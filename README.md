@@ -159,9 +159,10 @@ It's better to run this as a job on the cluster rather than running it interacti
 This step parses NCBI BLAST tabular output format into the format that can be loaded into the orthomcl database. 
 
 ```
-orthomclBlastParser my_blast_results compliantFasta >> similarSequences.txt
+orthomclBlastParser sample/3.blastresmerge/blastres.tab sample/1.compliantFasta >> sample/4.parsedblast/similarSequences.txt
 ```
 
+It's better to run this as a job on the cluster rather than running it interactively.
 
 
 
