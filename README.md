@@ -151,9 +151,16 @@ You have parallelized the blast so far, you need to put the results back togethe
 cat sample/3.blastres/* > sample/3.blastresmerge/blastres.tab
 ```
 
+It's better to run this as a job on the cluster rather than running it interactively.
 
 
+## Step 4: Parse BLAST results
 
+This step parses NCBI BLAST tabular output format into the format that can be loaded into the orthomcl database. 
+
+```
+orthomclBlastParser my_blast_results compliantFasta >> similarSequences.txt
+```
 
 
 
