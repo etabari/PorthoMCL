@@ -31,7 +31,7 @@ This is EXACTLY like the 5th step of OrhtoMCL.
 If you have downloaded faa files from NCBI (for example: ftp://ftp.ncbi.nlm.nih.gov/genomes/Bacteria/all.faa.tar.gz)
 We have supplied a bash script to run orthomclAdjustFasta on all faa files and produce the proper fasta files.
 
-```
+```shell
 cd compliantFasta
 orthomclAdjustFastaAll.sh <input_folder>
 ```
