@@ -63,8 +63,8 @@ The input arguments to `orthomclFilterFasta` are:
 - input_dir:               the directory containing a set of .fasta files
 - min_length:              minimum allowed length of proteins.  (suggested: 10)
 - max_percent_stop:        maximum percent stop codons.  (suggested 20)
-- good_proteins_file:      optional.  By default goodProteins.fasta in the current dir.
-- poor_proteins_file:      optional.  By default poorProteins.fasta in the current dir.
+- good_proteins_file:      _optional_  By default goodProteins.fasta in the current dir.
+- poor_proteins_file:      _optional_  By default poorProteins.fasta in the current dir.
 
 ```shell
 orthomclFilterFasta samlple/1.compliantFasta 10 20 
@@ -84,7 +84,7 @@ This way, you will have many blast runs that can be ran in parallel on a computi
 We have supplied a torque script for PBS based clusters. To do that we need to split the input file first.
 
 
-### Create BLAST database
+#### Create BLAST database
 
 ```
 makeblastdb -in samlple/2.filteredFasta/goodProteins.fasta  -dbtype prot
@@ -95,15 +95,35 @@ The output files of the makeblastdb is copied to samlple/3.blastdb
 #### Split the input file 
 
 Split goodProteins.fasta using orthomclpSplitFasta.py so that each file has relatively a small size for each blast.
+10K sequences in each query batch makes each blast run finish faster. 
+
+
+The input arguments to `orthomclpSplitFasta.py` are:
+- input-fasta: The large fasta file to be split into mnultiple files 
+- size: number of sequences to keep in each split file
+
 
 ```shell
 orthomclpSplitFasta.py -i samlple/2.filteredFasta/goodProteins.fasta  -s 10000
 ```
 
+The output files of the makeblastdb is copied to samlple/3.blastquery
+
 ####  Run blasts 
 
- In this step the required blast arguments are as follows:
+In this step the required blast arguments are as follows:
+- query 3.blastquery/goodProteins.fasta  (BLAST Query)
+- db 3.blastdb/goodProteins.fasta  (BLAST Database)
+- seg yes  (Filter query sequence with [SEG](http://www.ncbi.nlm.nih.gov/pubmed/8743706) to remove low complexity regions)
+- dbsize 100000000  (*constant* database size for adding other genomes and keeping e-values comparable)
+- evalue 1e-5  (minimum e-value to report back)
+- outfmt 6 (create tabluar output files)
+- num_threads 8 (run it multi-threaded, only if you have a capable machine to run it on)
+- out blastres/blastres.tab (tabulat output for the input)
+
 
 ```
  blastp -query blastquery/goodProteins.fasta.1  -db blastdb/goodProteins.fasta  -seg yes  -dbsize 100000000  -evalue 1e-5  -outfmt 6 -num_threads 8 -out blastres/blastres.1.tab
  ```
+
+ 
