@@ -52,11 +52,11 @@ orthomclAdjustFastaAll.sh <input_folder>
 
 In the sample run, the results of this step is copied to samlple/1.compliantFasta
 
-## Step 2: orthomclFilterFasta
+## Step 2: Filter the input 
 
 This is EXACTLY like the 6th step of OrhtoMCL. This step produces a single goodProteins.fasta file to run BLAST on.  It filters away poor-quality sequences (placing them in poorProteins.fasta).  The filter is based on length and percent stop codons.  You can adjust these values.
 
-The input arguments to orthomclFilterFasta are:
+The input arguments to `orthomclFilterFasta` are:
 - input_dir:               the directory containing a set of .fasta files
 - min_length:              minimum allowed length of proteins.  (suggested: 10)
 - max_percent_stop:        maximum percent stop codons.  (suggested 20)
@@ -68,3 +68,33 @@ orthomclFilterFasta samlple/1.compliantFasta 10 20
 ```
 
 In the sample run, the results of this step is copied to samlple/2.filteredFasta
+
+
+
+## Step 3: All-v-all BLAST
+
+We have developed and tested this with NCBI BLAST 2.2.29+. 
+
+At this stage, instead of running one huge blast that will never ends,
+we will split the input files to smaller size and blast them against the same huge database. 
+This way, you will have many blast runs that can be ran in parallel on a computing cluster. 
+We have supplied a torque script for PBS based clusters. To do that we need to split the input file first.
+
+
+### Create BLAST database
+
+```
+makeblastdb -in samlple/2.filteredFasta/goodProteins.fasta  -dbtype prot
+```
+
+The output files of the makeblastdb is copied to samlple/3.blastdb
+
+
+
+###  Run blasts: 
+
+ In this step the required blast arguments are as follows:
+
+```
+ blastp -query blastquery/goodProteins.fasta.1  -db blastdb/goodProteins.fasta  -seg yes  -dbsize 100000000  -evalue 1e-5  -outfmt 6 -num_threads 8 -out blastres/blastres.1.tab
+ ```
