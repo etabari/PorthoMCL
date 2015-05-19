@@ -28,8 +28,14 @@ Perl and Python come preinstalled on most Linux and Unix (OS X). You need to ins
 
 This is EXACTLY like the 5th step of OrhtoMCL.
 
+You must run `orthomclAdjustFasta` on your input fasta files.
+
+```
+orthomclAdjustFasta NC_000913 sample/0.input_faa/NC_000913.faa 4
+```
+
 If you have downloaded faa files from NCBI (for example: ftp://ftp.ncbi.nlm.nih.gov/genomes/Bacteria/all.faa.tar.gz)
-We have supplied a bash script to run orthomclAdjustFasta on all faa files and produce the proper fasta files.
+We have supplied a bash script to run `orthomclAdjustFasta` on all faa files and produce the proper fasta files.
 
 ```shell
 cd compliantFasta
