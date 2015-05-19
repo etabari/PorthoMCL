@@ -21,6 +21,7 @@ There are very few requirements for OrthoMCLP. Here are the list of the things n
 
 Perl and Python come preinstalled on most Linux and Unix (OS X). You need to install them on Windows. 
 
+This implementation *removes* the need for a database server.
 
 # Steps 
 
@@ -151,7 +152,7 @@ You have parallelized the blast so far, you need to put the results back togethe
 cat sample/3.blastres/* > sample/3.blastresmerge/blastres.tab
 ```
 
-It's better to run this as a job on the cluster rather than running it interactively.
+_It's better to run this as a job on the cluster rather than running it interactively._
 
 
 ## Step 4: Parse BLAST results
@@ -162,7 +163,7 @@ This step parses NCBI BLAST tabular output format into the format that can be lo
 orthomclBlastParser sample/3.blastresmerge/blastres.tab sample/1.compliantFasta >> sample/4.parsedblast/similarSequences.txt
 ```
 
-It's better to run this as a job on the cluster rather than running it interactively.
+_It's better to run this as a job on the cluster rather than running it interactively._
 
 
 
