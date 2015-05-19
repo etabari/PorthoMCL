@@ -7,7 +7,7 @@ We have reimplemented the sections of OrthoMCL that rely on databases. This way,
 Ehsan Tabari, May 19, 2015
 
 The initial steps of OrthoMCLP are exactly the same as OrthoMCL.
-We have reimplemented steps 7, 8 and 9. (main processing steps)
+We have reimplemented steps 9 and 10. (main processing steps)
 
 # Requirements
 
@@ -149,25 +149,30 @@ You have to customize the `#PBS` variables so that it matches the requirements o
 You have parallelized the blast so far, you need to put the results back together
 
 ```shell
-cat sample/3.blastres/* > sample/3.blastresmerge/blastres.tab
+cd sample
+cat 3.blastres/* > 3.blastresmerge/blastres.tab
 ```
 
 _It's better to run this as a job on the cluster rather than running it interactively._
 
 
 ## Step 4: Parse BLAST results
-
+This is EXACTLY like the 8th step of OrhtoMCL. 
 This step parses NCBI BLAST tabular output format into the format that can be loaded into the orthomcl database. 
 
 ```
-orthomclBlastParser sample/3.blastresmerge/blastres.tab sample/1.compliantFasta >> sample/4.parsedblast/similarSequences.txt
+cd sample
+orthomclBlastParser 3.blastresmerge/blastres.tab 1.compliantFasta >> 4.parsedblast/similarSequences.txt
 ```
 
 _It's better to run this as a job on the cluster rather than running it interactively._
 
 
+## Step 5: Find Pair
 
+This is the most time consuming step of OrthoMCL that would not finish using a MySQL server for large amount of data.
 
+THIS IS COMING ON
 
 
 
