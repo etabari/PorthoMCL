@@ -124,10 +124,48 @@ In this step the required blast arguments are as follows:
 
 Sample run for one of the input files:
 ```
- blastp -query blastquery/goodProteins.fasta.1  -db blastdb/goodProteins.fasta  -seg yes  -dbsize 100000000  -evalue 1e-5  -outfmt 6 -num_threads 8 -out blastres/blastres.1.tab
+cd sample
+mkdir 3.blastres 
+blastp -query 3.blastquery/goodProteins.fasta.1  -db 3.blastdb/goodProteins.fasta  -seg yes  -dbsize 100000000  -evalue 1e-5  -outfmt 6 -num_threads 8 -out 3.blastres/blastres.1.tab
  ```
 
 
 #### PBS Cluster BLAST
 
-If you have access to a PBS base computing cluster, we have included a torque 
+If you have access to a PBS base computing cluster, we have included a torque script to be ran on a given computing cluster. 
+It initiates an array of jobs (for the sample 1 to 4) that each job array will execute one BLASTP commands on the input indetified by 
+job array index. 
+
+For example, job 4 will run a multithreaded blastp command with query goodProteins.fasta.4 and outputs blastres.4.tab
+
+The script is `orthomclpRunBlasts.sh`
+
+You have to customize the `#PBS` variables so that it matches the requirements of your cluster. 
+
+
+#### Put all blastp results together
+
+You have parallelized the blast so far, you need to put the results back together
+
+```shell
+cat sample/3.blastres/* > sample/3.blastresmerge/blastres.tab
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
