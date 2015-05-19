@@ -54,7 +54,10 @@ In the sample run, the results of this step is copied to samlple/1.compliantFast
 
 ## Step 2: Filter the input 
 
-This is EXACTLY like the 6th step of OrhtoMCL. This step produces a single goodProteins.fasta file to run BLAST on.  It filters away poor-quality sequences (placing them in poorProteins.fasta).  The filter is based on length and percent stop codons.  You can adjust these values.
+This is EXACTLY like the 6th step of OrhtoMCL. 
+This step produces a single goodProteins.fasta file to run BLAST on.  
+It filters away poor-quality sequences (placing them in poorProteins.fasta).  
+The filter is based on length and percent stop codons.
 
 The input arguments to `orthomclFilterFasta` are:
 - input_dir:               the directory containing a set of .fasta files
@@ -89,9 +92,15 @@ makeblastdb -in samlple/2.filteredFasta/goodProteins.fasta  -dbtype prot
 
 The output files of the makeblastdb is copied to samlple/3.blastdb
 
+#### Split the input file 
 
+Split goodProteins.fasta using orthomclpSplitFasta.py so that each file has relatively a small size for each blast.
 
-###  Run blasts: 
+```shell
+orthomclpSplitFasta.py -i samlple/2.filteredFasta/goodProteins.fasta  -s 10000
+```
+
+####  Run blasts 
 
  In this step the required blast arguments are as follows:
 
