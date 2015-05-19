@@ -24,11 +24,18 @@ Perl and Python come preinstalled on most Linux and Unix (OS X). You need to ins
 
 # Steps 
 
+The sample folder contains execution of all these steps. Each folder created at each step is numbered by the step number. 
+The starting data is located in sample/0.input_faa
+
 ## Step 1: orthomclAdjustFasta
 
 This is EXACTLY like the 5th step of OrhtoMCL.
 
-You must run `orthomclAdjustFasta` on your input fasta files.
+You must run `orthomclAdjustFasta` on your input fasta files. orthomclAdjustFasta creates output in the same folder it's ran. 
+The input arguments to orthomclAdjustFasta are:
+- String to label each sequence
+- Input Fasta file 
+- A number identifying the field containing protein identification on the fasta header
 
 ```
 orthomclAdjustFasta NC_000913 sample/0.input_faa/NC_000913.faa 4
