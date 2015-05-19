@@ -16,7 +16,7 @@ There are very few requirements for OrthoMCLP. Here are the list of the things n
 - Perl 5.x
 - Python 2.x
 - [BioPython](http://biopython.org/wiki/Download)
-- [NCBI Blast](ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)
+- [NCBI Blast](ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST)
 - [MCL](http://www.micans.org/mcl/sec_description1.html)
 
 Perl and Python come preinstalled on most Linux and Unix (OS X). You need to install them on Windows. 
