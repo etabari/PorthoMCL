@@ -122,8 +122,12 @@ In this step the required blast arguments are as follows:
 - out blastres/blastres.tab (tabulat output for the input)
 
 
+Sample run for one of the input files:
 ```
  blastp -query blastquery/goodProteins.fasta.1  -db blastdb/goodProteins.fasta  -seg yes  -dbsize 100000000  -evalue 1e-5  -outfmt 6 -num_threads 8 -out blastres/blastres.1.tab
  ```
 
- 
+
+#### PBS Cluster BLAST
+
+If you have access to a PBS base computing cluster, we have included a torque 
