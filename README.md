@@ -175,19 +175,45 @@ _It's better to run this as a job on the cluster rather than running it interact
 
 This is the most time consuming step of OrthoMCL that would not finish using a MySQL server for large amount of data.
 This is an embarrassingly parallel problem and can be easily splitted into multiple input files to be executed in parallel.
+
 So the first step is to split the similarSequences.txt file into multiple files:
 
 #### Split input file
 
+`awk` provides a lot of capabilities for such use, we remove the taxon columns from the input file.  
 
 ```shell
-awk -F'[|\t]' '{print $1"|"$2"\t"$3"|"$4"\t"$7"\t"$8"\t"$9"\t"$10 >> ($1".ss.tsv")}' 4.parsedblast/similarSequences.txt
+cd sample
+mkdir 5.input
+awk -F'[|\t]' '{print $1"|"$2"\t"$3"|"$4"\t"$7"\t"$8"\t"$9"\t"$10 >> ("5.input/"$1".ss.tsv")}' 4.parsedblast/similarSequences.txt
+```
+
+The files creared in this step from the sample run is in sample/5.input.
+
+_It's better to run this as a job on the cluster rather than running it interactively._
+
+
+#### Taxon List file
+
+Although we could have listed the compliantFasta folder like the original orthomcl, but we find it very inefficient. 
+Also, having a list of taxons will help to easily exclude a taxon from the whole process.
+
+```shell
+cd sample
+ls -1 1.compliantFasta/ | sed -e 's/\..*$//'  > taxon_list
 ```
 
 
+#### Taxon List file
 
 
 
+.
 
+.
+
+.
+
+.
 
 THIS IS TO COTINUE
