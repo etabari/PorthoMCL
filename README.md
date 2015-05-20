@@ -206,7 +206,7 @@ ls -1 1.compliantFasta/ | sed -e 's/\..*$//'  > taxon_list
 ```
 
 
-#### Finding Orthologs
+#### Finding Best Hits
 
 
 

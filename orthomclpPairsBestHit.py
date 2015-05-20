@@ -57,8 +57,9 @@ if __name__ == '__main__':
 
 	parser.add_option("-t", "--taxonlist", dest="taxonlistfile", help="A single column file containing the list of taxon to work with")
 
-	parser.add_option('-i', '--inputfolder', dest='inputfolder', help='folder that stores TaxonID.ss.tsv files (Split SimilarSeuence.tsv) ')
-	parser.add_option('-o', '--outputfolder', dest='outputfolder', help='folder that will stores Best Hit files (If not set, current folder)')
+	parser.add_option('-i', '--inputFolder', dest='inputfolder', help='folder that stores TaxonID.ss.tsv files (Split SimilarSeuence.tsv) ')
+	parser.add_option('-b', '--outBestHitFolder', dest='outBestHitFolder', help='folder that will stores Best Hit files (If not set, current folder)')
+	parser.add_option('-q', '--outQueryTaxonScoreFolder', dest='outQueryTaxonScoreFolder', help='folder to generate best query-taxon evalue score (required for Paralogs)')
 
 	parser.add_option("-x", "--index", dest="index", help="an integer number identifying which taxon to work on [1-size_of_taxon_list]" , type='int')
 	parser.add_option("-l", "--logfile", dest="logfile", help="log file")
@@ -68,29 +69,27 @@ if __name__ == '__main__':
 	parser.add_option('', '--percentMatchCutoff', dest='percentMatchCutoff', help='percent Match Cutoff (integer value, default=50)', default=50, type='int')
 	
 	parser.add_option('', '--cacheInputFile', dest='cacheInputFile', help='Cache input file or read it again. (Only use if I/O is very slow)', default=False, action="store_true")
-	parser.add_option('', '--bestQueryTaxonScore', dest='bestQueryTaxonScore', help='folder to generate best query-taxon evalue score (optional)')
 	
 	#
 	
 	(options, args) = parser.parse_args()
 
 
-	log('1   | reading taxon list | * |'+  str(memory_usage_resource())+ 'MB | '+ str(datetime.now()) )
+	log('{2} | Best Hit | {0} | {1} | * | {3} MB | {4}'.format(1 , 'reading taxon list', options.index, memory_usage_resource(), datetime.now() ))
 	taxon_list = readTaxonList(options.taxonlistfile)
-	log('1   | reading taxon list |  loaded ' + str(len(taxon_list)) +' taxons | '+  str(memory_usage_resource())+ 'MB | '+ str(datetime.now()) )
 
 	if options.index <= 0 or options.index > len(taxon_list):
-		log('ERROR | Error in index 1 to ' + str(len(taxon_list)))
+		log('{2} | Best Hit | {0} | {1} | * | {3} MB | {4}'.format('ERROR' , 'Error in index', options.index, memory_usage_resource(), datetime.now() ))
 		exit()
 
 	taxon1s = taxon_list[options.index - 1]
 
 
 	if options.cacheInputFile:
-		log('OPTIONS   | cacheInputFile | Cache Enabled | ')
+		log('OPTIONS| Best Hit | ' + option.index + ' | cacheInputFile | Cache Enabled | ')
 
 
-	log('2   | Reading similar sequences (ss file) for ' + taxon1s +' | * | '+  str(memory_usage_resource())+ 'MB | '+ str(datetime.now()) )
+	log('{2} | Best Hit | {0} | {1} | * | {3} MB | {4}'.format(2 , 'Reading similar sequences (ss file)', options.index, memory_usage_resource(), datetime.now() ))
 
 	best_query_taxon_score = {}
 
@@ -141,11 +140,11 @@ if __name__ == '__main__':
 		best_query_taxon_score[(query_id,subject_taxon)] = (min_exp, min(min_mants))
 
 
-	if options.bestQueryTaxonScore:
+	if options.outQueryTaxonScoreFolder:
 
-		log('3   | Creating bestQueryTaxonScore (q-t file) for ' + taxon1s +' | * | '+  str(memory_usage_resource())+ 'MB | '+ str(datetime.now()) )
+		log('{2} | Best Hit | {0} | {1} | * | {3} MB | {4}'.format(3 , 'Creating bestQueryTaxonScore (q-t file)', options.index, memory_usage_resource(), datetime.now() ))
 
-		with open(os.path.join(options.bestQueryTaxonScore, taxon1s+'.q-t.tsv'), 'w') as out_file:
+		with open(os.path.join(options.outQueryTaxonScoreFolder, taxon1s+'.q-t.tsv'), 'w') as out_file:
 
 			for (query_id,subject_taxon) in sorted(best_query_taxon_score):
 
@@ -153,11 +152,11 @@ if __name__ == '__main__':
 				out_file.write('{0}\t{1}\t{2}\t{3}\n'.format(query_id, subject_taxon, evalue[0], evalue[1]))
 
 
-	log('4   | Creating BestHit (bh file) for ' + taxon1s +' | * | '+  str(memory_usage_resource())+ 'MB | '+ str(datetime.now()) )
+		log('{2} | Best Hit | {0} | {1} | * | {3} MB | {4}'.format(4 , 'Creating BestHit (bh file)', options.index, memory_usage_resource(), datetime.now() ))
 
-	if not options.outputfolder:
-		options.outputfolder = '.'
-	out_file = open(os.path.join(options.outputfolder, taxon1s+'.bh.tsv') ,'w')
+	if not options.outBestHitFolder:
+		options.outBestHitFolder = '.'
+	out_file = open(os.path.join(options.outBestHitFolder, taxon1s+'.bh.tsv') ,'w')
 
 	if not options.cacheInputFile:
 		with open(os.path.join(options.inputfolder, taxon1s+'.ss.tsv')) as input_file:
@@ -203,7 +202,7 @@ if __name__ == '__main__':
 
 	out_file.close()
 
-	log('5   | Done ' + taxon1s +' | * | '+  str(memory_usage_resource())+ 'MB | '+ str(datetime.now()) )
+	log('{2} | Best Hit | {0} | {1} | * | {3} MB | {4}'.format(5 , 'Done', options.index, memory_usage_resource(), datetime.now() ))
 
 
 
