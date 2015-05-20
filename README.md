@@ -198,13 +198,15 @@ _It's better to run this as a job on the cluster rather than running it interact
 Although we could have listed the compliantFasta folder like the original orthomcl, but we find it very inefficient. 
 Also, having a list of taxons will help to easily exclude a taxon from the whole process.
 
+This is achived by listing the folder and removing the extension, sending it to a file.
+
 ```shell
 cd sample
 ls -1 1.compliantFasta/ | sed -e 's/\..*$//'  > taxon_list
 ```
 
 
-#### Taxon List file
+#### Finding Orthologs
 
 
 
