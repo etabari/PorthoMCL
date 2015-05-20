@@ -208,6 +208,20 @@ ls -1 1.compliantFasta/ | sed -e 's/\..*$//'  > taxon_list
 
 #### Finding Best Hits
 
+This step must be done for all the split input files before you could move forward to calculate Orthologs, inParalogs and coOrthologs.
+
+The input parameters are: 
+
+- *-t*  --taxonlist A single column file containing the list of taxon to work with
+- *-i*  --inputFolder folder that stores TaxonID.ss.tsv files (Split SimilarSeuence.tsv)
+- *-x*  --index an integer number identifying which taxon to work on [1-size_of_taxon_list]
+-  -b  --outBestHitFolder folder that will stores Best Hit files (If not set, current folder)
+-  -q  --outQueryTaxonScoreFolder folder to generate best query-taxon evalue score (If not set, skipped. It is required for inParalogs and coOrthologs)
+-  -l --logfile log file
+-  --evalueExponentCutoff evalue Exponent Cutoff (a nebative value, default=-5)
+-  --percentMatchCutoff percent Match Cutoff (integer value, default=50)
+-  --cacheInputFile      Cache input file or read it again. (Only use if I/O is very slow)
+
 
 
 .
