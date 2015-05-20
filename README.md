@@ -229,7 +229,7 @@ This is the example to run for the FIRST sample file (-x 1).
 ```shell
 mkdir sample/5.bestquerytaxon
 mkdir sample/5.besthit
-orthomclpPairsBestHit.py -t sample/taxon_list -i sample/5.input/ -b sample/5.besthit -q sample/5.bestquerytaxon  -l sample/orthomclp.log -x 1
+orthomclpPairsBestHit.py -t sample/taxon_list -i sample/5.input -b sample/5.besthit -q sample/5.bestquerytaxon  -x 1
 ```
 
 You can run this code in parallel with different values for -x. An example of such execution is included in the `orthomclpRunPBS.sh` script.
