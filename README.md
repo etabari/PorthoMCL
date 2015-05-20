@@ -157,8 +157,9 @@ _It's better to run this as a job on the cluster rather than running it interact
 
 
 ## Step 4: Parse BLAST results
-This is EXACTLY like the 8th step of OrhtoMCL. 
+This is a little different from the 8th step of OrhtoMCL. 
 This step parses NCBI BLAST tabular output format into the format that can be loaded into the orthomcl database. 
+It additionally prints out the minimum value of evalue_exp (A negative number) in STDERR.
 
 ```
 cd sample
@@ -172,7 +173,7 @@ _It's better to run this as a job on the cluster rather than running it interact
 
 This is the most time consuming step of OrthoMCL that would not finish using a MySQL server for large amount of data.
 
-THIS IS COMING ON
+#### Split input files to 
 
 
 

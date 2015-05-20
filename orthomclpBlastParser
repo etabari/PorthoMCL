@@ -31,6 +31,9 @@ my $prevQueryId = 'blah';
 my $subject;  # hash to hold subject info
 my $queryShorter;
 
+#### Updated for OrthoMCLP
+my $orthomclp_min_evalueExp = 10;
+
 while(<F>) {
     chomp;
     my ($queryId, $subjectId, $percentIdentity, $length, $mismatches, $ngaps, $queryStart, $queryEnd, $subjectStart, $subjectEnd, $evalue, $bits) = split;
@@ -59,8 +62,19 @@ while(<F>) {
     push(@{$subject->{hspspans}}, $hspspan);
     $subject->{totalIdentities} += $percentIdentity * $length;
     $subject->{totalLength} += $length;
+
+    $orthomclp_min_evalueExp = $subject->{evalueExp} if ($orthomclp_min_evalueExp > $subject->{evalueExp});
+        
 }
 printPreviousSubject($subject);
+
+
+print STDERR "\n\n";
+print STDERR "-------------------------------------------\n";
+print STDERR "IMPORTANT: \n\n";
+print STDERR "Minimum evalueExp: $orthomclp_min_evalueExp\n\n";
+print STDERR "You need this as an input for the next step\n";
+print STDERR "-------------------------------------------\n";
 
 ########################################################################################
 
