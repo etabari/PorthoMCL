@@ -161,9 +161,11 @@ This is a little different from the 8th step of OrhtoMCL.
 This step parses NCBI BLAST tabular output format into the format that can be loaded into the orthomcl database. 
 It additionally prints out the minimum value of evalue_exp (A negative number) in STDERR.
 
+This will serve as an input to the next step. 
+
 ```
 cd sample
-orthomclBlastParser 3.blastresmerge/blastres.tab 1.compliantFasta >> 4.parsedblast/similarSequences.txt
+orthomclpBlastParser 3.blastresmerge/blastres.tab 1.compliantFasta >> 4.parsedblast/similarSequences.txt
 ```
 
 _It's better to run this as a job on the cluster rather than running it interactively._
@@ -172,10 +174,15 @@ _It's better to run this as a job on the cluster rather than running it interact
 ## Step 5: Find Pair
 
 This is the most time consuming step of OrthoMCL that would not finish using a MySQL server for large amount of data.
+This is an embarrassingly parallel problem and can be easily splitted into multiple input files to be executed in parallel.
+So the first step is to split the similarSequences.txt file into multiple files:
 
-#### Split input files to 
+#### Split input file
 
 
+```shell
+awk -F'[|\t]' '{print $1"|"$2"\t"$3"|"$4"\t"$7"\t"$8"\t"$9"\t"$10 >> ($1".ss.tsv")}' 4.parsedblast/similarSequences.txt
+```
 
 
 
