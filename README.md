@@ -190,4 +190,4 @@ awk -F'[|\t]' '{print $1"|"$2"\t"$3"|"$4"\t"$7"\t"$8"\t"$9"\t"$10 >> ($1".ss.tsv
 
 
 
-
+THIS IS TO COTINUE
