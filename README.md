@@ -139,7 +139,7 @@ job array index.
 
 For example, job 4 will run a multithreaded blastp command with query goodProteins.fasta.4 and outputs blastres.4.tab
 
-The script is `orthomclpRunBlasts.sh`
+The script is `orthomclpRunPBS.sh`
 
 You have to customize the `#PBS` variables so that it matches the requirements of your cluster. 
 
@@ -221,6 +221,19 @@ The input parameters are:
 -  --evalueExponentCutoff evalue Exponent Cutoff (a negative value, default=-5)
 -  --percentMatchCutoff percent Match Cutoff (integer value, default=50)
 -  --cacheInputFile      Cache input file or read it again. (Only use if I/O is very slow)
+
+
+This is the example to run for the FIRST sample file (-x 1). 
+
+
+```shell
+mkdir sample/5.bestquerytaxon
+mkdir sample/5.besthit
+orthomclpPairsBestHit.py -t sample/taxon_list -i sample/5.input/ -b sample/5.besthit -q sample/5.bestquerytaxon  -l sample/orthomclp.log -x 1
+```
+
+You can run this code in parallel with different values for -x. An example of such execution is included in the `orthomclpRunPBS.sh` script.
+
 
 
 

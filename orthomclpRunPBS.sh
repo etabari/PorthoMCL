@@ -52,8 +52,21 @@ cd $PBS_O_WORKDIR
 # Create a file to mark the start of this BLAST
 touch $PBS_JOBNAME-$SHORT_JOBID.start
 
-# run the blast
-blastp -query $ROOTFOLDER/blastquery/goodProteins.fasta.$PBS_ARRAYID  -db $ROOTFOLDER/blastdb/goodProteins.fasta  -seg yes  -dbsize 100000000  -evalue 1e-5  -outfmt 6 -num_threads 8 -out $ROOTFOLDER/blastres/blastres.$PBS_ARRAYID.tab
+
+############################################
+### STEP 3: run the blast
+###
+### https://github.com/etabari/OrthoMCLP#step-4-parse-blast-results
+### note that -num_threads 8 is passed, adjust it accordingly to your nodes.
+###
+#  blastp -query $ROOTFOLDER/3.blastquery/goodProteins.fasta.$PBS_ARRAYID  -db $ROOTFOLDER/3.blastdb/goodProteins.fasta  -seg yes  -dbsize 100000000  -evalue 1e-5  -outfmt 6 -num_threads 8 -out $ROOTFOLDER/3.blastres/blastres.$PBS_ARRAYID.tab
+
+############################################
+### STEP 5: Finding Best Hits
+###
+### https://github.com/etabari/OrthoMCLP#finding-best-hits
+###
+# orthomclpPairsBestHit.py -t sample/taxon_list -i sample/5.input/ -b sample/5.besthit -q sample/5.bestquerytaxon  -l sample/orthomclp.log -x $PBS_ARRAYID
 
 
 # Create a file to mark the end of this BLAST
