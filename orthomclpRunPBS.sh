@@ -19,27 +19,34 @@
 ##
 
 ## This is the Queue name variable. Where to submit the job to? 
+## 
 #PBS -q [QUEUE_NAME]
 
 ## This will indicate the indices of the input to run. 1-100 maybe?
+##
 #PBS -t 1-4
 
 ## Job Name: give it a good name so that you recognize it among the jobs running in the cluster.
+## example: #PBS -N 3_orthomclp_run_blast
+##
 #PBS -N [JOB_NAME]
 
 ## Your requirements: I prefer to run each BLAST multithreaded as well. (-num_threads 8) so I ask for 8 cores.
+##
 #PBS -l nodes=1:ppn=8
 #PBS -l walltime=100:00:00
 
 ## redirect errors and outputs
+## 
 #PBS -e /dev/null
 #PBS -o /dev/null
 
 
-# This is the folder where you keep your data 
-# This is going to be big.
-# Don't forget the / at the end of it
-# example is ROOTFOLDER=/scratch/user/orthomclp/data/
+## This is the folder where you keep your data 
+## This is going to be big.
+## Don't forget the / at the end of it
+## example: ROOTFOLDER=/scratch/user/orthomclp/data/
+##
 ROOTFOLDER=[FOLDER_CONTAINING_INPUT_AND_DB_AND_OUTPUT]
 
 SHORT_JOBID=`echo $PBS_JOBID |cut -d. -f1`
