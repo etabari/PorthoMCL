@@ -1,4 +1,4 @@
-# OrthoMCLP
+# PorthoMCL
 Parallel implementation of OrthoMCL
 
 
@@ -6,12 +6,12 @@ We have reimplemented the sections of OrthoMCL that rely on databases. This way,
 
 Ehsan Tabari, May 19, 2015
 
-The initial steps of OrthoMCLP are exactly the same as OrthoMCL.
+The initial steps of PorthoMCL are exactly the same as OrthoMCL.
 We have reimplemented steps 9 and 10. (main processing steps)
 
 # Requirements
 
-There are very few requirements for OrthoMCLP. Here are the list of the things needed to run OrthoMCLP
+There are very few requirements for PorthoMCL. Here are the list of the things needed to run PorthoMCL
 
 - Perl 5.x
 - Python 2.x
@@ -95,17 +95,17 @@ The output files of the makeblastdb is copied to samlple/3.blastdb
 
 #### Split the input file 
 
-Split goodProteins.fasta using orthomclpSplitFasta.py so that each file has relatively a small size for each blast.
+Split goodProteins.fasta using porthomclSplitFasta.py so that each file has relatively a small size for each blast.
 10K sequences in each query batch makes each blast run finish faster. 
 
 
-The input arguments to `orthomclpSplitFasta.py` are:
+The input arguments to `porthomclSplitFasta.py` are:
 - input-fasta: The large fasta file to be split into mnultiple files 
 - size: number of sequences to keep in each split file
 
 
 ```shell
-orthomclpSplitFasta.py -i samlple/2.filteredFasta/goodProteins.fasta  -s 10000
+porthomclSplitFasta.py -i samlple/2.filteredFasta/goodProteins.fasta  -s 10000
 ```
 
 The output files of the makeblastdb is copied to samlple/3.blastquery
@@ -139,7 +139,7 @@ job array index.
 
 For example, job 4 will run a multithreaded blastp command with query goodProteins.fasta.4 and outputs blastres.4.tab
 
-The script is `orthomclpRunPBS.sh`
+The script is `porthomclRunPBS.sh`
 
 You have to customize the `#PBS` variables so that it matches the requirements of your cluster. 
 
@@ -165,7 +165,7 @@ This will serve as an input to the next step.
 
 ```
 cd sample
-orthomclpBlastParser 3.blastresmerge/blastres.tab 1.compliantFasta >> 4.parsedblast/similarSequences.txt
+porthomclBlastParser 3.blastresmerge/blastres.tab 1.compliantFasta >> 4.parsedblast/similarSequences.txt
 ```
 
 _It's better to run this as a job on the cluster rather than running it interactively._
@@ -230,11 +230,11 @@ This is the example to run for the FIRST sample file (-x 1).
 mkdir sample/5.bestquerytaxon
 mkdir sample/5.besthit
 
-orthomclpPairsBestHit.py -t sample/taxon_list -i sample/5.input -b sample/5.besthit -q sample/5.bestquerytaxon -x 1
+porthomclPairsBestHit.py -t sample/taxon_list -i sample/5.input -b sample/5.besthit -q sample/5.bestquerytaxon -x 1
 
 ```
 
-You can run this code in parallel with different values for -x. An example of such execution is included in the `orthomclpRunPBS.sh` script.
+You can run this code in parallel with different values for -x. An example of such execution is included in the `porthomclRunPBS.sh` script.
 
 
 
