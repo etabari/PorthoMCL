@@ -185,7 +185,7 @@ So the first step is to split the similarSequences.txt file into multiple files:
 ```shell
 cd sample
 mkdir 5.input
-awk -F'\t' '{print $1"|"$2"\t"$3"|"$4"\t"$7"\t"$8"\t"$9"\t"$10 >> ("5.input/"$1".ss.tsv")}' 4.parsedblast/similarSequences.txt
+awk -F'[|\t]' '{print $1"|"$2"\t"$3"|"$4"\t"$7"\t"$8"\t"$9"\t"$10 >> ("5.input/"$1".ss.tsv")}' 4.parsedblast/similarSequences.txt
 ```
 
 The files creared in this step from the sample run is in sample/5.input.
