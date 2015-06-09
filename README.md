@@ -230,7 +230,7 @@ This is the example to run for the FIRST sample file (-x 1).
 mkdir sample/5.bestquerytaxon
 mkdir sample/5.besthit
 
-porthomclPairsBestHit.py -t sample/taxon_list -i sample/5.input -b sample/5.besthit -q sample/5.bestquerytaxon -x 1
+porthomclPairsBestHit.py -t sample/taxon_list -s sample/5.input -b sample/5.besthit -q sample/5.bestquerytaxon -x 1
 
 ```
 
@@ -239,11 +239,25 @@ You can run this code in parallel with different values for -x. An example of su
 
 #### Finding Orthologs
 
+The output of this step is all the ortholog genes. 
+
+
+The input parameters are:
 - **-t** (--taxonlist)A single column file containing the list of taxon to work with
 - **-b**  (--inBestHitFolder) folder that stores Best Hit files
 - **-x**  (--index) an integer number identifying which taxon to work on [1-size_of_taxon_list]
 - **-o** (--outputfolder) folder that will stores orthologs (TaxonID.ort.tsv files)
 -  --OverwiteOutput      If the output file exists, overwrite it. (default=process terminates)
+
+This is the example to run for the FIRST sample file (-x 1). 
+
+```shell
+mkdir sample/5.orthologs
+
+porthomclPairsOrthologs.py -t sample/taxon_list -b sample/5.besthit -o sample/5.orthologs -x 1
+
+```
+You can run this code in parallel with different values for -x. An example of such execution is included in the `porthomclRunPBS.sh` script.
 
 
 #### STEPS TO COME

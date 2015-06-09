@@ -76,5 +76,13 @@ touch $PBS_JOBNAME-$SHORT_JOBID.start
 # porthomclPairsBestHit.py -t $ROOTFOLDER/taxon_list -i $ROOTFOLDER/5.input/ -b $ROOTFOLDER/5.besthit -q $ROOTFOLDER/5.bestquerytaxon  -l $ROOTFOLDER/orthomclp.log -x $PBS_ARRAYID
 
 
+
+############################################
+### STEP 5: Finding Orthologs
+###
+### https://github.com/etabari/PorthoMCL#finding-orthologs
+###
+# porthomclPairsOrthologs.py -t $ROOTFOLDER/taxon_list -b $ROOTFOLDER/5.besthit -o $ROOTFOLDER/5.orthologs -x $PBS_ARRAYID
+
 # Create a file to mark the end of this BLAST
 touch $PBS_O_WORKDIR/$PBS_JOBNAME-$SHORT_JOBID.end
