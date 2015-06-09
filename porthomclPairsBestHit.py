@@ -52,7 +52,7 @@ def log(s):
 
 
 if __name__ == '__main__':
-	usage = "This is STEP 4 of PorthoMCL.\n\nusage: %prog arg\n"
+	usage = "This is STEP 4.1 of PorthoMCL.\n\nusage: %prog arg\n"
 	parser = OptionParser(usage)
 
 	parser.add_option("-t", "--taxonlist", dest="taxonlistfile", help="A single column file containing the list of taxon to work with")
@@ -100,12 +100,9 @@ if __name__ == '__main__':
 
 			column = line.strip().split('\t')
 
-			query = column[0].split('|')
-			query_taxon = query[0]
-			query_id = query[1]
+			(query_taxon, query_id) = column[0].split('|')
 
-			subject = column[1].split('|')
-			subject_taxon = subject[0]
+			(subject_taxon, subject_id) = column[1].split('|')
 
 			if query_taxon != subject_taxon:
 
@@ -113,7 +110,7 @@ if __name__ == '__main__':
 				evalue_exp = int(column[3])
 
 				if options.cacheInputFile:
-					input_file_cache += [SimilarSequenceLine(query_taxon, query_id, subject_taxon, subject[1], evalue_mant, evalue_exp, column[4], column[5])]
+					input_file_cache += [SimilarSequenceLine(query_taxon, query_id, subject_taxon, subject_id, evalue_mant, evalue_exp, column[4], column[5])]
 
 				try:
 					best_query_taxon_score[(query_id, subject_taxon)] += [(evalue_mant, evalue_exp)]
@@ -165,12 +162,9 @@ if __name__ == '__main__':
 				column = line.strip().split('\t')
 
 				
-				query = column[0].split('|')
-				query_taxon = query[0]
-				query_id = query[1]
+				(query_taxon, query_id) = column[0].split('|')
 
-				subject = column[1].split('|')
-				subject_taxon = subject[0]
+				(subject_taxon, subject_id) = column[1].split('|')
 
 				if query_taxon != subject_taxon:
 
@@ -186,7 +180,7 @@ if __name__ == '__main__':
 					percent_match = float(column[5])
 
 					if evalue_exp < options.evalueExponentCutoff and percent_match > options.percentMatchCutoff and (evalue_mant < 0.01 or evalue_exp==cutoff[0] and evalue_mant==cutoff[1]):
-						out_file.write('{0}|{1}\t{2}|{3}\t{4}\t{5}\n'.format(query_taxon, query_id, subject_taxon, subject[1], evalue_exp, evalue_mant))
+						out_file.write('{0}|{1}\t{2}|{3}\t{4}\t{5}\n'.format(query_taxon, query_id, subject_taxon, subject_id, evalue_exp, evalue_mant))
 
 	else:
 
