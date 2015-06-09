@@ -1,5 +1,5 @@
 ####################################################
-##      				 OrthoMCLP
+##      				 PorthoMCL
 ## -------------------------------------------------
 ## This is a sample PBS Script to run BLASTs for 
 ## multiple input files against a single database
@@ -9,7 +9,7 @@
 ##
 ## Once this script is complete, you must be able to 
 ## submit the job using 
-##		qsub orthomclpRunBlasts.sh
+##		qsub porthomclRunPBS.sh
 ## 
 ## Ehsan Tabari
 #################################################### 
@@ -45,9 +45,9 @@
 ## This is the folder where you keep your data 
 ## This is going to be big.
 ## Don't forget the / at the end of it
-## example: ROOTFOLDER=/scratch/user/orthomclp/data/
+## example: ROOTFOLDER=/scratch/user/porthomcl/data
 ##
-ROOTFOLDER=[FOLDER_CONTAINING_INPUT_AND_DB_AND_OUTPUT]
+ROOTFOLDER=sample
 
 SHORT_JOBID=`echo $PBS_JOBID |cut -d. -f1`
 1NLOGO_JOBNAME=`echo $PBS_JOBNAME |cut -d- -f1`
@@ -73,7 +73,7 @@ touch $PBS_JOBNAME-$SHORT_JOBID.start
 ###
 ### https://github.com/etabari/OrthoMCLP#finding-best-hits
 ###
-# orthomclpPairsBestHit.py -t sample/taxon_list -i sample/5.input/ -b sample/5.besthit -q sample/5.bestquerytaxon  -l sample/orthomclp.log -x $PBS_ARRAYID
+# porthomclPairsBestHit.py -t $ROOTFOLDER/taxon_list -i $ROOTFOLDER/5.input/ -b $ROOTFOLDER/5.besthit -q $ROOTFOLDER/5.bestquerytaxon  -l $ROOTFOLDER/orthomclp.log -x $PBS_ARRAYID
 
 
 # Create a file to mark the end of this BLAST

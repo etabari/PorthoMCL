@@ -31,7 +31,7 @@ my $prevQueryId = 'blah';
 my $subject;  # hash to hold subject info
 my $queryShorter;
 
-#### Updated for OrthoMCLP
+#### Updated for PorthoMCL
 my $orthomclp_min_evalueExp = 10;
 
 while(<F>) {
