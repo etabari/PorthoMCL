@@ -57,11 +57,11 @@ if __name__ == '__main__':
 
 	parser.add_option("-t", "--taxonlist", dest="taxonlistfile", help="A single column file containing the list of taxon to work with")
 
-	parser.add_option('-i', '--inputFolder', dest='inputfolder', help='folder that stores TaxonID.ss.tsv files (Split SimilarSeuence.tsv) ')
+	parser.add_option('-s', '--inSimSeq', dest='inSimSeq', help='folder that stores TaxonID.ss.tsv files (Split SimilarSequence.tsv) ')
 	parser.add_option('-b', '--outBestHitFolder', dest='outBestHitFolder', help='folder that will stores Best Hit files (If not set, current folder)')
 	parser.add_option('-q', '--outQueryTaxonScoreFolder', dest='outQueryTaxonScoreFolder', help='folder to generate best query-taxon evalue score (required for Paralogs)')
 
-	parser.add_option("-x", "--index", dest="index", help="an integer number identifying which taxon to work on [1-size_of_taxon_list]" , type='int')
+	parser.add_option("-x", "--index", dest="index", help="an integer number identifying which taxon to work on [1..size_of_taxon_list]" , type='int')
 	parser.add_option("-l", "--logfile", dest="logfile", help="log file")
 
 	
@@ -95,7 +95,7 @@ if __name__ == '__main__':
 
 	input_file_cache = []
 
-	with open(os.path.join(options.inputfolder, taxon1s+'.ss.tsv')) as input_file:
+	with open(os.path.join(options.inSimSeq, taxon1s+'.ss.tsv')) as input_file:
 		for line in input_file:
 
 			column = line.strip().split('\t')
@@ -156,7 +156,7 @@ if __name__ == '__main__':
 	out_file = open(os.path.join(options.outBestHitFolder, taxon1s+'.bh.tsv') ,'w')
 
 	if not options.cacheInputFile:
-		with open(os.path.join(options.inputfolder, taxon1s+'.ss.tsv')) as input_file:
+		with open(os.path.join(options.inSimSeq, taxon1s+'.ss.tsv')) as input_file:
 			for line in input_file:
 
 				column = line.strip().split('\t')

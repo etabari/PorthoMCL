@@ -213,7 +213,7 @@ This step must be done for all the split input files before you could move forwa
 The input parameters are: 
 
 - **-t**  (--taxonlist) A single column file containing the list of taxon to work with
-- **-i**  (--inputFolder) folder that stores TaxonID.ss.tsv files (Split SimilarSeuence.tsv)
+- **-s**  (--inSimSeq) folder that stores TaxonID.ss.tsv files (Split SimilarSequence.tsv)
 - **-x**  (--index) an integer number identifying which taxon to work on [1-size_of_taxon_list]
 -  -b  (--outBestHitFolder) folder that will stores Best Hit files (If not set, current folder)
 -  -q  (--outQueryTaxonScoreFolder) folder to generate best query-taxon evalue score (If not set, skipped. It is required for inParalogs and coOrthologs)
@@ -237,8 +237,16 @@ porthomclPairsBestHit.py -t sample/taxon_list -i sample/5.input -b sample/5.best
 You can run this code in parallel with different values for -x. An example of such execution is included in the `porthomclRunPBS.sh` script.
 
 
+#### Finding Orthologs
+
+- **-t** (--taxonlist)A single column file containing the list of taxon to work with
+- **-b**  (--inBestHitFolder) folder that stores Best Hit files
+- **-x**  (--index) an integer number identifying which taxon to work on [1-size_of_taxon_list]
+- **-o** (--outputfolder) folder that will stores orthologs (TaxonID.ort.tsv files)
+-  --OverwiteOutput      If the output file exists, overwrite it. (default=process terminates)
 
 
+#### STEPS TO COME
 .
 
 .

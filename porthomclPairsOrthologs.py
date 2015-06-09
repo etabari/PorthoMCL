@@ -75,8 +75,8 @@ if __name__ == '__main__':
 	parser.add_option("-x", "--index", dest="index", help="an integer number identifying which taxon to work on" , type='int')
 	parser.add_option("-l", "--logfile", dest="logfile", help="logfile")
 
-	parser.add_option('-i', '--inputfolder', dest='inputfolder', help='folder that stores TaxonID.dic.gz files (Best hit dictionaries) ')
-	parser.add_option('-o', '--outputfolder', dest='outputfolder', help='folder that will stores TaxonID.ort.tsv files')
+	parser.add_option('-b', '--inBestHitFolder', dest='inBestHitFolder', help='folder that stores TaxonID.dic.gz files (Best hit dictionaries) ')
+	parser.add_option('-o', '--outOrthologFolder', dest='outOrthologFolder', help='folder that will stores TaxonID.ort.tsv files')
 	parser.add_option('', '--OverwiteOutput', dest='OverwiteOutput', help='If the output file exists, overwrite it. (default=process terminates)', default=False, action="store_true")
 	#
 	
@@ -103,7 +103,7 @@ if __name__ == '__main__':
 
 	log('{2} | Orthology | {0} | {1} | {3} | {4} MB | {5}'.format(2 , 'Reading Best hit (bh file)', options.index, taxon1s , memory_usage_resource(), datetime.now() ))
 
-	taxon1_filename =  os.path.join(options.inputfolder , taxon1s + '.bh.tsv')
+	taxon1_filename =  os.path.join(options.inBestHitFolder , taxon1s + '.bh.tsv')
 	taxon1_dic = readBestHit(taxon1_filename)
 
 	# for taxon2s in sorted(taxon1_dic.keys()):
@@ -123,7 +123,7 @@ if __name__ == '__main__':
 	for taxon2s in sorted(taxon1_dic.keys()):
 
 		if taxon1s < taxon2s:
-			taxon2_filename =  os.path.join(options.inputfolder , taxon2s + '.bh.tsv')
+			taxon2_filename =  os.path.join(options.inBestHitFolder , taxon2s + '.bh.tsv')
 		
 			if not os.path.exists(taxon2_filename):
 				continue			
@@ -183,7 +183,7 @@ if __name__ == '__main__':
 
 			orthologs_index += taxon1_taxon2_score_count
 
-	out_f = open (options.outputfolder + taxon1s + '.ort.tsv', 'w')
+	out_f = open (os.path.join(options.outOrthologFolder , taxon1s + '.ort.tsv'), 'w')
 	out_f.write('query_id\tsubject_id\tunnormalized_score\tnormalized_score\n')
 	for ortholog in orthologs:
 		out_f.write(ortholog[0] +'|' + ortholog[1] + '\t')
