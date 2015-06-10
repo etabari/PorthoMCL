@@ -52,7 +52,7 @@ def log(s):
 
 
 if __name__ == '__main__':
-	usage = "This is STEP 4.1 of PorthoMCL.\n\nusage: %prog arg\n"
+	usage = "This is STEP 5.1 of PorthoMCL.\n\nusage: %prog arg\n"
 	parser = OptionParser(usage)
 
 	parser.add_option("-t", "--taxonlist", dest="taxonlistfile", help="A single column file containing the list of taxon to work with")
