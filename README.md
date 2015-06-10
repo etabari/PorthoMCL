@@ -223,7 +223,7 @@ The input parameters are:
 -  --cacheInputFile      Cache input file or read it again. (Only use if I/O is very slow)
 
 
-This is the example to run for the FIRST sample file (-x 1). 
+This is the example to run for the FIRST sample file (-x 1). To perform this for all the sample files, you must to run the same command for **-x 1** to **-x 12**. 
 
 
 ```shell
@@ -249,7 +249,7 @@ The input parameters are:
 - **-o** (--outputfolder) folder that will stores orthologs (TaxonID.ort.tsv files)
 -  --OverwiteOutput      If the output file exists, overwrite it. (default=process terminates)
 
-This is the example to run for the FIRST sample file (-x 1). 
+This is the example to run for the FIRST sample file (-x 1). To perform this for all the sample files, you must to run the same command for -x 1 to -x 12. 
 
 ```shell
 mkdir sample/5.orthologs
