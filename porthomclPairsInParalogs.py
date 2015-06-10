@@ -8,7 +8,7 @@ from optparse import OptionParser
 
 
 options = None
-DEBUG = False
+DEBUG = True
 
 
 options = None
@@ -135,14 +135,14 @@ if __name__ == '__main__':
 			ev_exp = int(cols[2])
 			ev_mant = float(cols[3])
 
-		try:
-			(min_exp, mants) = BestInterTaxonScore[query_id]
-			if ev_exp < min_exp:
+			try:
+				(min_exp, mants) = BestInterTaxonScore[query_id]
+				if ev_exp < min_exp:
+					BestInterTaxonScore[query_id] = (ev_exp, [ev_mant])
+				elif ev_exp == min_exp:
+					BestInterTaxonScore[query_id] = (ev_exp, mants+[ev_mant])
+			except:
 				BestInterTaxonScore[query_id] = (ev_exp, [ev_mant])
-			elif ev_exp == min_exp:
-				BestInterTaxonScore[query_id] = (ev_exp, mants+[ev_mant])
-		except:
-			BestInterTaxonScore[query_id] = (ev_exp, [ev_mant])
 
 
 	for query_id in BestInterTaxonScore.keys():
@@ -150,7 +150,7 @@ if __name__ == '__main__':
 		BestInterTaxonScore[query_id] = (ev_exp, min(mants))
 
 		if DEBUG:
-			print query_id, ev_exp, min(mants)
+			print query_id, ev_exp, mants
 
 
 	log('{2} | Orthology | {0} | {1} | {3} | {4} MB | {5}'.format(5, 'Finished' , options.index, taxon2s , memory_usage_resource(), datetime.now() ))
