@@ -22,14 +22,14 @@ def readTaxonList(filename):
 	return taxon_list
 
 
-def readBestHit(file_name):
+def readBestHit(query_taxon, file_name):
 	best_hits = {}
 	with open(file_name) as best_hit_file:
 		for line in best_hit_file:
 			cols = line.strip().split('\t')
 			
 			
-			query_id = cols[0].split('|')[1]
+			query_id = query_taxon+'|'+cols[0]
 
 			(subject_taxon, subject_id) = cols[1].split('|')
 
@@ -104,7 +104,7 @@ if __name__ == '__main__':
 	log('{2} | Orthology | {0} | {1} | {3} | {4} MB | {5}'.format(2 , 'Reading Best hit (bh file)', options.index, taxon1s , memory_usage_resource(), datetime.now() ))
 
 	taxon1_filename =  os.path.join(options.inBestHitFolder , taxon1s + '.bh.tsv')
-	taxon1_dic = readBestHit(taxon1_filename)
+	taxon1_dic = readBestHit(taxon1s, taxon1_filename)
 
 	# for taxon2s in sorted(taxon1_dic.keys()):
 	# 	print taxon2s
@@ -128,7 +128,7 @@ if __name__ == '__main__':
 			if not os.path.exists(taxon2_filename):
 				continue			
 
-			taxon2_dic = readBestHit(taxon2_filename)
+			taxon2_dic = readBestHit(taxon2s, taxon2_filename)
 
 			log('{2} | Orthology | {0} | {1} | {3} | {4} MB | {5}'.format(3 , 'Reading Targeted Best hit (bh file)', options.index, taxon2s , memory_usage_resource(), datetime.now() ))
 			
