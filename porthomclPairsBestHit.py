@@ -139,14 +139,11 @@ if __name__ == '__main__':
 
 	if options.outQueryTaxonScoreFolder:
 
-		log('{2} | Best Hit | {0} | {1} | * | {3} MB | {4}'.format(3 , 'Creating bestQueryTaxonScore (q-t file)', options.index, memory_usage_resource(), datetime.now() ))
-
-		with open(os.path.join(options.outQueryTaxonScoreFolder, taxon1s+'.q-t.tsv'), 'w') as out_file:
-
-			for (query_id,subject_taxon) in sorted(best_query_taxon_score):
-
-				(ev_exp, ev_mant) = best_query_taxon_score[(query_id,subject_taxon)]
-				out_file.write('{0}\t{1}\t{2}\t{3}\n'.format(query_id, subject_taxon, ev_exp, ev_mant))
+		# log('{2} | Best Hit | {0} | {1} | * | {3} MB | {4}'.format(3 , 'Creating bestQueryTaxonScore (q-t file)', options.index, memory_usage_resource(), datetime.now() ))
+		# with open(os.path.join(options.outQueryTaxonScoreFolder, taxon1s+'.q-t.tsv'), 'w') as out_file:
+		# 	for (query_id,subject_taxon) in sorted(best_query_taxon_score):
+		# 		(ev_exp, ev_mant) = best_query_taxon_score[(query_id,subject_taxon)]
+		# 		out_file.write('{0}\t{1}\t{2}\t{3}\n'.format(query_id, subject_taxon, ev_exp, ev_mant))
 
 
 		log('{2} | Best Hit | {0} | {1} | * | {3} MB | {4}'.format(3 , 'Creating BestInterTaxonScore (q+t file)', options.index, memory_usage_resource(), datetime.now() ))

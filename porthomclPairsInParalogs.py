@@ -123,7 +123,7 @@ if __name__ == '__main__':
 	# 	exit(0)
 
 
-	log('{2} | InParalogs | {0} | {1} | {3} | {4} MB | {5}'.format(2 , 'best query-taxon evalue score (q-t file)', options.index, taxon1s , memory_usage_resource(), datetime.now() ))
+	log('{2} | InParalogs | {0} | {1} | {3} | {4} MB | {5}'.format(2 , 'reading query-taxon evalue score (q-t file)', options.index, taxon1s , memory_usage_resource(), datetime.now() ))
 
 	BestInterTaxonScore = {}
 	taxon1_qt_filename =  os.path.join(options.inQueryTaxonScoreFolder , taxon1s + '.q-t.tsv')
