@@ -184,11 +184,11 @@ So the first step is to split the similarSequences.txt file into multiple files:
 
 ```shell
 cd sample
-mkdir 5.input
-awk -F'[|\t]' '{print $1"|"$2"\t"$3"|"$4"\t"$7"\t"$8"\t"$9"\t"$10 >> ("5.input/"$1".ss.tsv")}' 4.parsedblast/similarSequences.txt
+mkdir 5.splitSimSeq
+awk -F'[|\t]' '{print $1"|"$2"\t"$3"|"$4"\t"$7"\t"$8"\t"$9"\t"$10 >> ("5.splitSimSeq/"$1".ss.tsv")}' 4.parsedblast/similarSequences.txt
 ```
 
-The files creared in this step from the sample run is in sample/5.input.
+The files creared in this step from the sample run is in sample/5.splitSimSeq.
 
 _It's better to run this as a job on the cluster rather than running it interactively._
 
@@ -230,7 +230,7 @@ This is the example to run for the FIRST sample file (-x 1). To perform this for
 mkdir sample/5.bestquerytaxon
 mkdir sample/5.besthit
 
-porthomclPairsBestHit.py -t sample/taxon_list -s sample/5.input -b sample/5.besthit -q sample/5.bestquerytaxon -x 1
+porthomclPairsBestHit.py -t sample/taxon_list -s sample/5.splitSimSeq -b sample/5.besthit -q sample/5.bestquerytaxon -x 1
 
 ```
 
