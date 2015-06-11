@@ -209,7 +209,7 @@ ls -1 1.compliantFasta/ | sed -e 's/\..*$//'  > taxon_list
 #### Finding Best Hits
 
 This step must be done for all the split input files before you could move forward to calculate Orthologs, inParalogs and coOrthologs.
-OrthoMCL has a bug. read more about it [here](release_note.md): 
+OrthoMCL has a bug. read more about it [here](release_notes.md): 
 
 
 The input parameters are: 
