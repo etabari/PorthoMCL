@@ -17,9 +17,11 @@ class SimilarSequenceLine:
 	def __init__(self, line):
 		column = line.strip().split('\t')
 
-		(self.query_taxon, self.query_id) = column[0].split('|')
+		self.query_id = column[0]
+		(self.query_taxon, self.query_seq) = column[0].split('|')
 
-		(self.subject_taxon, self.subject_id) = column[1].split('|')
+		self.subject_id = column[1]
+		(self.subject_taxon,self.subject_seq)  = column[1].split('|')
 
 		self.evalue_mant = float(column[2])
 		self.evalue_exp = int(column[3])
@@ -70,7 +72,7 @@ def writeStoOutputFiles(s, out_bh_file, out_br_file):
 			s.percent_match > options.percentMatchCutoff and 
 			(s.evalue_mant < 0.01 or s.evalue_exp==cutoff_exp and s.evalue_mant==cutoff_mant)
 		   ):
-			out_bh_file.write('{0}|{1}\t{2}|{3}\t{4}\t{5}\n'.format(s.query_taxon, s.query_id, s.subject_taxon, s.subject_id, s.evalue_exp, s.evalue_mant))
+			out_bh_file.write('{0}\t{1}\t{2}\t{3}\n'.format(s.query_seq, s.subject_id, s.evalue_exp, s.evalue_mant))
 
 	except KeyError:
 		pass
@@ -87,7 +89,7 @@ def writeStoOutputFiles(s, out_bh_file, out_br_file):
 			s.percent_match > options.percentMatchCutoff and 
 			(s.evalue_mant < 0.01 or s.evalue_exp<cutoff_exp or (s.evalue_exp == cutoff_exp and s.evalue_mant<=cutoff_mant))
 		   ):
-			out_br_file.write('{0}|{1}\t{2}\t{3}\t{4}\n'.format(s.query_taxon, s.query_id, s.subject_id, s.evalue_exp, s.evalue_mant))
+			out_br_file.write('{0}\t{1}\t{2}\t{3}\n'.format(s.query_seq, s.subject_seq, s.evalue_exp, s.evalue_mant))
 
 	except KeyError:
 		pass
