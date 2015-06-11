@@ -62,7 +62,7 @@ def log(s):
 
 
 def writeStoOutputFiles(s, out_bh_file, out_br_file):
-	global best_query_taxon_score, BestInterTaxonScore
+	global best_query_taxon_score, BestInterTaxonScore, options
 	try:
 		(cutoff_exp, cutoff_mant) = best_query_taxon_score[(s.query_id, s.subject_taxon)]
 
@@ -83,16 +83,22 @@ def writeStoOutputFiles(s, out_bh_file, out_br_file):
 		if (
 			s.query_taxon == s.subject_taxon and 
 			s.query_id != s.subject_id and 
-			s.evalue_exp < options.evalueExponentCutoff and 
-			s.percent_match > options.percentMatchCutoff and 
-			s.evalue_exp < options.evalueExponentCutoff and 
-			s.percent_match > options.percentMatchCutoff and 
+			s.evalue_exp <= options.evalueExponentCutoff and 
+			s.percent_match >= options.percentMatchCutoff and 
 			(s.evalue_mant < 0.01 or s.evalue_exp<cutoff_exp or (s.evalue_exp == cutoff_exp and s.evalue_mant<=cutoff_mant))
 		   ):
 			out_br_file.write('{0}\t{1}\t{2}\t{3}\n'.format(s.query_seq, s.subject_seq, s.evalue_exp, s.evalue_mant))
 
 	except KeyError:
-		pass
+		# Include the ones with
+		if (
+			s.query_taxon == s.subject_taxon and 
+			(options.keepOrthoMCLBug or s.query_id != s.subject_id) and  #### THIS IS an OrthoMCL bug
+			s.evalue_exp <= options.evalueExponentCutoff and 
+			s.percent_match >= options.percentMatchCutoff
+		   ):
+			out_br_file.write('{0}\t{1}\t{2}\t{3}\n'.format(s.query_seq, s.subject_seq, s.evalue_exp, s.evalue_mant))
+
 
 if __name__ == '__main__':
 	usage = "This is STEP 5.1 of PorthoMCL.\n\nusage: %prog arg\n"
@@ -112,6 +118,7 @@ if __name__ == '__main__':
 	parser.add_option('', '--percentMatchCutoff', dest='percentMatchCutoff', help='percent Match Cutoff (integer value, default=50)', default=50, type='int')
 	
 	parser.add_option('', '--cacheInputFile', dest='cacheInputFile', help='Cache input file or read it again. (Only use if I/O is very slow)', default=False, action="store_true")
+	parser.add_option('', '--keepOrthoMCLBug', dest='keepOrthoMCLBug', help='Keep the OrthoMCL bug in creating BetterHit files (br) where self hits are included', default=False, action="store_true")
 	
 	#
 	
