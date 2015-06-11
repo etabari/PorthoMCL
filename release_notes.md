@@ -1,4 +1,4 @@
-# PorthoMCL
+# PorthoMCL Release Notes
 Parallel implementation of OrthoMCL
 
 
@@ -23,7 +23,10 @@ where
 - `Ay`: protein `y` in taxa `A` 
 - `QiH(Ax,Ay)`: qualifying in-species hit (single way better hit) (br.csv in our implementation) 
 
-Having said that the SQL command that supplies `QiH(Ax,Ay)` is as follows:
+The first condition of `QiH` is `Ax != Ay` which means it should not include self blast hits.
+Of course it does not make sense to include `Ax <--> Ax` as a paralog match.
+
+Having said that the SQL command that generates `QiH(Ax,Ay)` is as follows:
 
 ```sql
 create table BetterHit  as
@@ -31,7 +34,7 @@ select s.query_id, s.subject_id,
        s.query_taxon_id as taxon_id,
        s.evalue_exp, s.evalue_mant
 from SimilarSequences s, BestInterTaxonScore bis
-where s.query_id != s.subject_id 
+where s.query_id != s.subject_id  -- HERE THEY HAVE IT
   and s.query_taxon_id = s.subject_taxon_id
   and s.query_id = bis.query_id
   and s.evalue_exp <= -5
@@ -54,3 +57,11 @@ where s.query_taxon_id = s.subject_taxon_id
       LEFT OUTER JOIN BestInterTaxonScore bis ON bis.query_id = ust.query_id
       WHERE bis.query_id IS NULL)
 ```
+
+The second section of the `UNION` is proteins that have no orthologs, 
+and just have hits inside the genome (another case of paralogy).
+Unfortunately, their sql misses
+```sql
+s.query_id != s.subject_id 
+```
+in the where clause.
