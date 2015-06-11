@@ -146,7 +146,7 @@ if __name__ == '__main__':
 		# 		out_file.write('{0}\t{1}\t{2}\t{3}\n'.format(query_id, subject_taxon, ev_exp, ev_mant))
 
 
-		log('{2} | Best Hit | {0} | {1} | * | {3} MB | {4}'.format(3 , 'Creating BestInterTaxonScore (q+t file)', options.index, memory_usage_resource(), datetime.now() ))
+		log('{2} | Best Hit | {0} | {1} | * | {3} MB | {4}'.format(3 , 'Creating BestInterTaxonScore (q-t file)', options.index, memory_usage_resource(), datetime.now() ))
 
 		BestInterTaxonScore = {}
 		
@@ -164,9 +164,9 @@ if __name__ == '__main__':
 
 
 
-		with open(os.path.join(options.outQueryTaxonScoreFolder, taxon1s+'.q+t.tsv'), 'w') as out_file:
+		with open(os.path.join(options.outQueryTaxonScoreFolder, taxon1s+'.q-t.tsv'), 'w') as out_file:
 
-			for (query_id,subject_taxon) in sorted(BestInterTaxonScore):
+			for query_id in sorted(BestInterTaxonScore):
 
 				(ev_exp, ev_mants) = BestInterTaxonScore[query_id]
 				out_file.write('{0}\t{1}\t{2}\n'.format(query_id, ev_exp, min(ev_mants)))
