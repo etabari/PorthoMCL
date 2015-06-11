@@ -9,17 +9,25 @@ from optparse import OptionParser
 
 
 options = None
+best_query_taxon_score = {}
+BestInterTaxonScore = {}
+
 
 class SimilarSequenceLine:
-	def __init__(self, query_taxon, query_id, subject_taxon,  subject_id, evalue_mant, evalue_exp, percent_ident, percent_match):
-		self.query_taxon = query_taxon
-		self.query_id = query_id
-		self.subject_taxon = subject_taxon
-		self.subject_id = subject_id
-		self.evalue_mant = evalue_mant
-		self.evalue_exp = evalue_exp
-		self.percent_ident = percent_ident
-		self.percent_match = float(percent_match)
+	def __init__(self, line):
+		column = line.strip().split('\t')
+
+		(self.query_taxon, self.query_id) = column[0].split('|')
+
+		(self.subject_taxon, self.subject_id) = column[1].split('|')
+
+		self.evalue_mant = float(column[2])
+		self.evalue_exp = int(column[3])
+
+		self.percent_ident = column[4]
+		self.percent_match = float(column[5])
+
+
 
 def readTaxonList(filename):
 
@@ -51,6 +59,39 @@ def log(s):
 		l.close()
 
 
+def writeStoOutputFiles(s, out_bh_file, out_br_file):
+	global best_query_taxon_score, BestInterTaxonScore
+	try:
+		(cutoff_exp, cutoff_mant) = best_query_taxon_score[(s.query_id, s.subject_taxon)]
+
+		if ( 
+			s.query_taxon != s.subject_taxon and
+			s.evalue_exp < options.evalueExponentCutoff and 
+			s.percent_match > options.percentMatchCutoff and 
+			(s.evalue_mant < 0.01 or s.evalue_exp==cutoff_exp and s.evalue_mant==cutoff_mant)
+		   ):
+			out_bh_file.write('{0}|{1}\t{2}|{3}\t{4}\t{5}\n'.format(s.query_taxon, s.query_id, s.subject_taxon, s.subject_id, s.evalue_exp, s.evalue_mant))
+
+	except KeyError:
+		pass
+		
+	try:
+		(cutoff_exp, cutoff_mant) = BestInterTaxonScore[s.query_id]
+
+		if (
+			s.query_taxon == s.subject_taxon and 
+			s.query_id != s.subject_id and 
+			s.evalue_exp < options.evalueExponentCutoff and 
+			s.percent_match > options.percentMatchCutoff and 
+			s.evalue_exp < options.evalueExponentCutoff and 
+			s.percent_match > options.percentMatchCutoff and 
+			(s.evalue_mant < 0.01 or s.evalue_exp<cutoff_exp or (s.evalue_exp == cutoff_exp and s.evalue_mant<=cutoff_mant))
+		   ):
+			out_br_file.write('{0}|{1}\t{2}\t{3}\t{4}\n'.format(s.query_taxon, s.query_id, s.subject_id, s.evalue_exp, s.evalue_mant))
+
+	except KeyError:
+		pass
+
 if __name__ == '__main__':
 	usage = "This is STEP 5.1 of PorthoMCL.\n\nusage: %prog arg\n"
 	parser = OptionParser(usage)
@@ -75,47 +116,41 @@ if __name__ == '__main__':
 	(options, args) = parser.parse_args()
 
 
-	log('{2} | Best Hit | {0} | {1} | * | {3} MB | {4}'.format(1 , 'reading taxon list', options.index, memory_usage_resource(), datetime.now() ))
+	log('{2} | Best Hit | {0} | {1} | {3} | {4} MB | {5}'.format(1 , 'reading taxon list', options.index, '', memory_usage_resource(), datetime.now() ))
 	taxon_list = readTaxonList(options.taxonlistfile)
 
 	if options.index <= 0 or options.index > len(taxon_list):
-		log('{2} | Best Hit | {0} | {1} | * | {3} MB | {4}'.format('ERROR' , 'Error in index', options.index, memory_usage_resource(), datetime.now() ))
+		log('{2} | Best Hit | {0} | {1} | {3} | {4} MB | {5}'.format('ERROR' , 'Error in index', options.index,'', memory_usage_resource(), datetime.now() ))
 		exit()
 
 	taxon1s = taxon_list[options.index - 1]
 
 
 	if options.cacheInputFile:
-		log('OPTIONS| Best Hit | ' + option.index + ' | cacheInputFile | Cache Enabled | ')
+		log('{2} | Best Hit | {0} | {1} | {3} | {4} MB | {5}'.format('OPTION' , 'Caching Input files', options.index, taxon1s, memory_usage_resource(), datetime.now() ))
 
 
-	log('{2} | Best Hit | {0} | {1} | * | {3} MB | {4}'.format(2 , 'Reading similar sequences (ss file)', options.index, memory_usage_resource(), datetime.now() ))
+	log('{2} | Best Hit | {0} | {1} | {3} | {4} MB | {5}'.format(2 , 'Reading similar sequences (ss file)', options.index, taxon1s, memory_usage_resource(), datetime.now() ))
 
-	best_query_taxon_score = {}
 
 	input_file_cache = []
 
 	with open(os.path.join(options.inSimSeq, taxon1s+'.ss.tsv')) as input_file:
 		for line in input_file:
 
-			column = line.strip().split('\t')
+			ss = SimilarSequenceLine(line)
 
-			(query_taxon, query_id) = column[0].split('|')
 
-			(subject_taxon, subject_id) = column[1].split('|')
+			if options.cacheInputFile:
+				input_file_cache += [ss]
 
-			if query_taxon != subject_taxon:
 
-				evalue_mant = float(column[2])
-				evalue_exp = int(column[3])
-
-				if options.cacheInputFile:
-					input_file_cache += [SimilarSequenceLine(query_taxon, query_id, subject_taxon, subject_id, evalue_mant, evalue_exp, column[4], column[5])]
+			if ss.query_taxon != ss.subject_taxon:
 
 				try:
-					best_query_taxon_score[(query_id, subject_taxon)] += [(evalue_mant, evalue_exp)]
+					best_query_taxon_score[(ss.query_id, ss.subject_taxon)] += [(ss.evalue_mant, ss.evalue_exp)]
 				except:
-					best_query_taxon_score[(query_id, subject_taxon)] = [(evalue_mant, evalue_exp)]
+					best_query_taxon_score[(ss.query_id, ss.subject_taxon)] = [(ss.evalue_mant, ss.evalue_exp)]
 
 
 	for (query_id,subject_taxon) in best_query_taxon_score:
@@ -146,9 +181,8 @@ if __name__ == '__main__':
 		# 		out_file.write('{0}\t{1}\t{2}\t{3}\n'.format(query_id, subject_taxon, ev_exp, ev_mant))
 
 
-		log('{2} | Best Hit | {0} | {1} | * | {3} MB | {4}'.format(3 , 'Creating BestInterTaxonScore (q-t file)', options.index, memory_usage_resource(), datetime.now() ))
+		log('{2} | Best Hit | {0} | {1} | {3} | {4} MB | {5}'.format(3 , 'Creating BestInterTaxonScore (q-t file)', options.index,taxon1s, memory_usage_resource(), datetime.now() ))
 
-		BestInterTaxonScore = {}
 		
 		for (query_id,subject_taxon) in best_query_taxon_score:
 
@@ -173,54 +207,31 @@ if __name__ == '__main__':
 
 
 
-	log('{2} | Best Hit | {0} | {1} | * | {3} MB | {4}'.format(4 , 'Creating BestHit (bh file)', options.index, memory_usage_resource(), datetime.now() ))
+	log('{2} | Best Hit | {0} | {1} | {3} | {4} MB | {5}'.format(4 , 'Creating BestHit/BetterHit (bh/br file)', options.index, taxon1s, memory_usage_resource(), datetime.now() ))
+
+	BestHit = {}
 
 	if not options.outBestHitFolder:
 		options.outBestHitFolder = '.'
-	out_file = open(os.path.join(options.outBestHitFolder, taxon1s+'.bh.tsv') ,'w')
+	out_bh_file = open(os.path.join(options.outBestHitFolder, taxon1s+'.bh.tsv') ,'w')
+	out_br_file = open(os.path.join(options.outBestHitFolder, taxon1s+'.br.tsv') ,'w')
 
 	if not options.cacheInputFile:
 		with open(os.path.join(options.inSimSeq, taxon1s+'.ss.tsv')) as input_file:
 			for line in input_file:
+				s = SimilarSequenceLine(line)
+				writeStoOutputFiles(s, out_bh_file, out_br_file)
 
-				column = line.strip().split('\t')
-
-				
-				(query_taxon, query_id) = column[0].split('|')
-
-				(subject_taxon, subject_id) = column[1].split('|')
-
-				if query_taxon != subject_taxon:
-
-					try:
-						cutoff = best_query_taxon_score[(query_id,subject_taxon)]
-					except:
-						continue
-
-
-
-					evalue_mant = float(column[2])
-					evalue_exp = int(column[3])
-					percent_match = float(column[5])
-
-					if evalue_exp < options.evalueExponentCutoff and percent_match > options.percentMatchCutoff and (evalue_mant < 0.01 or evalue_exp==cutoff[0] and evalue_mant==cutoff[1]):
-						out_file.write('{0}|{1}\t{2}|{3}\t{4}\t{5}\n'.format(query_taxon, query_id, subject_taxon, subject_id, evalue_exp, evalue_mant))
 
 	else:
 
 		for s in input_file_cache:
+			writeStoOutputFiles(s, out_bh_file, out_br_file)
 
-			try:
-				cutoff = best_query_taxon_score[(s.query_id, s.subject_taxon)]
-			except:
-				continue
 
-			if s.evalue_exp < options.evalueExponentCutoff and s.percent_match > options.percentMatchCutoff and (s.evalue_mant < 0.01 or s.evalue_exp==cutoff[0] and s.evalue_mant==cutoff[1]):
-				out_file.write('{0}|{1}\t{2}|{3}\t{4}\t{5}\n'.format(s.query_taxon, s.query_id, s.subject_taxon, s.subject_id, s.evalue_exp, s.evalue_mant))
-
-	out_file.close()
-
-	log('{2} | Best Hit | {0} | {1} | * | {3} MB | {4}'.format(5 , 'Done', options.index, memory_usage_resource(), datetime.now() ))
+	out_bh_file.close()
+	out_br_file.close()
+	log('{2} | Best Hit | {0} | {1} | {3} | {4} MB | {5}'.format(5 , 'Done', options.index, taxon1s, memory_usage_resource(), datetime.now() ))
 
 
 
