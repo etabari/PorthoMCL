@@ -59,7 +59,7 @@ if __name__ == '__main__':
 
 	parser.add_option('-s', '--inSimSeq', dest='inSimSeq', help='folder that stores TaxonID.ss.tsv files (Split SimilarSequence.tsv) ')
 	parser.add_option('-b', '--outBestHitFolder', dest='outBestHitFolder', help='folder that will stores Best Hit files (If not set, current folder)')
-	parser.add_option('-q', '--outQueryTaxonScoreFolder', dest='outQueryTaxonScoreFolder', help='folder to generate best query-taxon evalue score (required for Paralogs)')
+	parser.add_option('-q', '--outQueryTaxonScoreFolder', dest='outQueryTaxonScoreFolder', help='folder to generate best query-taxon evalue scores (q-t, q+t files) (required for Paralogs)')
 
 	parser.add_option("-x", "--index", dest="index", help="an integer number identifying which taxon to work on [1..size_of_taxon_list]" , type='int')
 	parser.add_option("-l", "--logfile", dest="logfile", help="log file")
@@ -145,11 +145,38 @@ if __name__ == '__main__':
 
 			for (query_id,subject_taxon) in sorted(best_query_taxon_score):
 
-				evalue = best_query_taxon_score[(query_id,subject_taxon)]
-				out_file.write('{0}\t{1}\t{2}\t{3}\n'.format(query_id, subject_taxon, evalue[0], evalue[1]))
+				(ev_exp, ev_mant) = best_query_taxon_score[(query_id,subject_taxon)]
+				out_file.write('{0}\t{1}\t{2}\t{3}\n'.format(query_id, subject_taxon, ev_exp, ev_mant))
 
 
-		log('{2} | Best Hit | {0} | {1} | * | {3} MB | {4}'.format(4 , 'Creating BestHit (bh file)', options.index, memory_usage_resource(), datetime.now() ))
+		log('{2} | Best Hit | {0} | {1} | * | {3} MB | {4}'.format(3 , 'Creating BestInterTaxonScore (q+t file)', options.index, memory_usage_resource(), datetime.now() ))
+
+		BestInterTaxonScore = {}
+		
+		for (query_id,subject_taxon) in best_query_taxon_score:
+
+			(ev_exp, ev_mant) = best_query_taxon_score[(query_id,subject_taxon)]
+			try:
+				(min_exp, mants) = BestInterTaxonScore[query_id]
+				if ev_exp < min_exp:
+					BestInterTaxonScore[query_id] = (ev_exp, [ev_mant])
+				elif ev_exp == min_exp:
+					BestInterTaxonScore[query_id] = (ev_exp, mants+[ev_mant])
+			except:
+				BestInterTaxonScore[query_id] = (ev_exp, [ev_mant])
+
+
+
+		with open(os.path.join(options.outQueryTaxonScoreFolder, taxon1s+'.q+t.tsv'), 'w') as out_file:
+
+			for (query_id,subject_taxon) in sorted(BestInterTaxonScore):
+
+				(ev_exp, ev_mants) = BestInterTaxonScore[query_id]
+				out_file.write('{0}\t{1}\t{2}\n'.format(query_id, ev_exp, min(ev_mants)))
+
+
+
+	log('{2} | Best Hit | {0} | {1} | * | {3} MB | {4}'.format(4 , 'Creating BestHit (bh file)', options.index, memory_usage_resource(), datetime.now() ))
 
 	if not options.outBestHitFolder:
 		options.outBestHitFolder = '.'
