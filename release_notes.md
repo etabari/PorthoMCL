@@ -16,3 +16,10 @@ OrthoMCL's definition for pairs from [their documentation](https://docs.google.c
 - IP(Ax,Ay) iff:
    - QiH(Ax,Ay) && QiH(Ay,Ax)
  ```
+
+where 
+
+- `Ax`: protein `x` in taxa `A` 
+- `Ay`: protein `y` in taxa `A` 
+- `QiH(Ax,Ay)`: qualifying in-species hit (single way better hit) (br.csv in our implementation) 
+

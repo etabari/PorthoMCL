@@ -126,6 +126,7 @@ if __name__ == '__main__':
 			taxon2_filename =  os.path.join(options.inBestHitFolder , taxon2s + '.bh.tsv')
 		
 			if not os.path.exists(taxon2_filename):
+				log('{2} | Orthology | {0} | {1} | {3} | {4} MB | {5}'.format(3 , 'ERROR: Targeted Best hit (bh file) Does not exists', options.index, taxon2s , memory_usage_resource(), datetime.now() ))
 				continue			
 
 			taxon2_dic = readBestHit(taxon2s, taxon2_filename)
