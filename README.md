@@ -40,7 +40,7 @@ The detail manual is [here](MANUAL.md):
 
 #### 3.3 Run blasts 
 
-#### PBS Cluster BLAST
+#### 3.3.1 PBS Cluster BLAST
 
 #### 3.4 Put all blastp results together
 
