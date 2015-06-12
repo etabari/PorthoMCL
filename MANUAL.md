@@ -218,7 +218,7 @@ The input parameters are:
 - **-s**  (--inSimSeq) folder that stores TaxonID.ss.tsv files (Split SimilarSequence.tsv)
 - **-x**  (--index) an integer number identifying which taxon to work on [1-size_of_taxon_list]
 -  -b  (--outBestHitFolder) folder that will stores Best Hit files (If not set, current folder)
--  -q  (--outQueryTaxonScoreFolder) folder to generate best query-taxon evalue score (If not set, skipped. It is required for inParalogs and coOrthologs)
+-  -p  (--outInParalogTempFolde) folder to generate best InParalogTemp evalue scores (pt files) (required only for Paralogs)
 -  -l (--logfile) log file
 -  --evalueExponentCutoff evalue Exponent Cutoff (a negative value, default=-5)
 -  --percentMatchCutoff percent Match Cutoff (integer value, default=50)
