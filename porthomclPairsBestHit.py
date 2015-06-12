@@ -11,6 +11,7 @@ from optparse import OptionParser
 options = None
 best_query_taxon_score = {}
 BestInterTaxonScore = {}
+BetterHit = {}
 
 
 class SimilarSequenceLine:
@@ -61,7 +62,7 @@ def log(s):
 		l.close()
 
 
-def writeStoOutputFiles(s, out_bh_file, out_br_file):
+def writeStoOutputFiles(s, out_bh_file):
 	global best_query_taxon_score, BestInterTaxonScore, options
 	try:
 		(cutoff_exp, cutoff_mant) = best_query_taxon_score[(s.query_id, s.subject_taxon)]
@@ -77,27 +78,35 @@ def writeStoOutputFiles(s, out_bh_file, out_br_file):
 	except KeyError:
 		pass
 		
-	try:
-		(cutoff_exp, cutoff_mant) = BestInterTaxonScore[s.query_id]
+	if options.outInParalogTempFolder:
+		try:
+			(cutoff_exp, cutoff_mant) = BestInterTaxonScore[s.query_id]
 
-		if (
-			s.query_taxon == s.subject_taxon and 
-			s.query_id != s.subject_id and 
-			s.evalue_exp <= options.evalueExponentCutoff and 
-			s.percent_match >= options.percentMatchCutoff and 
-			(s.evalue_mant < 0.01 or s.evalue_exp<cutoff_exp or (s.evalue_exp == cutoff_exp and s.evalue_mant<=cutoff_mant))
-		   ):
-			out_br_file.write('{0}\t{1}\t{2}\t{3}\n'.format(s.query_seq, s.subject_seq, s.evalue_exp, s.evalue_mant))
+			if (
+				s.query_taxon == s.subject_taxon and 
+				s.query_id != s.subject_id and 
+				s.evalue_exp <= options.evalueExponentCutoff and 
+				s.percent_match >= options.percentMatchCutoff and 
+				(s.evalue_mant < 0.01 or s.evalue_exp<cutoff_exp or (s.evalue_exp == cutoff_exp and s.evalue_mant<=cutoff_mant))
+			   ):
 
-	except KeyError:
-		# Include the ones with
-		if (
-			s.query_taxon == s.subject_taxon and 
-			(options.keepOrthoMCLBug or s.query_id != s.subject_id) and  #### THIS IS an OrthoMCL bug
-			s.evalue_exp <= options.evalueExponentCutoff and 
-			s.percent_match >= options.percentMatchCutoff
-		   ):
-			out_br_file.write('{0}\t{1}\t{2}\t{3}\n'.format(s.query_seq, s.subject_seq, s.evalue_exp, s.evalue_mant))
+				# try:
+				# 	BetterHit[(s.query_seq, s.subject_seq)] += [(s.evalue_exp, s.evalue_mant)]
+				# except KeyError:
+				BetterHit[(s.query_seq, s.subject_seq)] = (s.evalue_exp, s.evalue_mant)
+
+		except KeyError:
+			# Include the ones with
+			if (
+				s.query_taxon == s.subject_taxon and 
+				(options.keepOrthoMCLBug or s.query_id != s.subject_id) and  #### THIS IS an OrthoMCL bug
+				s.evalue_exp <= options.evalueExponentCutoff and 
+				s.percent_match >= options.percentMatchCutoff
+			   ):
+				# try:
+				# 	BetterHit[(s.query_seq, s.subject_seq)] += [(s.evalue_exp, s.evalue_mant)]
+				# except KeyError:
+				BetterHit[(s.query_seq, s.subject_seq)] = (s.evalue_exp, s.evalue_mant)
 
 
 if __name__ == '__main__':
@@ -108,7 +117,7 @@ if __name__ == '__main__':
 
 	parser.add_option('-s', '--inSimSeq', dest='inSimSeq', help='folder that stores TaxonID.ss.tsv files (Split SimilarSequence.tsv) ')
 	parser.add_option('-b', '--outBestHitFolder', dest='outBestHitFolder', help='folder that will stores Best Hit files (If not set, current folder)')
-	parser.add_option('-q', '--outQueryTaxonScoreFolder', dest='outQueryTaxonScoreFolder', help='folder to generate best query-taxon evalue scores (q-t, q+t files) (required for Paralogs)')
+	parser.add_option('-p', '--outInParalogTempFolder', dest='outInParalogTempFolder', help='folder to generate best InParalogTemp evalue scores (pt files) (required only for Paralogs)')
 
 	parser.add_option("-x", "--index", dest="index", help="an integer number identifying which taxon to work on [1..size_of_taxon_list]" , type='int')
 	parser.add_option("-l", "--logfile", dest="logfile", help="log file")
@@ -181,7 +190,7 @@ if __name__ == '__main__':
 		best_query_taxon_score[(query_id,subject_taxon)] = (min_exp, min(min_mants))
 
 
-	if options.outQueryTaxonScoreFolder:
+	if options.outInParalogTempFolder:
 
 		# log('{2} | Best Hit | {0} | {1} | * | {3} MB | {4}'.format(3 , 'Creating bestQueryTaxonScore (q-t file)', options.index, memory_usage_resource(), datetime.now() ))
 		# with open(os.path.join(options.outQueryTaxonScoreFolder, taxon1s+'.q-t.tsv'), 'w') as out_file:
@@ -190,7 +199,7 @@ if __name__ == '__main__':
 		# 		out_file.write('{0}\t{1}\t{2}\t{3}\n'.format(query_id, subject_taxon, ev_exp, ev_mant))
 
 
-		log('{2} | Best Hit | {0} | {1} | {3} | {4} MB | {5}'.format(3 , 'Creating BestInterTaxonScore (q-t file)', options.index,taxon1s, memory_usage_resource(), datetime.now() ))
+		log('{2} | Best Hit | {0} | {1} | {3} | {4} MB | {5}'.format(3 , 'Creating BestInterTaxonScore Matirx', options.index,taxon1s, memory_usage_resource(), datetime.now() ))
 
 		
 		for (query_id,subject_taxon) in best_query_taxon_score:
@@ -205,42 +214,73 @@ if __name__ == '__main__':
 			except:
 				BestInterTaxonScore[query_id] = (ev_exp, [ev_mant])
 
-
-
-		with open(os.path.join(options.outQueryTaxonScoreFolder, taxon1s+'.q-t.tsv'), 'w') as out_file:
-
-			for query_id in sorted(BestInterTaxonScore):
+			for query_id in BestInterTaxonScore:
 
 				(ev_exp, ev_mants) = BestInterTaxonScore[query_id]
-				out_file.write('{0}\t{1}\t{2}\n'.format(query_id, ev_exp, min(ev_mants)))
+				BestInterTaxonScore[query_id] = (ev_exp, min(ev_mants))
 
 
 
-	log('{2} | Best Hit | {0} | {1} | {3} | {4} MB | {5}'.format(4 , 'Creating BestHit/BetterHit (bh/br file)', options.index, taxon1s, memory_usage_resource(), datetime.now() ))
+	log('{2} | Best Hit | {0} | {1} | {3} | {4} MB | {5}'.format(4 , 'Creating BestHit file needed for Orthology (bh file)', options.index, taxon1s, memory_usage_resource(), datetime.now() ))
 
 	BestHit = {}
 
 	if not options.outBestHitFolder:
 		options.outBestHitFolder = '.'
 	out_bh_file = open(os.path.join(options.outBestHitFolder, taxon1s+'.bh.tsv') ,'w')
-	out_br_file = open(os.path.join(options.outBestHitFolder, taxon1s+'.br.tsv') ,'w')
 
 	if not options.cacheInputFile:
 		with open(os.path.join(options.inSimSeq, taxon1s+'.ss.tsv')) as input_file:
 			for line in input_file:
 				s = SimilarSequenceLine(line)
-				writeStoOutputFiles(s, out_bh_file, out_br_file)
+				writeStoOutputFiles(s, out_bh_file)
 
 
 	else:
 
 		for s in input_file_cache:
-			writeStoOutputFiles(s, out_bh_file, out_br_file)
+			writeStoOutputFiles(s, out_bh_file)
 
 
 	out_bh_file.close()
-	out_br_file.close()
-	log('{2} | Best Hit | {0} | {1} | {3} | {4} MB | {5}'.format(5 , 'Done', options.index, taxon1s, memory_usage_resource(), datetime.now() ))
+
+
+
+	if options.outInParalogTempFolder:
+		log('{2} | Best Hit | {0} | {1} | {3} | {4} MB | {5}'.format(5 , 'Creating InParalogTemp file needed for InParalogs (pt file)', options.index, taxon1s, memory_usage_resource(), datetime.now() ))
+
+		out_pt_file = open(os.path.join(options.outInParalogTempFolder, taxon1s+'.pt.tsv') ,'w')
+
+		for (seq1, seq2) in BetterHit:
+			
+			if seq1 < seq2:
+
+				(bh1_evalue_exp, bh1_evalue_mant) = BetterHit[(seq1, seq2)]
+
+				try:
+					(bh2_evalue_exp, bh2_evalue_mant) =  BetterHit[(seq2, seq1)]
+				except:
+					continue
+
+				if bh1_evalue_mant < 0.01 or bh2_evalue_mant < 0.01:
+					unnormalized_score = (bh1_evalue_exp + bh2_evalue_exp) / -2 
+				else:
+					unnormalized_score = (math.log10(bh1_evalue_mant * bh2_evalue_mant) + bh1_evalue_exp + bh2_evalue_exp) / -2
+
+
+				out_pt_file.write('{0}\t{1}\t{2}\n'.format(seq1, seq2, unnormalized_score))
+
+
+		out_pt_file.close()
+
+
+
+
+
+
+
+
+	log('{2} | Best Hit | {0} | {1} | {3} | {4} MB | {5}'.format(6 , 'Done', options.index, taxon1s, memory_usage_resource(), datetime.now() ))
 
 
 

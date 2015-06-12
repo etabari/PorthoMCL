@@ -146,9 +146,9 @@ if __name__ == '__main__':
 
 							unnormalized_score = None
 							if evalue_mant1 < 0.01 or evalue_mant2 < 0.01:
-								unnormalized_score = (evalue_mant1 + evalue_mant2) / -2 
+								unnormalized_score = (evalue_exp1 + evalue_exp2) / -2 
 							else:
-								unnormalized_score = (math.log10(evalue_exp1 * evalue_exp2) + evalue_mant1 + evalue_mant2) / -2
+								unnormalized_score = (math.log10(evalue_mant1 * evalue_mant2) + evalue_exp2 + evalue_exp1) / -2
 
 							orthologs += [ [taxon1s, seq1, taxon2s, seq2, unnormalized_score, None] ]
 

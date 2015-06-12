@@ -85,7 +85,7 @@ This way, you will have many blast runs that can be ran in parallel on a computi
 We have supplied a torque script for PBS based clusters. To do that we need to split the input file first.
 
 
-#### Create BLAST database
+#### 3.1 Create BLAST database
 
 ```
 makeblastdb -in samlple/2.filteredFasta/goodProteins.fasta  -dbtype prot
@@ -93,7 +93,7 @@ makeblastdb -in samlple/2.filteredFasta/goodProteins.fasta  -dbtype prot
 
 The output files of the makeblastdb is copied to samlple/3.blastdb
 
-#### Split the input file 
+#### 3.2 Split the input file 
 
 Split goodProteins.fasta using porthomclSplitFasta.py so that each file has relatively a small size for each blast.
 10K sequences in each query batch makes each blast run finish faster. 
@@ -110,7 +110,7 @@ porthomclSplitFasta.py -i samlple/2.filteredFasta/goodProteins.fasta  -s 10000
 
 The output files of the makeblastdb is copied to samlple/3.blastquery
 
-####  Run blasts 
+#### 3.3 Run blasts 
 
 In this step the required blast arguments are as follows:
 - query 3.blastquery/goodProteins.fasta  (BLAST Query)
@@ -131,7 +131,7 @@ blastp -query 3.blastquery/goodProteins.fasta.1  -db 3.blastdb/goodProteins.fast
  ```
 
 
-#### PBS Cluster BLAST
+#### 3.3.1 PBS Cluster BLAST
 
 If you have access to a PBS base computing cluster, we have included a torque script to be ran on a given computing cluster. 
 It initiates an array of jobs (for the sample 1 to 4) that each job array will execute one BLASTP commands on the input indetified by 
@@ -144,7 +144,7 @@ The script is `porthomclRunPBS.sh`
 You have to customize the `#PBS` variables so that it matches the requirements of your cluster. 
 
 
-#### Put all blastp results together
+#### 3.4 Put all blastp results together
 
 You have parallelized the blast so far, you need to put the results back together
 
@@ -178,7 +178,7 @@ This is an embarrassingly parallel problem and can be easily splitted into multi
 
 So the first step is to split the similarSequences.txt file into multiple files:
 
-#### Split input file
+#### 5.0.1 Split input file
 
 `awk` provides a lot of capabilities for such use, we remove the taxon columns from the input file.  
 
@@ -193,7 +193,7 @@ The files creared in this step from the sample run is in sample/5.splitSimSeq.
 _It's better to run this as a job on the cluster rather than running it interactively._
 
 
-#### Taxon List file
+#### 5.0.2 Taxon List file
 
 Although we could have listed the compliantFasta folder like the original orthomcl, but we find it very inefficient. 
 Also, having a list of taxons will help to easily exclude a taxon from the whole process.
@@ -206,7 +206,7 @@ ls -1 1.compliantFasta/ | sed -e 's/\..*$//'  > taxon_list
 ```
 
 
-#### Finding Best Hits
+#### 5.1 Finding Best Hits
 
 This step must be done for all the split input files before you could move forward to calculate Orthologs, inParalogs and coOrthologs.
 OrthoMCL has a bug. read more about it [here](release_notes.md#1-orthomcl-bug): 
@@ -239,7 +239,7 @@ porthomclPairsBestHit.py -t sample/taxon_list -s sample/5.splitSimSeq -b sample/
 You can run this code in parallel with different values for -x. An example of such execution is included in the `porthomclRunPBS.sh` script.
 
 
-#### Finding Orthologs
+#### 5.2 Finding Orthologs
 
 The output of this step is all the ortholog genes. 
 

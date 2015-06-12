@@ -13,39 +13,24 @@ DEBUG = True
 
 options = None
 
-class SimilarSequenceLine:
-	def __init__(self, query_taxon, query_id, subject_taxon,  subject_id, evalue_mant, evalue_exp, percent_ident, percent_match):
-		self.query_taxon = query_taxon
-		self.query_id = query_id
-		self.subject_taxon = subject_taxon
-		self.subject_id = subject_id
-		self.evalue_mant = evalue_mant
-		self.evalue_exp = evalue_exp
-		self.percent_ident = percent_ident
-		self.percent_match = float(percent_match)
 
-
-def readBestHit(file_name):
-	best_hits = {}
+def readBetterHit(taxon, file_name):
+	better_hits = {}
 	with open(file_name) as best_hit_file:
 		for line in best_hit_file:
 			cols = line.strip().split('\t')
 			
 			
-			query_id = cols[0].split('|')[1]
+			query_id = taxon + '|' + cols[0]
 
-			(subject_taxon, subject_id) = cols[1].split('|')
+			subject_id =  taxon + '|' + cols[1]
 
-			try: 
-				a = best_hits[subject_taxon]
-			except:
-				best_hits[subject_taxon] = {}
 
 			try:
-				best_hits[subject_taxon][query_id] += [(subject_id, int(cols[2]), float(cols[3]))]
+				better_hits[query_id] += [(subject_id, int(cols[2]), float(cols[3]))]
 			except:
-				best_hits[subject_taxon][query_id] = [(subject_id, int(cols[2]), float(cols[3]))]
-	return best_hits
+				better_hits[query_id] = [(subject_id, int(cols[2]), float(cols[3]))]
+	return better_hits
 
 
 
