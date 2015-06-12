@@ -229,10 +229,10 @@ This is the example to run for the FIRST sample file (-x 1). To perform this for
 
 
 ```shell
-mkdir sample/5.bestquerytaxon
+mkdir sample/5.paralogTemp
 mkdir sample/5.besthit
 
-porthomclPairsBestHit.py -t sample/taxon_list -s sample/5.splitSimSeq -b sample/5.besthit -q sample/5.bestquerytaxon -x 1
+porthomclPairsBestHit.py -t sample/taxon_list -s sample/5.splitSimSeq -b sample/5.besthit -p sample/5.paralogTemp -x 1
 
 ```
 
