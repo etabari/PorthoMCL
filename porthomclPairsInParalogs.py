@@ -65,6 +65,7 @@ if __name__ == '__main__':
 	parser.add_option('-q', '--inInParalogTempFolder', dest='inInParalogTempFolder', help='folder thast stores TempParalog unnormalized score  (TaxonID.pt.tsv)')
 	
 	parser.add_option('-p', '--outInParalogFolder', dest='outInParalogFolder', help='folder that will stores TaxonID.par.tsv files')
+	parser.add_option('', '--KeepUnnormalizedScore', dest='KeepUnnormalizedScore', help='Store Un-normalized Score. (default=False)', default=False, action="store_true")
 	
 	#	#
 	
@@ -93,24 +94,26 @@ if __name__ == '__main__':
 
 	OrthologUniqueId = []
 	if options.inOrthologGeneFolder: 
-		OrthologUniqueId = readTaxonList(options.inOrthologGeneFolder)
+		OrthologUniqueId = readTaxonList(os.path.join(options.inOrthologGeneFolder, taxon1s + '.og.tsv' ))
 
 
 	log('{2} | InParalogs | {0} | {1} | {3} | {4} MB | {5}'.format(3 , 'reading TempParalog file (pt file)', options.index, taxon1s , memory_usage_resource(), datetime.now() ))
 
+
+	file_name = os.path.join(options.inInParalogTempFolder, taxon1s + '.pt.tsv' )
 	paralog_temp = {}
 	InParalogTaxonAvg = 0
 	InplgOrthTaxonAvg = 0
 	InplgOrthTaxonAvg_Count = 0
-	with open(file_name) as best_hit_file:
-		for line in best_hit_file:
+	with open(file_name) as paralog_temp_file:
+		for line in paralog_temp_file:
 			cols = line.strip().split('\t')
 			
 			query_id = cols[0]
 
 			subject_id =  cols[1]
 
-			unnormalized_score = float(cols[3])
+			unnormalized_score = float(cols[2])
 			paralog_temp[(query_id,subject_id)] = unnormalized_score
 
 			InParalogTaxonAvg += unnormalized_score
@@ -120,9 +123,12 @@ if __name__ == '__main__':
 				InplgOrthTaxonAvg_Count += 1
 
 
-	InParalogTaxonAvg /= len(paralog_temp)
+	if len(paralog_temp)>0:
+		InParalogTaxonAvg /= len(paralog_temp)
+	else:
+		InParalogTaxonAvg = 'NA'
 	
-	if InplgOrthTaxonAvg_Count > 0
+	if InplgOrthTaxonAvg_Count > 0:
 		InplgOrthTaxonAvg /= InplgOrthTaxonAvg_Count
 	else:
 		InplgOrthTaxonAvg = 'NA'
@@ -134,15 +140,22 @@ if __name__ == '__main__':
 
 
 
-	log('{2} | Orthology | {0} | {1} | {3} | {4} MB | {5}'.format(5, 'writing the paralog file' , options.index, taxon2s , memory_usage_resource(), datetime.now() ))
+	log('{2} | InParalogs | {0} | {1} | {3} | {4} MB | {5}'.format(5, 'writing the paralog file' , options.index, taxon1s , memory_usage_resource(), datetime.now() ))
 
 	out_f = open (os.path.join(options.outInParalogFolder , taxon1s + '.par.tsv'), 'w')
-	out_f.write('query_id\tsubject_id\tunnormalized_score\tnormalized_score\n')
+	
+	if options.KeepUnnormalizedScore:
+		out_f.write('query_id\tsubject_id\tunnormalized_score\tnormalized_score\n')
 	for (query_id,subject_id) in paralog_temp:
+		norm = paralog_temp[(query_id,subject_id)] / InplgOrthTaxonAvg
+
 		out_f.write(taxon1s +'|' + query_id + '\t')
 		out_f.write(taxon1s +'|' + subject_id + '\t')
+		if options.KeepUnnormalizedScore:
+			out_f.write(str(paralog_temp[(query_id,subject_id)]) + '\t')
+		else:
+			norm = int( norm * 1000 + .5) / 1000.0 
 
-		out_f.write(str(paralog_temp[(query_id,subject_id)]) + '\t')
-		out_f.write(str(paralog_temp[(query_id,subject_id)] / InplgOrthTaxonAvg) + '\n')
+		out_f.write(str(norm) + '\n')
 	out_f.close()
 

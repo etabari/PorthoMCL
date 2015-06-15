@@ -78,6 +78,7 @@ if __name__ == '__main__':
 	parser.add_option('-b', '--inBestHitFolder', dest='inBestHitFolder', help='folder that stores TaxonID.dic.gz files (Best hit dictionaries) ')
 	parser.add_option('-o', '--outOrthologFolder', dest='outOrthologFolder', help='folder that will stores TaxonID.ort.tsv files')
 	parser.add_option('', '--OverwiteOutput', dest='OverwiteOutput', help='If the output file exists, overwrite it. (default=process terminates)', default=False, action="store_true")
+	parser.add_option('', '--KeepUnnormalizedScore', dest='KeepUnnormalizedScore', help='Store Un-normalized Score. (default=False)', default=False, action="store_true")
 	#
 	
 	(options, args) = parser.parse_args()
@@ -178,17 +179,23 @@ if __name__ == '__main__':
 			
 			for i in xrange(taxon1_taxon2_score_count):
 				if average>0:
-					orthologs[orthologs_index+i][5] = orthologs[orthologs_index+i][4] / average
+					orthologs[orthologs_index+i][5] = orthologs[orthologs_index+i][4] / average 
 				else:
 					orthologs[orthologs_index+i][5] = 1
 
 			orthologs_index += taxon1_taxon2_score_count
 
 	out_f = open (os.path.join(options.outOrthologFolder , taxon1s + '.ort.tsv'), 'w')
-	out_f.write('query_id\tsubject_id\tunnormalized_score\tnormalized_score\n')
+	if options.KeepUnnormalizedScore:
+		out_f.write('query_id\tsubject_id\tunnormalized_score\tnormalized_score\n')
 	for ortholog in orthologs:
 		out_f.write(ortholog[0] +'|' + ortholog[1] + '\t')
 		out_f.write(ortholog[2] +'|' + ortholog[3] + '\t')
-		out_f.write(str(ortholog[4]) +'\t' + str(ortholog[5]) + '\n')
+		if options.KeepUnnormalizedScore:
+			out_f.write(str(ortholog[4]) +'\t')
+		else:
+			ortholog[5] = int( ortholog[5] * 1000 + .5) / 1000.0 
+		out_f.write(str(ortholog[5]) + '\n')
+
 	out_f.close()
 	log('{2} | Orthology | {0} | {1} | {3} | {4} MB | {5}'.format(5, 'Finished' , options.index, taxon2s , memory_usage_resource(), datetime.now() ))

@@ -212,11 +212,15 @@ This step must be done for all the split input files before you could move forwa
 OrthoMCL has a bug. read more about it [here](release_notes.md#1-orthomcl-bug): 
 
 
+In this step actually the paralogs are found, and an unnormalized score is assigned to them.
+Step 5.3 will normalize this score so that it be comparable among different genomes. 
+
+
 The input parameters are: 
 
 - **-t**  (--taxonlist) A single column file containing the list of taxon to work with
-- **-s**  (--inSimSeq) folder that stores TaxonID.ss.tsv files (Split SimilarSequence.tsv)
 - **-x**  (--index) an integer number identifying which taxon to work on [1-size_of_taxon_list]
+- **-s**  (--inSimSeq) folder that stores TaxonID.ss.tsv files (Split SimilarSequence.tsv)
 -  -b  (--outBestHitFolder) folder that will stores Best Hit files (If not set, current folder)
 -  -q  (--outInParalogTempFolde) folder to generate best InParalogTemp evalue scores (pt files) (required only for Paralogs)
 -  -l (--logfile) log file
@@ -246,11 +250,10 @@ The output of this step is all the ortholog genes.
 
 The input parameters are:
 - **-t** (--taxonlist)A single column file containing the list of taxon to work with
-- **-b**  (--inBestHitFolder) folder that stores Best Hit files
 - **-x**  (--index) an integer number identifying which taxon to work on [1-size_of_taxon_list]
-- **-o** (--outputfolder) folder that will stores orthologs (TaxonID.ort.tsv files)
--  --OverwiteOutput      If the output file exists, overwrite it. (default=process terminates)
-
+- **-b**  (--inBestHitFolder) folder that stores Best Hit files
+- **-o** (--outOrthologFolder) folder that will stores orthologs (TaxonID.ort.tsv files)
+- --KeepUnnormalizedScore  Write the un-normalize scores also. (default=False)
 This is the example to run for the FIRST sample file (-x 1). To perform this for all the sample files, you must to run the same command for -x 1 to -x 12. 
 
 ```shell
@@ -264,8 +267,13 @@ You can run this code in parallel with different values for -x. An example of su
 
 #### 5.3 Finding Paralogs
 
+This step normalizes the scores calculated in step 5.1. OrthoMCL uses the average paralog score of the genes that have orthologous relationships to 
+normalized the score. 
+Therefore a list of all the genes that have an orthology is essential. 
+
 To find the paralogs, we need to extract every gene that has an orthologous relationship in every genome. 
 This can be achieved using a set of bash commands as follows. 
+
 
 ```shell
 cd sample
@@ -281,7 +289,33 @@ awk -F'[|\t]' '{print $2 >> ("5.ogenes/"$1".og.tsv")}' 5.orthologs/*.ort.tsv
 find 5.ogenes/ -maxdepth 1 -type f -exec sort -u -o {} {} \;
 ```
 
-Similar code has been included in the `porthomclRunPBS.sh` for convenience.
+Parallelized version of preceding commands have been included in the `porthomclRunPBS.sh` for convenience.
+
+Having these files (og files) in hand we can normalize the inparalog relationships:
+
+The output of this step is all the paralogs genes with normalized scores. 
+
+
+The input parameters are:
+- **-t** (--taxonlist)A single column file containing the list of taxon to work with
+- **-x**  (--index) an integer number identifying which taxon to work on [1-size_of_taxon_list]
+
+- **-q**  (--inInParalogTempFolder) folder that stores Temp Paralogs with un-normalize scores (pt files).
+- **-o**  (--inOrthologGeneFolder) folder that stores list of genes with orthology relationships (og files).
+
+- **-p** (--outInParalogFolder) folder that will stores InParalogs (par files)
+- --KeepUnnormalizedScore  Write the un-normalize scores also. (default=False)
+
+This is the example to run for the FIRST sample file (-x 1). To perform this for all the sample files, you must to run the same command for -x 1 to -x 12. 
+
+```shell
+mkdir sample/5.paralogs
+
+porthomclPairsInParalogs.py -t sample/taxon_list -q sample/5.paralogTemp -o sample/5.ogenes -p sample/5.paralogs -x 1
+
+```
+You can run this code in parallel with different values for -x. An example of such execution is included in the `porthomclRunPBS.sh` script.
+
 
 .
 
