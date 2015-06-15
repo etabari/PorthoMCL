@@ -106,37 +106,43 @@ if __name__ == '__main__':
 		for line in best_hit_file:
 			cols = line.strip().split('\t')
 			
-			query_id = taxon + '|' + cols[0]
+			query_id = cols[0]
 
-			subject_id =  taxon + '|' + cols[1]
+			subject_id =  cols[1]
 
 			unnormalized_score = float(cols[3])
 			paralog_temp[(query_id,subject_id)] = unnormalized_score
 
 			InParalogTaxonAvg += unnormalized_score
 
-			if cols[0] in OrthologUniqueId or cols[1] in OrthologUniqueId:
+			if query_id in OrthologUniqueId or subject_id in OrthologUniqueId:
 				InplgOrthTaxonAvg += unnormalized_score
 				InplgOrthTaxonAvg_Count += 1
 
+
+	InParalogTaxonAvg /= len(paralog_temp)
 	
 	if InplgOrthTaxonAvg_Count > 0
 		InplgOrthTaxonAvg /= InplgOrthTaxonAvg_Count
 	else:
 		InplgOrthTaxonAvg = 'NA'
 
-	InParalogTaxonAvg /= len(paralog_temp)
+	log('{2} | InParalogs | {0} | {1} | {3} | {4} MB | {5}'.format(4 , 'InplgOrthTaxonAvg: '+ str(InplgOrthTaxonAvg) +' : InParalogTaxonAvg:' + str(InParalogTaxonAvg) , options.index, taxon1s , memory_usage_resource(), datetime.now() ))
+
+	if InplgOrthTaxonAvg == 'NA':
+		InplgOrthTaxonAvg = InParalogTaxonAvg
 
 
 
+	log('{2} | Orthology | {0} | {1} | {3} | {4} MB | {5}'.format(5, 'writing the paralog file' , options.index, taxon2s , memory_usage_resource(), datetime.now() ))
 
-
+	out_f = open (os.path.join(options.outInParalogFolder , taxon1s + '.par.tsv'), 'w')
+	out_f.write('query_id\tsubject_id\tunnormalized_score\tnormalized_score\n')
 	for (query_id,subject_id) in paralog_temp:
-		paralog_temp[(query_id,subject_id)] = paralog_temp[(query_id,subject_id)] / InplgOrthTaxonAvg
+		out_f.write(taxon1s +'|' + query_id + '\t')
+		out_f.write(taxon1s +'|' + subject_id + '\t')
 
-
-
-
-	log('{2} | Orthology | {0} | {1} | {3} | {4} MB | {5}'.format(5, 'Finished' , options.index, taxon2s , memory_usage_resource(), datetime.now() ))
-
+		out_f.write(str(paralog_temp[(query_id,subject_id)]) + '\t')
+		out_f.write(str(paralog_temp[(query_id,subject_id)] / InplgOrthTaxonAvg) + '\n')
+	out_f.close()
 
