@@ -27,9 +27,9 @@
 #PBS -t 1-4
 
 ## Job Name: give it a good name so that you recognize it among the jobs running in the cluster.
-## example: #PBS -N 3_orthomclp_run_blast
+## example: #PBS -N 3_porthomcl_run_blast
 ##
-#PBS -N [JOB_NAME]
+#PBS -N x_porthomcl
 
 ## Your requirements: I prefer to run each BLAST multithreaded as well. (-num_threads 8) so I ask for 8 cores.
 ##
@@ -56,7 +56,7 @@ exec 1>$PBS_O_WORKDIR/$PBS_JOBNAME-$SHORT_JOBID.out  2>$PBS_O_WORKDIR/$PBS_JOBNA
 
 cd $PBS_O_WORKDIR
 
-TAXON_FILE="`sed -n {$PBS_ARRAYID}p $ROOTFOLDER/taxon_list`"
+TAXON_FILE="`sed -n $PBS_ARRAYID\p $ROOTFOLDER/taxon_list`"
 
 
 # Create a file to mark the start of this BLAST
@@ -79,6 +79,14 @@ echo $TAXON_FILE > $PBS_JOBNAME-$SHORT_JOBID.start
 # porthomclPairsBestHit.py -t $ROOTFOLDER/taxon_list -i $ROOTFOLDER/5.input/ -b $ROOTFOLDER/5.besthit -q $ROOTFOLDER/5.bestquerytaxon  -l $ROOTFOLDER/orthomclp.log -x $PBS_ARRAYID
 
 
+############################################
+### STEP 5.0.1: Split the input file
+###
+### https://github.com/etabari/PorthoMCL#finding-orthologs
+###
+# awk -F'[|\t]' '{print $1"|"$2"\t"$3"|"$4"\t"$7"\t"$8"\t"$9"\t"$10 >> ("$ROOTFOLDER/5.splitSimSeq/"$1".ss.tsv")}' $ROOTFOLDER/4.parsedblast/similarSequences.txt
+
+
 
 ############################################
 ### STEP 5.1: Finding Orthologs
@@ -93,8 +101,27 @@ echo $TAXON_FILE > $PBS_JOBNAME-$SHORT_JOBID.start
 ###
 ### https://github.com/etabari/PorthoMCL#finding-paralogs
 ###
-# 
+#########
+###
+### Step 5.2.1: Find the genes:
+###
+# awk -F'[|\t]' '{print $4 >> ("$ROOTFOLDER/5.ogenes/"$3".og.tsv")}' $ROOTFOLDER/5.orthologs/$TAXON_FILE.ort.tsv 
+#
+# awk -F'[|\t]' '{print $2 >> ("$ROOTFOLDER/5.ogenes/"$1".og.tsv")}' $ROOTFOLDER/5.orthologs/$TAXON_FILE.ort.tsv 
+#
+#########
+###
+### Step 5.2.2: sort unique files:
+###
+# sort -u $ROOTFOLDER/5.ogenes/$TAXON_FILE.og.tsv > $ROOTFOLDER/5.ogenes/$TAXON_FILE.og.tsv
+#
+#########
+###
+### Step 5.2.3: Run the paralog
+###
+
 
 
 # Create a file to mark the end of this BLAST
 echo $TAXON_FILE >  $PBS_O_WORKDIR/$PBS_JOBNAME-$SHORT_JOBID.end
+

@@ -281,7 +281,7 @@ awk -F'[|\t]' '{print $2 >> ("5.ogenes/"$1".og.tsv")}' 5.orthologs/*.ort.tsv
 find 5.ogenes/ -maxdepth 1 -type f -exec sort -u -o {} {} \;
 ```
 
-Similar code has been included in the `porthomclRunPBS.sh` for convinence.
+Similar code has been included in the `porthomclRunPBS.sh` for convenience.
 
 .
 

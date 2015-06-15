@@ -61,7 +61,7 @@ if __name__ == '__main__':
 	parser.add_option("-x", "--index", dest="index", help="an integer number identifying which taxon to work on" , type='int')
 	parser.add_option("-l", "--logfile", dest="logfile", help="logfile")
 
-	parser.add_option('-o', '--inOrthologFolder', dest='inOrthologFolder', help='folder that will stores TaxonID.ort.tsv files')
+	parser.add_option('-o', '--inOrthologGeneFolder', dest='inOrthologGeneFolder', help='folder that stores TaxonID.og.tsv files (Optional)')
 	parser.add_option('-q', '--inInParalogTempFolder', dest='inInParalogTempFolder', help='folder thast stores TempParalog unnormalized score  (TaxonID.pt.tsv)')
 	
 	parser.add_option('-p', '--outInParalogFolder', dest='outInParalogFolder', help='folder that will stores TaxonID.par.tsv files')
@@ -89,10 +89,19 @@ if __name__ == '__main__':
 	# 	exit(0)
 
 
-	log('{2} | InParalogs | {0} | {1} | {3} | {4} MB | {5}'.format(2 , 'reading TempParalog file (pt file)', options.index, taxon1s , memory_usage_resource(), datetime.now() ))
+	log('{2} | InParalogs | {0} | {1} | {3} | {4} MB | {5}'.format(2 , 'reading Ortholog Gene file (og file)', options.index, taxon1s , memory_usage_resource(), datetime.now() ))
+
+	OrthologUniqueId = []
+	if options.inOrthologGeneFolder: 
+		OrthologUniqueId = readTaxonList(options.inOrthologGeneFolder)
+
+
+	log('{2} | InParalogs | {0} | {1} | {3} | {4} MB | {5}'.format(3 , 'reading TempParalog file (pt file)', options.index, taxon1s , memory_usage_resource(), datetime.now() ))
 
 	paralog_temp = {}
-	score_average = 0
+	InParalogTaxonAvg = 0
+	InplgOrthTaxonAvg = 0
+	InplgOrthTaxonAvg_Count = 0
 	with open(file_name) as best_hit_file:
 		for line in best_hit_file:
 			cols = line.strip().split('\t')
@@ -103,9 +112,28 @@ if __name__ == '__main__':
 
 			unnormalized_score = float(cols[3])
 			paralog_temp[(query_id,subject_id)] = unnormalized_score
-			score_average += unnormalized_score
 
-	score_average /= len(paralog_temp)
+			InParalogTaxonAvg += unnormalized_score
+
+			if cols[0] in OrthologUniqueId or cols[1] in OrthologUniqueId:
+				InplgOrthTaxonAvg += unnormalized_score
+				InplgOrthTaxonAvg_Count += 1
+
+	
+	if InplgOrthTaxonAvg_Count > 0
+		InplgOrthTaxonAvg /= InplgOrthTaxonAvg_Count
+	else:
+		InplgOrthTaxonAvg = 'NA'
+
+	InParalogTaxonAvg /= len(paralog_temp)
+
+
+	for (query_id,subject_id) in paralog_temp:
+		paralog_temp[(query_id,subject_id)] = paralog_temp[(query_id,subject_id)] / InplgOrthTaxonAvg
+
+
 
 
 	log('{2} | Orthology | {0} | {1} | {3} | {4} MB | {5}'.format(5, 'Finished' , options.index, taxon2s , memory_usage_resource(), datetime.now() ))
+
+
