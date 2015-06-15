@@ -14,23 +14,10 @@ DEBUG = True
 options = None
 
 
-def readBetterHit(taxon, file_name):
-	better_hits = {}
-	with open(file_name) as best_hit_file:
-		for line in best_hit_file:
-			cols = line.strip().split('\t')
-			
-			
-			query_id = taxon + '|' + cols[0]
-
-			subject_id =  taxon + '|' + cols[1]
+def readParalogTemp(taxon, file_name):
 
 
-			try:
-				better_hits[query_id] += [(subject_id, int(cols[2]), float(cols[3]))]
-			except:
-				better_hits[query_id] = [(subject_id, int(cols[2]), float(cols[3]))]
-	return better_hits
+	return paralog_temp
 
 
 
@@ -74,16 +61,10 @@ if __name__ == '__main__':
 	parser.add_option("-x", "--index", dest="index", help="an integer number identifying which taxon to work on" , type='int')
 	parser.add_option("-l", "--logfile", dest="logfile", help="logfile")
 
-	parser.add_option('-s', '--inSimSeq', dest='inSimSeq', help='folder that stores Similar Sequence files (TaxonID.ss.tsv) ')
-	parser.add_option('-b', '--inBestHitFolder', dest='inBestHitFolder', help='folder that stores Best Hit files (TaxonID.bh.tsv)')
-	parser.add_option('-q', '--inQueryTaxonScoreFolder', dest='inQueryTaxonScoreFolder', help='folder thast stores best query-taxon evalue score  (TaxonID.q-t.tsv)')
+	parser.add_option('-o', '--inOrthologFolder', dest='inOrthologFolder', help='folder that will stores TaxonID.ort.tsv files')
+	parser.add_option('-q', '--inInParalogTempFolder', dest='inInParalogTempFolder', help='folder thast stores TempParalog unnormalized score  (TaxonID.pt.tsv)')
 	
-	parser.add_option('-p', '--outInParagogFolder', dest='outInParagogFolder', help='folder that will stores TaxonID.ort.tsv files')
-	
-	parser.add_option('', '--evalueExponentCutoff', dest='evalueExponentCutoff', help='evalue Exponent Cutoff (a nebative value, default=-5)', default=-5, type='int')
-	parser.add_option('', '--percentMatchCutoff', dest='percentMatchCutoff', help='percent Match Cutoff (integer value, default=50)', default=50, type='int')
-	
-	parser.add_option('', '--cacheInputFile', dest='cacheInputFile', help='Cache input file or read it again. (Only use if I/O is very slow)', default=False, action="store_true")
+	parser.add_option('-p', '--outInParalogFolder', dest='outInParalogFolder', help='folder that will stores TaxonID.par.tsv files')
 	
 	#	#
 	
@@ -108,34 +89,23 @@ if __name__ == '__main__':
 	# 	exit(0)
 
 
-	log('{2} | InParalogs | {0} | {1} | {3} | {4} MB | {5}'.format(2 , 'reading query-taxon evalue score (q-t file)', options.index, taxon1s , memory_usage_resource(), datetime.now() ))
+	log('{2} | InParalogs | {0} | {1} | {3} | {4} MB | {5}'.format(2 , 'reading TempParalog file (pt file)', options.index, taxon1s , memory_usage_resource(), datetime.now() ))
 
-	BestInterTaxonScore = {}
-	taxon1_qt_filename =  os.path.join(options.inQueryTaxonScoreFolder , taxon1s + '.q-t.tsv')
-	with open(taxon1_qt_filename) as taxon1_qt_file:
-		for line in taxon1_qt_file:
-			cols = line.strip().split()
-			query_id = cols[0]
-			taxon2s = cols[1]
-			ev_exp = int(cols[2])
-			ev_mant = float(cols[3])
+	paralog_temp = {}
+	score_average = 0
+	with open(file_name) as best_hit_file:
+		for line in best_hit_file:
+			cols = line.strip().split('\t')
+			
+			query_id = taxon + '|' + cols[0]
 
-			try:
-				(min_exp, mants) = BestInterTaxonScore[query_id]
-				if ev_exp < min_exp:
-					BestInterTaxonScore[query_id] = (ev_exp, [ev_mant])
-				elif ev_exp == min_exp:
-					BestInterTaxonScore[query_id] = (ev_exp, mants+[ev_mant])
-			except:
-				BestInterTaxonScore[query_id] = (ev_exp, [ev_mant])
+			subject_id =  taxon + '|' + cols[1]
 
+			unnormalized_score = float(cols[3])
+			paralog_temp[(query_id,subject_id)] = unnormalized_score
+			score_average += unnormalized_score
 
-	for query_id in BestInterTaxonScore.keys():
-		(ev_exp, mants) = BestInterTaxonScore[query_id]
-		BestInterTaxonScore[query_id] = (ev_exp, min(mants))
-
-		if DEBUG:
-			print query_id, ev_exp, mants
+	score_average /= len(paralog_temp)
 
 
 	log('{2} | Orthology | {0} | {1} | {3} | {4} MB | {5}'.format(5, 'Finished' , options.index, taxon2s , memory_usage_resource(), datetime.now() ))

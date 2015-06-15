@@ -120,7 +120,7 @@ if __name__ == '__main__':
 
 	parser.add_option('-s', '--inSimSeq', dest='inSimSeq', help='folder that stores TaxonID.ss.tsv files (Split SimilarSequence.tsv) ')
 	parser.add_option('-b', '--outBestHitFolder', dest='outBestHitFolder', help='folder that will stores Best Hit files (If not set, current folder)')
-	parser.add_option('-p', '--outInParalogTempFolder', dest='outInParalogTempFolder', help='folder to generate best InParalogTemp evalue scores (pt files) (required only for Paralogs)')
+	parser.add_option('-q', '--outInParalogTempFolder', dest='outInParalogTempFolder', help='folder to generate best InParalogTemp evalue scores (pt files) (required only for Paralogs)')
 
 	parser.add_option("-x", "--index", dest="index", help="an integer number identifying which taxon to work on [1..size_of_taxon_list]" , type='int')
 	parser.add_option("-l", "--logfile", dest="logfile", help="log file")

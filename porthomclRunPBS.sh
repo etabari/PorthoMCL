@@ -56,8 +56,11 @@ exec 1>$PBS_O_WORKDIR/$PBS_JOBNAME-$SHORT_JOBID.out  2>$PBS_O_WORKDIR/$PBS_JOBNA
 
 cd $PBS_O_WORKDIR
 
+TAXON_FILE="`sed -n {$PBS_ARRAYID}p $ROOTFOLDER/taxon_list`"
+
+
 # Create a file to mark the start of this BLAST
-touch $PBS_JOBNAME-$SHORT_JOBID.start
+echo $TAXON_FILE > $PBS_JOBNAME-$SHORT_JOBID.start
 
 
 ############################################
@@ -78,11 +81,20 @@ touch $PBS_JOBNAME-$SHORT_JOBID.start
 
 
 ############################################
-### STEP 5: Finding Orthologs
+### STEP 5.1: Finding Orthologs
 ###
 ### https://github.com/etabari/PorthoMCL#finding-orthologs
 ###
 # porthomclPairsOrthologs.py -t $ROOTFOLDER/taxon_list -b $ROOTFOLDER/5.besthit -o $ROOTFOLDER/5.orthologs -x $PBS_ARRAYID
 
+
+############################################
+### STEP 5.2: Finding Paralogs
+###
+### https://github.com/etabari/PorthoMCL#finding-paralogs
+###
+# 
+
+
 # Create a file to mark the end of this BLAST
-touch $PBS_O_WORKDIR/$PBS_JOBNAME-$SHORT_JOBID.end
+echo $TAXON_FILE >  $PBS_O_WORKDIR/$PBS_JOBNAME-$SHORT_JOBID.end

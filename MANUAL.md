@@ -218,7 +218,7 @@ The input parameters are:
 - **-s**  (--inSimSeq) folder that stores TaxonID.ss.tsv files (Split SimilarSequence.tsv)
 - **-x**  (--index) an integer number identifying which taxon to work on [1-size_of_taxon_list]
 -  -b  (--outBestHitFolder) folder that will stores Best Hit files (If not set, current folder)
--  -p  (--outInParalogTempFolde) folder to generate best InParalogTemp evalue scores (pt files) (required only for Paralogs)
+-  -q  (--outInParalogTempFolde) folder to generate best InParalogTemp evalue scores (pt files) (required only for Paralogs)
 -  -l (--logfile) log file
 -  --evalueExponentCutoff evalue Exponent Cutoff (a negative value, default=-5)
 -  --percentMatchCutoff percent Match Cutoff (integer value, default=50)
@@ -262,7 +262,27 @@ porthomclPairsOrthologs.py -t sample/taxon_list -b sample/5.besthit -o sample/5.
 You can run this code in parallel with different values for -x. An example of such execution is included in the `porthomclRunPBS.sh` script.
 
 
-#### STEPS TO COME
+#### 5.3 Finding Paralogs
+
+To find the paralogs, we need to extract every gene that has an orthologous relationship in every genome. 
+This can be achieved using a set of bash commands as follows. 
+
+```shell
+cd sample
+mkdir 5.ogenes
+
+# genes in the second column
+awk -F'[|\t]' '{print $4 >> ("5.ogenes/"$3".og.tsv")}' 5.orthologs/*.ort.tsv
+
+# genes in the first column
+awk -F'[|\t]' '{print $2 >> ("5.ogenes/"$1".og.tsv")}' 5.orthologs/*.ort.tsv
+
+# keep unique ones
+find 5.ogenes/ -maxdepth 1 -type f -exec sort -u -o {} {} \;
+```
+
+Similar code has been included in the `porthomclRunPBS.sh` for convinence.
+
 .
 
 .
