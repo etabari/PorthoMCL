@@ -128,6 +128,9 @@ if __name__ == '__main__':
 	InParalogTaxonAvg /= len(paralog_temp)
 
 
+
+
+
 	for (query_id,subject_id) in paralog_temp:
 		paralog_temp[(query_id,subject_id)] = paralog_temp[(query_id,subject_id)] / InplgOrthTaxonAvg
 
