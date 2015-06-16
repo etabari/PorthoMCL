@@ -226,7 +226,7 @@ The input parameters are:
 |   -s   | --inSimSeq				| Input folder that contains *split similar sequences* files (ss files)         
 | **Outputs**|                		|                                                                          
 |   -b 	| --outBestHitFolder  		| Folder that will store Best Hit files (bh files) (If not set, current folder)            
-|   -q 	| --outInParalogTempFolde	| Folder that will store Temporary Paralog pairs (pt files) (required only for InParalogs, if not supplied won't be generated) 
+|   -q 	| --outInParalogTempFolder	| Folder that will store Temporary Paralog pairs (pt files) (required only for InParalogs, if not supplied won't be generated) 
 |   -l 	| --logfile	  				| log file (optional, if not supplied STDERR will be used)
 | **Options**|                		|                                                                          
 |    	| --evalueExponentCutoff	| e-value Exponent Cutoff (a negative value, default=-5)         
@@ -320,7 +320,7 @@ The input parameters are:
 |--------|--------------------------|-----------------------------------------------------------------------------
 |   -t   | --taxonlist 	 			| A single column file containing the list of taxon to work with              
 |   -x   | --index	  				| An integer number identifying which taxon to work on [1-size_of_taxon_list] 
-|   -q 	 | --inInParalogTempFolde	| Folder that contains Temporary Paralog pairs (pt files)
+|   -q 	 | --inInParalogTempFolder	| Folder that contains Temporary Paralog pairs (pt files)
 |   -o 	 | --inOrthologFolder		| Folder to generate Orthologous pairs (ort files) in
 | **Outputs**|                		|                                                                          
 |   -p 	 | --outInParalogFolder		| folder that will stores InParalogs (par files)
