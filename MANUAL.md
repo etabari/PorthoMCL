@@ -221,14 +221,20 @@ The input parameters are:
 
 |  Inputs|                |    Description                                                              |
 |--------|----------------|-----------------------------------------------------------------------------|
-| **-t** | (--taxonlist)  | A single column file containing the list of taxon to work with              |
-| **-x** | (--index)	  |	an integer number identifying which taxon to work on [1-size_of_taxon_list] |
-| **-s** | (--inSimSeq)	  | Input folder that stores *split similar sequences* files (ss files)         |
+| **-t** | --taxonlist 	 	| A single column file containing the list of taxon to work with              |
+| **-x** | --index	  		|	an integer number identifying which taxon to work on [1-size_of_taxon_list] |
+| **-s** | --inSimSeq		| Input folder that stores *split similar sequences* files (ss files)         |
 
-- Outputs:
-	-  -b  (--outBestHitFolder)		folder that will stores Best Hit files (If not set, current folder)
-	-  -q  (--outInParalogTempFolde)	folder to generate best InParalogTemp evalue scores (pt files) (required only for Paralogs)
-	-  -l  (--logfile)	log file
+| Outputs|                |    Description                                                              |
+|--------|----------------|-----------------------------------------------------------------------------|
+|   -b 	| --outBestHitFolder  		|folder that will stores Best Hit files (If not set, current folder)            |
+|   -q 	| --outInParalogTempFolde	|	folder to generate best InParalogTemp evalue scores (pt files) (required only for Paralogs) |
+|   -l 	| --logfile)	  			| log file (optional)         |
+
+- :
+	-  -b  (--outBestHitFolder)		
+	-  -q  (--outInParalogTempFolde)	
+	-  -l  (--logfile)	
 - Options:
 	-  --evalueExponentCutoff evalue Exponent Cutoff (a negative value, default=-5)
 	-  --percentMatchCutoff percent Match Cutoff (integer value, default=50)
