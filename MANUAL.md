@@ -220,11 +220,11 @@ The input parameters are:
 
 - Inputs:
 
-|        |                |
-|--------|----------------|-----------------------------------------------------------------------------
-| **-t** | (--taxonlist)  | A single column file containing the list of taxon to work with
-| **-x** | (--index)	  |	an integer number identifying which taxon to work on [1-size_of_taxon_list]
-| **-s** | (--inSimSeq)	  | Input folder that stores *split similar sequences* files (ss files)
+|        |                |                                                                             |
+|--------|----------------|-----------------------------------------------------------------------------|
+| **-t** | (--taxonlist)  | A single column file containing the list of taxon to work with              |
+| **-x** | (--index)	  |	an integer number identifying which taxon to work on [1-size_of_taxon_list] |
+| **-s** | (--inSimSeq)	  | Input folder that stores *split similar sequences* files (ss files)         |
 
 - Outputs:
 	-  -b  (--outBestHitFolder)		folder that will stores Best Hit files (If not set, current folder)
