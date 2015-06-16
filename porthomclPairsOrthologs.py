@@ -68,22 +68,29 @@ def log(s):
 
 
 if __name__ == '__main__':
-	usage = "This is STEP 5.2 of PorthoMcl.\n\nusage: %prog arg\n"
+	usage = "This is STEP 5.2 of PorthoMcl.\n\nusage: %prog options\n"
 	parser = OptionParser(usage)
 
 	parser.add_option("-t", "--taxonlist", dest="taxonlistfile", help="A single column file containing the list of taxon to work with")
-	parser.add_option("-x", "--index", dest="index", help="an integer number identifying which taxon to work on" , type='int')
-	parser.add_option("-l", "--logfile", dest="logfile", help="logfile")
+	parser.add_option("-x", "--index", dest="index", help="An integer number identifying which taxon to work on [1-size_of_taxon_list]" , type='int')
 
-	parser.add_option('-b', '--inBestHitFolder', dest='inBestHitFolder', help='folder that stores TaxonID.dic.gz files (Best hit dictionaries) ')
-	parser.add_option('-o', '--outOrthologFolder', dest='outOrthologFolder', help='folder that will stores TaxonID.ort.tsv files')
+	parser.add_option('-b', '--inBestHitFolder', dest='inBestHitFolder', help='Input folder that contains Best Hit files (bh files)')
+
+	parser.add_option('-o', '--outOrthologFolder', dest='outOrthologFolder', help='Folder that will store Orthologous pairs (ort files) in')
+	parser.add_option("-l", "--logfile", dest="logfile", help="log file (optional, if not supplied STDERR will be used)")
+
 	parser.add_option('', '--OverwiteOutput', dest='OverwiteOutput', help='If the output file exists, overwrite it. (default=process terminates)', default=False, action="store_true")
 	parser.add_option('', '--KeepUnnormalizedScore', dest='KeepUnnormalizedScore', help='Store Un-normalized Score. (default=False)', default=False, action="store_true")
+	
+
 	#
 	
 	(options, args) = parser.parse_args()
 
-	#log('-----')
+
+	if len(args) != 0 or not options.taxonlistfile or not options.inSimSeq or not options.index:
+		parser.error("incorrect arguments.\n\t\tUse -h to get more information or refer to the MANUAL.md")
+
 
 	#print best_hit
 
