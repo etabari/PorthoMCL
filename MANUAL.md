@@ -230,10 +230,9 @@ The input parameters are:
 |   -l 	| --logfile	  			| log file (optional)         |
 | **Options**|                |                                                                          
 |    	| --evalueExponentCutoff	  			| evalue Exponent Cutoff (a negative value, default=-5)         
-
 | | --percentMatchCutoff | percent Match Cutoff (integer value, default=50) 
-	-  --cacheInputFile      Cache input file or read it again. (Only use if I/O is very slow)
-	-  **--keepOrthoMCLBug**     Keep the OrthoMCL bug in creating BetterHit files (br) where self hits are included
+| |	  --cacheInputFile    |  Cache input file or read it again. (Only use if I/O is very slow)
+| |	  **--keepOrthoMCLBug**|     Keep the OrthoMCL bug in creating BetterHit files (br) where self hits are included
 
 This is the example to run for the FIRST sample file (-x 1). To perform this for all the sample files, you must to run the same command for **-x 1** to **-x 12**. 
 
