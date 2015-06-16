@@ -218,8 +218,8 @@ Step 5.3 will normalize this score so that it be comparable among different geno
 
 The input parameters are: 
 
-- Inputs:
-|        |                |                                                                             |
+
+|    Inputs    |                |                                                                             |
 |--------|----------------|-----------------------------------------------------------------------------|
 | **-t** | (--taxonlist)  | A single column file containing the list of taxon to work with              |
 | **-x** | (--index)	  |	an integer number identifying which taxon to work on [1-size_of_taxon_list] |
