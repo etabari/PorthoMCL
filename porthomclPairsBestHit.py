@@ -113,28 +113,31 @@ def writeStoOutputFiles(s, out_bh_file):
 
 
 if __name__ == '__main__':
-	usage = "This is STEP 5.1 of PorthoMCL.\n\nusage: %prog arg\n"
+	usage = "This is STEP 5.1 of PorthoMCL.\n\nusage: %prog options\n"
 	parser = OptionParser(usage)
 
 	parser.add_option("-t", "--taxonlist", dest="taxonlistfile", help="A single column file containing the list of taxon to work with")
+	parser.add_option("-x", "--index", dest="index", help="An integer number identifying which taxon to work on [1-size_of_taxon_list]" , type='int')
 
-	parser.add_option('-s', '--inSimSeq', dest='inSimSeq', help='folder that stores TaxonID.ss.tsv files (Split SimilarSequence.tsv) ')
+	parser.add_option('-s', '--inSimSeq', dest='inSimSeq', help='Input folder that contains split similar sequences files (ss files)')
+
 	parser.add_option('-b', '--outBestHitFolder', dest='outBestHitFolder', help='folder that will stores Best Hit files (If not set, current folder)')
 	parser.add_option('-q', '--outInParalogTempFolder', dest='outInParalogTempFolder', help='folder to generate best InParalogTemp evalue scores (pt files) (required only for Paralogs)')
-
-	parser.add_option("-x", "--index", dest="index", help="an integer number identifying which taxon to work on [1..size_of_taxon_list]" , type='int')
 	parser.add_option("-l", "--logfile", dest="logfile", help="log file")
 
 	
 	parser.add_option('', '--evalueExponentCutoff', dest='evalueExponentCutoff', help='evalue Exponent Cutoff (a nebative value, default=-5)', default=-5, type='int')
 	parser.add_option('', '--percentMatchCutoff', dest='percentMatchCutoff', help='percent Match Cutoff (integer value, default=50)', default=50, type='int')
-	
 	parser.add_option('', '--cacheInputFile', dest='cacheInputFile', help='Cache input file or read it again. (Only use if I/O is very slow)', default=False, action="store_true")
-	parser.add_option('', '--keepOrthoMCLBug', dest='keepOrthoMCLBug', help='Keep the OrthoMCL bug in creating BetterHit files (br) where self hits are included', default=False, action="store_true")
+	parser.add_option('', '--keepOrthoMCLBug', dest='keepOrthoMCLBug', help='Keep the OrthoMCL bug in creating Temporary Paralogs files (pt files) where self hits are included', default=False, action="store_true")
 	
 	#
 	
 	(options, args) = parser.parse_args()
+
+
+	if len(args) != 0 or not options.taxonlistfile or not options.inSimSeq or not options.index:
+		parser.error("incorrect arguments.\n\t\tUse -h to get more information or refer to the MANUAL.md")
 
 
 	log('{2} | Best Hit | {0} | {1} | {3} | {4} MB | {5}'.format(1 , 'reading taxon list', options.index, '', memory_usage_resource(), datetime.now() ))
