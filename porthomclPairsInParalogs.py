@@ -72,7 +72,8 @@ if __name__ == '__main__':
 	
 	(options, args) = parser.parse_args()
 
-	#log('-----')
+	if len(args) != 0 or not options.taxonlistfile or not options.index or not options.inInParalogTempFolder  or not options.inOrthologGeneFolder or not options.outInParalogFolder:
+		parser.error("incorrect arguments.\n\t\tUse -h to get more information or refer to the MANUAL.md")
 
 	#print best_hit
 

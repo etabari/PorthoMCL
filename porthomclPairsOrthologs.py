@@ -88,7 +88,7 @@ if __name__ == '__main__':
 	(options, args) = parser.parse_args()
 
 
-	if len(args) != 0 or not options.taxonlistfile or not options.inSimSeq or not options.index:
+	if len(args) != 0 or not options.taxonlistfile or not options.inBestHitFolder or not options.index or not options.outOrthologFolder:
 		parser.error("incorrect arguments.\n\t\tUse -h to get more information or refer to the MANUAL.md")
 
 
