@@ -80,7 +80,7 @@ if __name__ == '__main__':
 	parser.add_option("-l", "--logfile", dest="logfile", help="log file (optional, if not supplied STDERR will be used)")
 
 	parser.add_option('', '--OverwiteOutput', dest='OverwiteOutput', help='If the output file exists, overwrite it. (default=process terminates)', default=False, action="store_true")
-	parser.add_option('', '--KeepUnnormalizedScore', dest='KeepUnnormalizedScore', help='Store Un-normalized Score. (default=False)', default=False, action="store_true")
+	parser.add_option('', '--KeepUnnormalizedScore', dest='KeepUnnormalizedScore', help='Write the un-normalize scores for ortholog pairs (default=False)', default=False, action="store_true")
 	
 
 	#

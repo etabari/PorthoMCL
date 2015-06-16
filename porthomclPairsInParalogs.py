@@ -58,14 +58,15 @@ if __name__ == '__main__':
 	parser = OptionParser(usage)
 
 	parser.add_option("-t", "--taxonlist", dest="taxonlistfile", help="A single column file containing the list of taxon to work with")
-	parser.add_option("-x", "--index", dest="index", help="an integer number identifying which taxon to work on" , type='int')
-	parser.add_option("-l", "--logfile", dest="logfile", help="logfile")
+	parser.add_option("-x", "--index", dest="index", help="An integer number identifying which taxon to work on [1-size_of_taxon_list]" , type='int')
 
-	parser.add_option('-o', '--inOrthologGeneFolder', dest='inOrthologGeneFolder', help='folder that stores TaxonID.og.tsv files (Optional)')
-	parser.add_option('-q', '--inInParalogTempFolder', dest='inInParalogTempFolder', help='folder thast stores TempParalog unnormalized score  (TaxonID.pt.tsv)')
+	parser.add_option('-q', '--inInParalogTempFolder', dest='inInParalogTempFolder', help='Folder that contains Temporary Paralog pairs (pt files)')
+	parser.add_option('-o', '--inOrthologGeneFolder', dest='inOrthologGeneFolder', help='Folder that contains List of genes that have orthologous relationship (og files)')
 	
-	parser.add_option('-p', '--outInParalogFolder', dest='outInParalogFolder', help='folder that will stores TaxonID.par.tsv files')
-	parser.add_option('', '--KeepUnnormalizedScore', dest='KeepUnnormalizedScore', help='Store Un-normalized Score. (default=False)', default=False, action="store_true")
+	parser.add_option('-p', '--outInParalogFolder', dest='outInParalogFolder', help='folder that will stores InParalogs (par files)')
+	parser.add_option("-l", "--logfile", dest="logfile", help="log file (optional, if not supplied STDERR will be used)")
+	
+	parser.add_option('', '--KeepUnnormalizedScore', dest='KeepUnnormalizedScore', help='Write the un-normalize scores for paralog pairs (default=False)', default=False, action="store_true")
 	
 	#	#
 	

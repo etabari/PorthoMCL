@@ -321,7 +321,7 @@ The input parameters are:
 |   -t   | --taxonlist 	 			| A single column file containing the list of taxon to work with              
 |   -x   | --index	  				| An integer number identifying which taxon to work on [1-size_of_taxon_list] 
 |   -q 	 | --inInParalogTempFolder	| Folder that contains Temporary Paralog pairs (pt files)
-|   -o 	 | --inOrthologFolder		| Folder to generate Orthologous pairs (ort files) in
+|   -o 	 | --inOrthologGeneFolder	| Folder that contains List of genes that have orthologous relationship (og files)
 | **Outputs**|                		|                                                                          
 |   -p 	 | --outInParalogFolder		| folder that will stores InParalogs (par files)
 |   -l 	 | --logfile	  			| log file (optional, if not supplied STDERR will be used)
