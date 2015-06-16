@@ -219,24 +219,19 @@ Step 5.3 will normalize this score so that it be comparable among different geno
 The input parameters are: 
 
 
-|  Inputs|                |    Description                                                              |
-|--------|----------------|-----------------------------------------------------------------------------|
-| **-t** | --taxonlist 	 	| A single column file containing the list of taxon to work with              |
-| **-x** | --index	  		|	an integer number identifying which taxon to work on [1-size_of_taxon_list] |
-| **-s** | --inSimSeq		| Input folder that stores *split similar sequences* files (ss files)         |
-| **Outputs**|                |                                                                          |
-|--------|----------------|-----------------------------------------------------------------------------|
-|   -b 	| --outBestHitFolder  		|folder that will stores Best Hit files (If not set, current folder)            |
-|   -q 	| --outInParalogTempFolde	|	folder to generate best InParalogTemp evalue scores (pt files) (required only for Paralogs) |
-|   -l 	| --logfile)	  			| log file (optional)         |
+|  Inputs|                |    Description                                                              
+|--------|----------------|-----------------------------------------------------------------------------
+| **-t** | --taxonlist 	 	| A single column file containing the list of taxon to work with              
+| **-x** | --index	  		|	an integer number identifying which taxon to work on [1-size_of_taxon_list] 
+| **-s** | --inSimSeq		| Input folder that stores *split similar sequences* files (ss files)         
+| **Outputs**|                |                                                                          
+|   -b 	| --outBestHitFolder  		|folder that will stores Best Hit files (If not set, current folder)            
+|   -q 	| --outInParalogTempFolde	|	folder to generate best InParalogTemp evalue scores (pt files) (required only for Paralogs) 
+|   -l 	| --logfile	  			| log file (optional)         |
+| **Options**|                |                                                                          
+|    	| --evalueExponentCutoff	  			| evalue Exponent Cutoff (a negative value, default=-5)         
 
-- :
-	-  -b  (--outBestHitFolder)		
-	-  -q  (--outInParalogTempFolde)	
-	-  -l  (--logfile)	
-- Options:
-	-  --evalueExponentCutoff evalue Exponent Cutoff (a negative value, default=-5)
-	-  --percentMatchCutoff percent Match Cutoff (integer value, default=50)
+| | --percentMatchCutoff | percent Match Cutoff (integer value, default=50) 
 	-  --cacheInputFile      Cache input file or read it again. (Only use if I/O is very slow)
 	-  **--keepOrthoMCLBug**     Keep the OrthoMCL bug in creating BetterHit files (br) where self hits are included
 
