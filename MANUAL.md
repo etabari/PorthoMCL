@@ -223,10 +223,10 @@ The input parameters are:
 |--------|--------------------------|-----------------------------------------------------------------------------
 |   -t   | --taxonlist 	 			| A single column file containing the list of taxon to work with              
 |   -x   | --index	  				| An integer number identifying which taxon to work on [1-size_of_taxon_list] 
-|   -s   | --inSimSeq				| Input folder that stores *split similar sequences* files (ss files)         
+|   -s   | --inSimSeq				| Input folder that contains *split similar sequences* files (ss files)         
 | **Outputs**|                		|                                                                          
 |   -b 	| --outBestHitFolder  		| Folder that will store Best Hit files (bh files) (If not set, current folder)            
-|   -q 	| --outInParalogTempFolde	| Folder to generate Temporary Paralog pairs (pt files) (required only for InParalogs, if not supplied won't be generated) 
+|   -q 	| --outInParalogTempFolde	| Folder that will store Temporary Paralog pairs (pt files) (required only for InParalogs, if not supplied won't be generated) 
 |   -l 	| --logfile	  				| log file (optional, if not supplied STDERR will be used)
 | **Options**|                		|                                                                          
 |    	| --evalueExponentCutoff	| e-value Exponent Cutoff (a negative value, default=-5)         
@@ -263,9 +263,9 @@ The input parameters are:
 |--------|--------------------------|-----------------------------------------------------------------------------
 |   -t   | --taxonlist 	 			| A single column file containing the list of taxon to work with              
 |   -x   | --index	  				| An integer number identifying which taxon to work on [1-size_of_taxon_list] 
-|   -b 	 | --inBestHitFolder  		| Folder that stores Best Hit files (bh files)             
+|   -b 	 | --inBestHitFolder  		| Input folder that contains Best Hit files (bh files)             
 | **Outputs**|                		|                                                                          
-|   -o 	 | --outOrthologFolder		| Folder to generate Orthologous pairs (ort files) 
+|   -o 	 | --outOrthologFolder		| Folder that will store Orthologous pairs (ort files) in
 |   -l 	 | --logfile	  			| log file (optional, if not supplied STDERR will be used)
 | **Options**|                		|                                                                          
 |    	 | --KeepUnnormalizedScore	| Write the un-normalize scores for ortholog pairs (default=False)         
@@ -314,14 +314,20 @@ The output of this step is all the paralogs genes with normalized scores.
 
 
 The input parameters are:
-- **-t** (--taxonlist) A single column file containing the list of taxon to work with
-- **-x**  (--index) an integer number identifying which taxon to work on [1-size_of_taxon_list]
 
-- **-q**  (--inInParalogTempFolder) folder that stores Temp Paralogs with un-normalize scores (pt files).
-- **-o**  (--inOrthologGeneFolder) folder that stores list of genes with orthology relationships (og files).
 
-- **-p** (--outInParalogFolder) folder that will stores InParalogs (par files)
-- --KeepUnnormalizedScore  Write the un-normalize scores also. (default=False)
+|  Inputs|                			|    Description                                                              
+|--------|--------------------------|-----------------------------------------------------------------------------
+|   -t   | --taxonlist 	 			| A single column file containing the list of taxon to work with              
+|   -x   | --index	  				| An integer number identifying which taxon to work on [1-size_of_taxon_list] 
+|   -q 	 | --inInParalogTempFolde	| Folder that contains Temporary Paralog pairs (pt files)
+|   -o 	 | --inOrthologFolder		| Folder to generate Orthologous pairs (ort files) in
+| **Outputs**|                		|                                                                          
+|   -p 	 | --outInParalogFolder		| folder that will stores InParalogs (par files)
+|   -l 	 | --logfile	  			| log file (optional, if not supplied STDERR will be used)
+| **Options**|                		|                                                                          
+|    	 | --KeepUnnormalizedScore	| Write the un-normalize scores for paralog pairs (default=False)         
+
 
 This is the example to run for the FIRST sample file (-x 1). To perform this for all the sample files, you must to run the same command for -x 1 to -x 12. 
 
