@@ -219,20 +219,20 @@ Step 5.3 will normalize this score so that it be comparable among different geno
 The input parameters are: 
 
 
-|  Inputs|                |    Description                                                              
-|--------|----------------|-----------------------------------------------------------------------------
-| **-t** | --taxonlist 	 	| A single column file containing the list of taxon to work with              
-| **-x** | --index	  		|	an integer number identifying which taxon to work on [1-size_of_taxon_list] 
-| **-s** | --inSimSeq		| Input folder that stores *split similar sequences* files (ss files)         
-| **Outputs**|                |                                                                          
-|   -b 	| --outBestHitFolder  		|folder that will stores Best Hit files (If not set, current folder)            
-|   -q 	| --outInParalogTempFolde	|	folder to generate best InParalogTemp evalue scores (pt files) (required only for Paralogs) 
-|   -l 	| --logfile	  			| log file (optional)         |
-| **Options**|                |                                                                          
-|    	| --evalueExponentCutoff	  			| evalue Exponent Cutoff (a negative value, default=-5)         
-| | --percentMatchCutoff | percent Match Cutoff (integer value, default=50) 
-| |	  --cacheInputFile    |  Cache input file or read it again. (Only use if I/O is very slow)
-| |	  **--keepOrthoMCLBug**|     Keep the OrthoMCL bug in creating BetterHit files (br) where self hits are included
+|  Inputs|                			|    Description                                                              
+|--------|--------------------------|-----------------------------------------------------------------------------
+|   -t   | --taxonlist 	 			| A single column file containing the list of taxon to work with              
+|   -x   | --index	  				| An integer number identifying which taxon to work on [1-size_of_taxon_list] 
+|   -s   | --inSimSeq				| Input folder that stores *split similar sequences* files (ss files)         
+| **Outputs**|                		|                                                                          
+|   -b 	| --outBestHitFolder  		| Folder that will store Best Hit files (bh files) (If not set, current folder)            
+|   -q 	| --outInParalogTempFolde	| Folder to generate Temporary Paralog pairs (pt files) (required only for InParalogs, if not supplied won't be generated) 
+|   -l 	| --logfile	  				| log file (optional, if not supplied STDERR will be used)
+| **Options**|                		|                                                                          
+|    	| --evalueExponentCutoff	| e-value Exponent Cutoff (a negative value, default=-5)         
+| 		| --percentMatchCutoff 		| percent Match Cutoff (integer value, default=50) 
+| 		|	  --cacheInputFile    	| Cache input file or read it again. (Only use if I/O is very slow)
+| 		|	  **--keepOrthoMCLBug** | Keep the *OrthoMCL bug* in creating Temporary Paralogs files (pt files) where self hits are included
 
 This is the example to run for the FIRST sample file (-x 1). To perform this for all the sample files, you must to run the same command for **-x 1** to **-x 12**. 
 
@@ -251,14 +251,25 @@ You can run this code in parallel with different values for -x. An example of su
 #### 5.2 Finding Orthologs
 
 The output of this step is all the ortholog genes. 
+The outputs of this steps for all genomes can be merged together and fed to MCL 
+if --KeepUnnormalizedScore is not used (defualt execution).
+Otherwise, the un-normalized score column must be removed from the output files before 
+feeding the output of this step to MCL.
 
 
 The input parameters are:
-- **-t** (--taxonlist) A single column file containing the list of taxon to work with
-- **-x**  (--index) an integer number identifying which taxon to work on [1-size_of_taxon_list]
-- **-b**  (--inBestHitFolder) folder that stores Best Hit files
-- **-o** (--outOrthologFolder) folder that will stores orthologs (TaxonID.ort.tsv files)
-- --KeepUnnormalizedScore  Write the un-normalize scores also. (default=False)
+|  Inputs|                			|    Description                                                              
+|--------|--------------------------|-----------------------------------------------------------------------------
+|   -t   | --taxonlist 	 			| A single column file containing the list of taxon to work with              
+|   -x   | --index	  				| An integer number identifying which taxon to work on [1-size_of_taxon_list] 
+|   -b 	 | --inBestHitFolder  		| Folder that stores Best Hit files (bh files)             
+| **Outputs**|                		|                                                                          
+|   -o 	 | --outOrthologFolder		| Folder to generate Orthologous pairs (ort files) 
+|   -l 	 | --logfile	  			| log file (optional, if not supplied STDERR will be used)
+| **Options**|                		|                                                                          
+|    	 | --KeepUnnormalizedScore	| Write the un-normalize scores for ortholog pairs (default=False)         
+
+
 This is the example to run for the FIRST sample file (-x 1). To perform this for all the sample files, you must to run the same command for -x 1 to -x 12. 
 
 ```shell
