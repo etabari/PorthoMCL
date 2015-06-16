@@ -258,6 +258,7 @@ feeding the output of this step to MCL.
 
 
 The input parameters are:
+
 |  Inputs|                			|    Description                                                              
 |--------|--------------------------|-----------------------------------------------------------------------------
 |   -t   | --taxonlist 	 			| A single column file containing the list of taxon to work with              
