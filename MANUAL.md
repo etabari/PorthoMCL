@@ -249,7 +249,7 @@ The output of this step is all the ortholog genes.
 
 
 The input parameters are:
-- **-t** (--taxonlist)A single column file containing the list of taxon to work with
+- **-t** (--taxonlist) A single column file containing the list of taxon to work with
 - **-x**  (--index) an integer number identifying which taxon to work on [1-size_of_taxon_list]
 - **-b**  (--inBestHitFolder) folder that stores Best Hit files
 - **-o** (--outOrthologFolder) folder that will stores orthologs (TaxonID.ort.tsv files)
@@ -297,7 +297,7 @@ The output of this step is all the paralogs genes with normalized scores.
 
 
 The input parameters are:
-- **-t** (--taxonlist)A single column file containing the list of taxon to work with
+- **-t** (--taxonlist) A single column file containing the list of taxon to work with
 - **-x**  (--index) an integer number identifying which taxon to work on [1-size_of_taxon_list]
 
 - **-q**  (--inInParalogTempFolder) folder that stores Temp Paralogs with un-normalize scores (pt files).
