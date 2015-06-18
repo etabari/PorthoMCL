@@ -124,9 +124,12 @@ if __name__ == '__main__':
 
 	# exit()
 
+	log('{2} | Orthology | {0} | {1} | {3} | {4} MB | {5}'.format(2.1 , 'Size: ' + str(len(taxon1_dic)) + ' taxons.', options.index, taxon1s , memory_usage_resource(), datetime.now() ))
 
 	orthologs = []
 	orthologs_index = 0
+
+	taxon2_index = 0
 
 	for taxon2s in sorted(taxon1_dic.keys()):
 
@@ -134,12 +137,12 @@ if __name__ == '__main__':
 			taxon2_filename =  os.path.join(options.inBestHitFolder , taxon2s + '.bh.tsv')
 		
 			if not os.path.exists(taxon2_filename):
-				log('{2} | Orthology | {0} | {1} | {3} | {4} MB | {5}'.format(3 , 'ERROR: Targeted Best hit (bh file) Does not exists', options.index, taxon2s , memory_usage_resource(), datetime.now() ))
+				log('{2} | Orthology | {0} | {1} | {3} | {4} MB | {5}'.format('3.' + str(taxon2_index) , 'ERROR: Targeted Best hit (bh file) Does not exists', options.index, taxon2s , memory_usage_resource(), datetime.now() ))
 				continue			
 
 			taxon2_dic = readBestHit(taxon2s, taxon2_filename)
 
-			log('{2} | Orthology | {0} | {1} | {3} | {4} MB | {5}'.format(3 , 'Reading Targeted Best hit (bh file)', options.index, taxon2s , memory_usage_resource(), datetime.now() ))
+			log('{2} | Orthology | {0} | {1} | {3} | {4} MB | {5}'.format('3.' + str(taxon2_index) , 'Reading Targeted Best hit (bh file)', options.index, taxon2s , memory_usage_resource(), datetime.now() ))
 			
 			taxon1_taxon2_score_sum = 0
 			taxon1_taxon2_score_count = 0
@@ -172,8 +175,8 @@ if __name__ == '__main__':
 							print '\t', seq1, '(',len(taxon1_dic[taxon2s][seq1]),')', '<----> NOTHING'
 							
 
-			log('{2} | Orthology | {0} | {1} | {3} | {4} MB | {5}'.format(4 , 'Orthologs: ' + str( taxon1_taxon2_score_count) , options.index, taxon2s , memory_usage_resource(), datetime.now() ))
-			log('{2} | Orthology | {0} | {1} | {3} | {4} MB | {5}'.format(4 , 'No hits: ' + str( taxon1_taxon2_notfound_count) , options.index, taxon2s , memory_usage_resource(), datetime.now() ))
+			log('{2} | Orthology | {0} | {1} | {3} | {4} MB | {5}'.format('4.' + str(taxon2_index) , 'Orthologs: ' + str( taxon1_taxon2_score_count) , options.index, taxon2s , memory_usage_resource(), datetime.now() ))
+			log('{2} | Orthology | {0} | {1} | {3} | {4} MB | {5}'.format('4.' + str(taxon2_index), 'No hits: ' + str( taxon1_taxon2_notfound_count) , options.index, taxon2s , memory_usage_resource(), datetime.now() ))
 			
 			average = 1
 			if taxon1_taxon2_score_count>0:

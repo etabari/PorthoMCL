@@ -120,27 +120,26 @@ if __name__ == '__main__':
 	parser.add_option("-x", "--index", dest="index", help="An integer number identifying which taxon to work on [1-size_of_taxon_list]" , type='int')
 
 	parser.add_option('-s', '--inSimSeq', dest='inSimSeq', help='Input folder that contains split similar sequences files (ss files)')
+	parser.add_option('-p', '--inInParalogFolder', dest='inInParalogFolder', help='Input folder that contains InParalogs (par files)')
+	parser.add_option('-o', '--inOrthologFolder', dest='inOrthologFolder', help='Input folder that contains Orthologous pairs (ort files)')
 
-	parser.add_option('-b', '--outBestHitFolder', dest='outBestHitFolder', help='folder that will stores Best Hit files (If not set, current folder)')
-	parser.add_option('-q', '--outInParalogTempFolder', dest='outInParalogTempFolder', help='folder to generate best InParalogTemp evalue scores (pt files) (required only for Paralogs)')
+	parser.add_option('-c', '--outCoOrthFolder', dest='outCoOrthFolder', help='folder that will stores CoOrtholog files (cor files)')
 	parser.add_option("-l", "--logfile", dest="logfile", help="log file (optional, if not supplied STDERR will be used)")
 
 	
 	parser.add_option('', '--evalueExponentCutoff', dest='evalueExponentCutoff', help='evalue Exponent Cutoff (a nebative value, default=-5)', default=-5, type='int')
 	parser.add_option('', '--percentMatchCutoff', dest='percentMatchCutoff', help='percent Match Cutoff (integer value, default=50)', default=50, type='int')
-	parser.add_option('', '--cacheInputFile', dest='cacheInputFile', help='Cache input file or read it again. (Only use if I/O is very slow)', default=False, action="store_true")
-	parser.add_option('', '--keepOrthoMCLBug', dest='keepOrthoMCLBug', help='Keep the OrthoMCL bug in creating Temporary Paralogs files (pt files) where self hits are included', default=False, action="store_true")
 	
 	#
 	
 	(options, args) = parser.parse_args()
 
 
-	if len(args) != 0 or not options.taxonlistfile or not options.inSimSeq or not options.index:
+	if len(args) != 0 or not options.taxonlistfile  or not options.index or not options.inSimSeq or not options.inInParalogFolder or not options.inOrthologFolder or not options.outCoOrthFolder:
 		parser.error("incorrect arguments.\n\t\tUse -h to get more information or refer to the MANUAL.md")
 
 
-	log('{2} | Best Hit | {0} | {1} | {3} | {4} MB | {5}'.format(1 , 'reading taxon list', options.index, '', memory_usage_resource(), datetime.now() ))
+	log('{2} | CoOrtholog | {0} | {1} | {3} | {4} MB | {5}'.format(1 , 'reading taxon list', options.index, '', memory_usage_resource(), datetime.now() ))
 	taxon_list = readTaxonList(options.taxonlistfile)
 
 	if options.index <= 0 or options.index > len(taxon_list):
@@ -150,14 +149,8 @@ if __name__ == '__main__':
 	taxon1s = taxon_list[options.index - 1]
 
 
-	if options.cacheInputFile:
-		log('{2} | Best Hit | {0} | {1} | {3} | {4} MB | {5}'.format('OPTION' , 'Caching Input files', options.index, taxon1s, memory_usage_resource(), datetime.now() ))
 
-
-	log('{2} | Best Hit | {0} | {1} | {3} | {4} MB | {5}'.format(2 , 'Reading similar sequences (ss file)', options.index, taxon1s, memory_usage_resource(), datetime.now() ))
-
-
-	input_file_cache = []
+	log('{2} | CoOrtholog | {0} | {1} | {3} | {4} MB | {5}'.format(2 , 'Reading similar sequences (ss file)', options.index, taxon1s, memory_usage_resource(), datetime.now() ))
 
 	with open(os.path.join(options.inSimSeq, taxon1s+'.ss.tsv')) as input_file:
 		for line in input_file:
@@ -165,97 +158,19 @@ if __name__ == '__main__':
 			ss = SimilarSequenceLine(line)
 
 
-			if options.cacheInputFile:
-				input_file_cache += [ss]
-
-
-			if ss.query_taxon != ss.subject_taxon:
-
-				try:
-					best_query_taxon_score[(ss.query_id, ss.subject_taxon)] += [(ss.evalue_mant, ss.evalue_exp)]
-				except:
-					best_query_taxon_score[(ss.query_id, ss.subject_taxon)] = [(ss.evalue_mant, ss.evalue_exp)]
-
-
-	for (query_id,subject_taxon) in best_query_taxon_score:
-
-		evalues = best_query_taxon_score[(query_id, subject_taxon)]
-		
-		min_exp = sys.maxint  #min(evalues, key = lambda t: t[1])
-
-		min_mants = []
-
-		for (evalue_mant, evalue_exp) in evalues:
-			if evalue_exp < min_exp:
-				min_exp = evalue_exp
-				min_mants += [evalue_mant]
-
-			if evalue_mant == 0 and evalue_exp == 0:
-				min_mants += [evalue_mant]
-
-		best_query_taxon_score[(query_id,subject_taxon)] = (min_exp, min(min_mants))
-
-
-	if options.outInParalogTempFolder:
-
-		# log('{2} | Best Hit | {0} | {1} | * | {3} MB | {4}'.format(3 , 'Creating bestQueryTaxonScore (q-t file)', options.index, memory_usage_resource(), datetime.now() ))
-		# with open(os.path.join(options.outQueryTaxonScoreFolder, taxon1s+'.q-t.tsv'), 'w') as out_file:
-		# 	for (query_id,subject_taxon) in sorted(best_query_taxon_score):
-		# 		(ev_exp, ev_mant) = best_query_taxon_score[(query_id,subject_taxon)]
-		# 		out_file.write('{0}\t{1}\t{2}\t{3}\n'.format(query_id, subject_taxon, ev_exp, ev_mant))
-
-
-		log('{2} | Best Hit | {0} | {1} | {3} | {4} MB | {5}'.format(3 , 'Creating BestInterTaxonScore Matirx', options.index,taxon1s, memory_usage_resource(), datetime.now() ))
-
-
-		for (query_id,subject_taxon) in best_query_taxon_score:
-
-			(ev_exp, ev_mant) = best_query_taxon_score[(query_id,subject_taxon)]
 			
-			try:
-				(min_exp, mants) = BestInterTaxonScore[query_id]
-				
-				if ev_exp < min_exp:
-					BestInterTaxonScore[query_id] = (ev_exp, [ev_mant])
-				elif ev_exp == min_exp:
-					BestInterTaxonScore[query_id] = (ev_exp, mants+[ev_mant])
-			except:
-				BestInterTaxonScore[query_id] = (ev_exp, [ev_mant])
 
 
-		for query_id in BestInterTaxonScore:
-
-			(ev_exp, ev_mants) = BestInterTaxonScore[query_id]
-			BestInterTaxonScore[query_id] = (ev_exp, min(ev_mants))
 
 
-	log('{2} | Best Hit | {0} | {1} | {3} | {4} MB | {5}'.format(4 , 'Creating BestHit file needed for Orthology (bh file)', options.index, taxon1s, memory_usage_resource(), datetime.now() ))
-
-	BestHit = {}
-
-	if not options.outBestHitFolder:
-		options.outBestHitFolder = '.'
-	out_bh_file = open(os.path.join(options.outBestHitFolder, taxon1s+'.bh.tsv') ,'w')
-
-	if not options.cacheInputFile:
-		with open(os.path.join(options.inSimSeq, taxon1s+'.ss.tsv')) as input_file:
-			for line in input_file:
-				s = SimilarSequenceLine(line)
-				writeStoOutputFiles(s, out_bh_file)
 
 
-	else:
 
-		for s in input_file_cache:
-			writeStoOutputFiles(s, out_bh_file)
-
-
-	out_bh_file.close()
 
 
 
 	if options.outInParalogTempFolder:
-		log('{2} | Best Hit | {0} | {1} | {3} | {4} MB | {5}'.format(5 , 'Creating InParalogTemp file needed for InParalogs (pt file)', options.index, taxon1s, memory_usage_resource(), datetime.now() ))
+		log('{2} | CoOrtholog | {0} | {1} | {3} | {4} MB | {5}'.format(5 , 'Creating InParalogTemp file needed for InParalogs (pt file)', options.index, taxon1s, memory_usage_resource(), datetime.now() ))
 
 		out_pt_file = open(os.path.join(options.outInParalogTempFolder, taxon1s+'.pt.tsv') ,'w')
 
@@ -288,7 +203,7 @@ if __name__ == '__main__':
 
 
 
-	log('{2} | Best Hit | {0} | {1} | {3} | {4} MB | {5}'.format(6 , 'Done', options.index, taxon1s, memory_usage_resource(), datetime.now() ))
+	log('{2} | CoOrtholog | {0} | {1} | {3} | {4} MB | {5}'.format(6 , 'Done', options.index, taxon1s, memory_usage_resource(), datetime.now() ))
 
 
 
