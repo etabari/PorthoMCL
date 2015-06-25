@@ -165,7 +165,7 @@ if __name__ == '__main__':
 							else:
 								unnormalized_score = (math.log10(evalue_mant1 * evalue_mant2) + evalue_exp2 + evalue_exp1) / -2
 
-							orthologs += [ [taxon1s, seq1, taxon2s, seq2, unnormalized_score, None] ]
+							orthologs += [ [seq1, seq2, unnormalized_score, None] ]
 
 							taxon1_taxon2_score_sum +=	unnormalized_score	
 							taxon1_taxon2_score_count += 1
@@ -193,9 +193,9 @@ if __name__ == '__main__':
 			
 			for i in xrange(taxon1_taxon2_score_count):
 				if average>0:
-					orthologs[orthologs_index+i][5] = orthologs[orthologs_index+i][4] / average 
+					orthologs[orthologs_index+i][3] = orthologs[orthologs_index+i][2] / average 
 				else:
-					orthologs[orthologs_index+i][5] = 1
+					orthologs[orthologs_index+i][3] = 1
 
 			orthologs_index += taxon1_taxon2_score_count
 
@@ -203,13 +203,13 @@ if __name__ == '__main__':
 	if options.KeepUnnormalizedScore:
 		out_f.write('query_id\tsubject_id\tunnormalized_score\tnormalized_score\n')
 	for ortholog in orthologs:
-		out_f.write(ortholog[0] +'|' + ortholog[1] + '\t')
-		out_f.write(ortholog[2] +'|' + ortholog[3] + '\t')
+		out_f.write(ortholog[0] + '\t')
+		out_f.write(ortholog[1] + '\t')
 		if options.KeepUnnormalizedScore:
-			out_f.write(str(ortholog[4]) +'\t')
+			out_f.write(str(ortholog[2]) +'\t')
 		else:
-			ortholog[5] = int( ortholog[5] * 1000 + .5) / 1000.0 
-		out_f.write(str(ortholog[5]) + '\n')
+			ortholog[3] = int( ortholog[3] * 1000 + .5) / 1000.0 
+		out_f.write(str(ortholog[3]) + '\n')
 
 	out_f.close()
 	log('{2} | Orthology | {0} | {1} | {3} | {4} MB | {5}'.format(5, 'Finished' , options.index, taxon1s , memory_usage_resource(), datetime.now() ))
