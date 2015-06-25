@@ -24,7 +24,7 @@
 
 ## This will indicate the indices of the input to run. 1-100 maybe?
 ##
-#PBS -t 1-4
+#PBS -t 1-12
 
 ## Job Name: give it a good name so that you recognize it among the jobs running in the cluster.
 ## example: #PBS -N 3_porthomcl_run_blast
@@ -76,7 +76,7 @@ echo "$PBS_ARRAYID|$TAXON_FILE|$(date)" > $PBS_JOBNAME-$SHORT_JOBID.str
 ###
 ### https://github.com/etabari/OrthoMCLP#finding-best-hits
 ###
-# porthomclPairsBestHit.py -t $ROOTFOLDER/taxon_list -i $ROOTFOLDER/5.input/ -b $ROOTFOLDER/5.besthit -q $ROOTFOLDER/5.bestquerytaxon  -l $ROOTFOLDER/orthomclp.log -x $PBS_ARRAYID
+# porthomclPairsBestHit.py -t $ROOTFOLDER/taxon_list -i $ROOTFOLDER/5.input/ -b $ROOTFOLDER/5.besthit -q $ROOTFOLDER/5.bestquerytaxon  -l $PBS_JOBNAME-$SHORT_JOBID.log -x $PBS_ARRAYID
 
 
 ############################################
@@ -93,7 +93,7 @@ echo "$PBS_ARRAYID|$TAXON_FILE|$(date)" > $PBS_JOBNAME-$SHORT_JOBID.str
 ###
 ### https://github.com/etabari/PorthoMCL#finding-orthologs
 ###
-# porthomclPairsOrthologs.py -t $ROOTFOLDER/taxon_list -b $ROOTFOLDER/5.besthit -o $ROOTFOLDER/5.orthologs -x $PBS_ARRAYID
+# porthomclPairsOrthologs.py -t $ROOTFOLDER/taxon_list -b $ROOTFOLDER/5.besthit -o $ROOTFOLDER/5.orthologs -l $PBS_JOBNAME-$SHORT_JOBID.log -x $PBS_ARRAYID
 
 
 ############################################
@@ -109,6 +109,8 @@ echo "$PBS_ARRAYID|$TAXON_FILE|$(date)" > $PBS_JOBNAME-$SHORT_JOBID.str
 #
 # awk -F'[|\t]' '{print $2 >> ("$ROOTFOLDER/5.ogenes/"$1".og.tsv")}' $ROOTFOLDER/5.orthologs/$TAXON_FILE.ort.tsv 
 #
+
+
 #########
 ###
 ### Step 5.2.2: sort unique files:
