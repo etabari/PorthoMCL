@@ -60,7 +60,7 @@ TAXON_FILE="`sed -n $PBS_ARRAYID\p $ROOTFOLDER/taxon_list`"
 
 
 # Create a file to mark the start of this BLAST
-echo $TAXON_FILE > $PBS_JOBNAME-$SHORT_JOBID.start
+echo "$PBS_ARRAYID|$TAXON_FILE|$(date)" > $PBS_JOBNAME-$SHORT_JOBID.str
 
 
 ############################################
@@ -123,5 +123,5 @@ echo $TAXON_FILE > $PBS_JOBNAME-$SHORT_JOBID.start
 
 
 # Create a file to mark the end of this BLAST
-echo $TAXON_FILE >  $PBS_O_WORKDIR/$PBS_JOBNAME-$SHORT_JOBID.end
+echo "$PBS_ARRAYID|$TAXON_FILE|$(date)" >  $PBS_O_WORKDIR/$PBS_JOBNAME-$SHORT_JOBID.fin
 
