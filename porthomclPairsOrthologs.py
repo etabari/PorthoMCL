@@ -31,7 +31,9 @@ def readBestHit(query_taxon, file_name):
 			
 			query_id = query_taxon+'|'+cols[0]
 
-			(subject_taxon, subject_id) = cols[1].split('|')
+			subject_id = cols[1]
+
+			subject_taxon = subject_id.split('|')[0]
 
 			try: 
 				a = best_hits[subject_taxon]
@@ -139,12 +141,12 @@ if __name__ == '__main__':
 			taxon2_index += 1
 			
 			if not os.path.exists(taxon2_filename):
-				log('{2} | Orthology | {0} | {1} | {3} | {4} MB | {5}'.format('3.' + str(taxon2_index) , 'ERROR: Targeted Best hit (bh file) Does not exists', options.index, taxon2s , memory_usage_resource(), datetime.now() ))
+				log('{2} | Orthology | {0} | {1} | {3} | {4} MB | {5}'.format('3.' + str(taxon2_index) , 'ERROR: Targeted Best hit ('+taxon2s+'.bh.tsv) Does not exists', options.index, taxon1s , memory_usage_resource(), datetime.now() ))
 				continue			
 
 			taxon2_dic = readBestHit(taxon2s, taxon2_filename)
 
-			log('{2} | Orthology | {0} | {1} | {3} | {4} MB | {5}'.format('3.' + str(taxon2_index) , 'Reading Targeted Best hit (bh file)', options.index, taxon2s , memory_usage_resource(), datetime.now() ))
+			log('{2} | Orthology | {0} | {1} | {3} | {4} MB | {5}'.format('3.' + str(taxon2_index) , 'Reading Targeted Best hit ('+taxon2s+'.bh.tsv)', options.index, taxon1s , memory_usage_resource(), datetime.now() ))
 			
 			taxon1_taxon2_score_sum = 0
 			taxon1_taxon2_score_count = 0
@@ -177,8 +179,8 @@ if __name__ == '__main__':
 							print '\t', seq1, '(',len(taxon1_dic[taxon2s][seq1]),')', '<----> NOTHING'
 							
 
-			log('{2} | Orthology | {0} | {1} | {3} | {4} MB | {5}'.format('4.' + str(taxon2_index) , 'Orthologs: ' + str( taxon1_taxon2_score_count) , options.index, taxon2s , memory_usage_resource(), datetime.now() ))
-			log('{2} | Orthology | {0} | {1} | {3} | {4} MB | {5}'.format('4.' + str(taxon2_index), 'No hits: ' + str( taxon1_taxon2_notfound_count) , options.index, taxon2s , memory_usage_resource(), datetime.now() ))
+			log('{2} | Orthology | {0} | {1} | {3} | {4} MB | {5}'.format('4.' + str(taxon2_index) , 'Orthologs: ' + str( taxon1_taxon2_score_count) , options.index, taxon1s , memory_usage_resource(), datetime.now() ))
+			log('{2} | Orthology | {0} | {1} | {3} | {4} MB | {5}'.format('4.' + str(taxon2_index), 'No hits: ' + str( taxon1_taxon2_notfound_count) , options.index, taxon1s , memory_usage_resource(), datetime.now() ))
 			
 			average = 1
 			if taxon1_taxon2_score_count>0:
@@ -210,4 +212,4 @@ if __name__ == '__main__':
 		out_f.write(str(ortholog[5]) + '\n')
 
 	out_f.close()
-	log('{2} | Orthology | {0} | {1} | {3} | {4} MB | {5}'.format(5, 'Finished' , options.index, taxon2s , memory_usage_resource(), datetime.now() ))
+	log('{2} | Orthology | {0} | {1} | {3} | {4} MB | {5}'.format(5, 'Finished' , options.index, taxon1s , memory_usage_resource(), datetime.now() ))
