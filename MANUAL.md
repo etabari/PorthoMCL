@@ -191,13 +191,6 @@ porthomclBlastParser 3.blastres/NC_000913.tab 1.compliantFasta >> 4.splitSimSeq/
 _It's better to run this as a job on the cluster rather than running it interactively._
 
 
-## Step 5: Find Pair
-
-This is the most time consuming step of OrthoMCL that would not finish using a MySQL server for large amount of data.
-This is an embarrassingly parallel problem and can be easily splitted into multiple input files to be executed in parallel.
-
-So the first step is to split the similarSequences.txt file into multiple files:
-
 
 <!--
 #### 5.0.1 Split input file
@@ -216,7 +209,7 @@ _It's better to run this as a job on the cluster rather than running it interact
 -->
 
 
-#### 5.1 Finding Best Hits
+## Step 5: Finding Best Hits
 
 This step must be done for all the split input files before you could move forward to calculate Orthologs, inParalogs and coOrthologs.
 OrthoMCL has a bug. read more about it [here](release_notes.md#1-orthomcl-bug): 
@@ -258,7 +251,7 @@ porthomclPairsBestHit.py -t sample/taxon_list -s sample/4.splitSimSeq -b sample/
 You can run this code in parallel with different values for -x. An example of such execution is included in the `porthomclRunPBS.sh` script.
 
 
-#### 5.2 Finding Orthologs
+## Step 6: Finding Orthologs
 
 The output of this step is all the ortholog genes. 
 The outputs of this steps for all genomes can be merged together and fed to MCL 
@@ -292,9 +285,9 @@ porthomclPairsOrthologs.py -t sample/taxon_list -b sample/5.besthit -o sample/5.
 You can run this code in parallel with different values for -x. An example of such execution is included in the `porthomclRunPBS.sh` script.
 
 
-#### 5.3 Finding Paralogs
+#### Step 7: Finding Paralogs
 
-This step normalizes the scores calculated in step 5.1. OrthoMCL uses the average paralog score of the genes that have orthologous relationships to 
+This step normalizes the scores calculated in step 5. OrthoMCL uses the average paralog score of the genes that have orthologous relationships to 
 normalized the score. 
 Therefore a list of all the genes that have an orthology is essential. 
 
@@ -353,12 +346,4 @@ porthomclPairsInParalogs.py -t sample/taxon_list -q sample/5.paralogTemp -o samp
 You can run this code in parallel with different values for -x. An example of such execution is included in the `porthomclRunPBS.sh` script.
 
 
-.
 
-.
-
-.
-
-.
-
-THIS IS TO COTINUE
