@@ -43,28 +43,45 @@
 #PBS -o /dev/null
 
 
-## This is the folder where you keep your data 
-## This is going to be big.
-## Don't forget the / at the end of it
-## example: ROOTFOLDER=/scratch/user/porthomcl/data
-##
-ROOTFOLDER=sample
-
+### ----------------------------------------
+###   IMPORTANT VARIABLE SETTING
+### ----------------------------------------
+### Make variables for Job names and job log files
+###
 SHORT_JOBID=`echo $PBS_JOBID |cut -d. -f1`
 SHORTER_JOBID=`echo $PBS_JOBID | sed  's/\([0-9]\+\).*/\1/g'`
 ORG_JOBNAME=`echo $PBS_JOBNAME |cut -d- -f1`
-
 JOB_FILE=$ORG_JOBNAME-$SHORTER_JOBID-$PBS_ARRAYID
-
 exec 1>$PBS_O_WORKDIR/$JOB_FILE.out  2>$PBS_O_WORKDIR/$JOB_FILE.err
+
+
+### ----------------------------------------
+###   IMPORTANT VARIABLE SETTING
+### ----------------------------------------
+### This is the folder where you keep your data 
+### This is going to be big.
+### SKIP the / at the end of it
+### example: ROOTFOLDER=/scratch/user/porthomcl/data
+##
+ROOTFOLDER=sample
+
 
 
 cd $PBS_O_WORKDIR
 
+### ----------------------------------------
+###   IMPORTANT VARIABLE SETTING
+### ----------------------------------------
+### Get the name of the Taxon file to work on based on the job array id:
+###
 TAXON_FILE="`sed -n $PBS_ARRAYID\p $ROOTFOLDER/taxon_list`"
 
 
-# Create a file to mark the start of this BLAST
+### ----------------------------------------
+###   IMPORTANT STEP TO LOG RUN TIME
+### ----------------------------------------
+### log the index, taxon id and time of the start
+###
 echo "$PBS_ARRAYID|$TAXON_FILE|$(date)|start" >> $PBS_O_WORKDIR/$ORG_JOBNAME-$SHORTER_JOBID.timing
 
 
@@ -74,7 +91,17 @@ echo "$PBS_ARRAYID|$TAXON_FILE|$(date)|start" >> $PBS_O_WORKDIR/$ORG_JOBNAME-$SH
 ### https://github.com/etabari/OrthoMCLP#step-4-parse-blast-results
 ### note that -num_threads 8 is passed, adjust it accordingly to your nodes.
 ###
-#  blastp -query $ROOTFOLDER/3.blastquery/$TAXON_FILE.fasta  -db $ROOTFOLDER/3.blastdb/goodProteins.fasta  -seg yes  -dbsize 100000000  -evalue 1e-5  -outfmt 6 -num_threads 8 -out $ROOTFOLDER/3.blastres/blastres.$PBS_ARRAYID.tab
+#  blastp -query $ROOTFOLDER/3.blastquery/$TAXON_FILE.fasta  -db $ROOTFOLDER/3.blastdb/goodProteins.fasta  -seg yes  -dbsize 100000000  -evalue 1e-5  -outfmt 6 -num_threads 8 -out $ROOTFOLDER/3.blastres/$TAXON_FILE.tab
+
+
+############################################
+### STEP 4: Parse the blast
+###
+### https://github.com/etabari/OrthoMCLP#step-4-parse-blast-results
+###
+#  porthomclBlastParser $ROOTFOLDER/3.blastresmerge/$TAXON_FILE.tab $ROOTFOLDER/1.compliantFasta >> $ROOTFOLDER/5.splitSimSeq/$TAXON_FILE.ss.tsv
+
+
 
 ############################################
 ### STEP 5: Finding Best Hits
@@ -123,6 +150,10 @@ echo "$PBS_ARRAYID|$TAXON_FILE|$(date)|start" >> $PBS_O_WORKDIR/$ORG_JOBNAME-$SH
 #porthomclPairsInParalogs.py -t $ROOTFOLDER/taxon_list -q $ROOTFOLDER/5.paralogTemp -o $ROOTFOLDER/5.ogenes -p $ROOTFOLDER/5.paralogs -l $JOB_FILE.log -x $PBS_ARRAYID
 
 
-# Create a file to mark the end of this BLAST
+### ----------------------------------------
+###   IMPORTANT STEP TO LOG RUN TIME
+### ----------------------------------------
+### log the index, taxon id and time of the finish
+###
 echo "$PBS_ARRAYID|$TAXON_FILE|$(date)|end" >> $PBS_O_WORKDIR/$ORG_JOBNAME-$SHORTER_JOBID.timing
 

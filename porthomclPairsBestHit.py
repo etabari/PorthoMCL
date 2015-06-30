@@ -30,8 +30,8 @@ class SimilarSequenceLine:
 		self.evalue_mant = float(column[2])
 		self.evalue_exp = int(column[3])
 
-		self.percent_ident = column[4]
-		self.percent_match = float(column[5])
+		#self.percent_ident = column[4]
+		self.percent_match = float(column[4])
 
 
 

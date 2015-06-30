@@ -68,14 +68,6 @@ while(<F>) {
 }
 printPreviousSubject($subject);
 
-
-print STDERR "\n\n";
-print STDERR "-------------------------------------------\n";
-print STDERR "IMPORTANT: \n\n";
-print STDERR "Minimum evalueExp: $orthomclp_min_evalueExp\n\n";
-print STDERR "You need this as an input for the next step\n";
-print STDERR "-------------------------------------------\n";
-
 ########################################################################################
 
 sub getGenesFromFasta {
@@ -130,7 +122,8 @@ sub printPreviousSubject {
 	int($subject->{totalIdentities} / $subject->{totalLength} * 10 + .5)/10;
     my $shorterLength = $subject->{queryShorter}? $subject->{queryLength} : $subject->{subjectLength};
     my $percentMatch = int($nonOverlapMatchLen / $shorterLength * 1000 + .5) / 10;
-    print "$subject->{queryId}\t$subject->{subjectId}\t$subject->{queryTaxon}\t$subject->{subjectTaxon}\t$subject->{evalueMant}\t$subject->{evalueExp}\t$percentIdent\t$percentMatch\n";
+    #print "$subject->{queryId}\t$subject->{subjectId}\t$subject->{queryTaxon}\t$subject->{subjectTaxon}\t$subject->{evalueMant}\t$subject->{evalueExp}\t$percentIdent\t$percentMatch\n";
+    print "$subject->{queryId}\t$subject->{subjectId}\t$subject->{evalueMant}\t$subject->{evalueExp}\t$percentMatch\n";
 }
 
 # this (corrected) version of formatEvalue provided by Robson de Souza
