@@ -159,13 +159,12 @@ _It's better to run this as a job on the cluster rather than running it interact
 ## Step 4: Parse BLAST results
 This is a little different from the 8th step of OrhtoMCL. 
 This step parses NCBI BLAST tabular output format into the format that can be loaded into the orthomcl database. 
-It additionally prints out the minimum value of evalue_exp (A negative number) in STDERR.
 
 This will serve as an input to the next step. 
 
 ```
 cd sample
-porthomclBlastParser 3.blastresmerge/blastres.tab 1.compliantFasta >> 4.parsedblast/similarSequences.txt
+porthomclBlastParser 3.blastresmerge/NC_000913.tab 1.compliantFasta >> 5.splitSimSeq/NC_000913.ss.tsv
 ```
 
 _It's better to run this as a job on the cluster rather than running it interactively._
