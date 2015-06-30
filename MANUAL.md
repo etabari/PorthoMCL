@@ -301,12 +301,12 @@ awk -F'[|\t]' '{print $4 >> ("5.ogenes/"$3".og.tsv")}' 5.orthologs/*.ort.tsv
 
 # genes in the first column
 awk -F'[|\t]' '{print $2 >> ("5.ogenes/"$1".og.tsv")}' 5.orthologs/*.ort.tsv
+
+```
 <!---
 # keep unique ones
 find 5.ogenes/ -maxdepth 1 -type f -exec sort -u -o {} {} \;
 -->
-```
-
 Parallelized version of preceding commands have been included in the `porthomclRunPBS.sh` for convenience.
 
 Having these files (og files) in hand we can normalize the inparalog relationships:
