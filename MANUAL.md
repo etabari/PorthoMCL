@@ -232,7 +232,7 @@ The input parameters are:
 |    	| --evalueExponentCutoff	| e-value Exponent Cutoff (a negative value, default=-5)         
 | 		| --percentMatchCutoff 		| percent Match Cutoff (integer value, default=50) 
 | 		|	  --cacheInputFile    	| Cache input file or read it again. (Only use if I/O is very slow)
-| 		|	  **--keepOrthoMCLBug** | Keep the *OrthoMCL bug* in creating Temporary Paralogs files (pt files) where self hits are included
+| 		|	 --keepOrthoMCLBug | Keep the *OrthoMCL bug* in creating Temporary Paralogs files (pt files) where self hits are included
 
 This is the example to run for the FIRST sample file (-x 1). To perform this for all the sample files, you must to run the same command for **-x 1** to **-x 12**. 
 
@@ -305,8 +305,10 @@ awk -F'[|\t]' '{print $2 >> ("5.ogenes/"$1".og.tsv")}' 5.orthologs/*.ort.tsv
 ```
 <!---
 # keep unique ones
+# not needed anymore. InParalogs uses sets. 
 find 5.ogenes/ -maxdepth 1 -type f -exec sort -u -o {} {} \;
 -->
+
 Parallelized version of preceding commands have been included in the `porthomclRunPBS.sh` for convenience.
 
 Having these files (og files) in hand we can normalize the inparalog relationships:
