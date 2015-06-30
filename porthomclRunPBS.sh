@@ -31,7 +31,8 @@
 ##
 #PBS -N x_porthomcl
 
-## Your requirements: I prefer to run each BLAST multithreaded as well. (-num_threads 8) so I ask for 8 cores.
+## Resource Requirements: I prefer to run each BLAST multithreaded as well. (-num_threads 8) so I ask for 8 cores.
+## but for other proceses, you could just use ppm=1
 ##
 #PBS -l nodes=1:ppn=8
 #PBS -l walltime=100:00:00
@@ -50,8 +51,12 @@
 ROOTFOLDER=sample
 
 SHORT_JOBID=`echo $PBS_JOBID |cut -d. -f1`
-1NLOGO_JOBNAME=`echo $PBS_JOBNAME |cut -d- -f1`
-exec 1>$PBS_O_WORKDIR/$PBS_JOBNAME-$SHORT_JOBID.out  2>$PBS_O_WORKDIR/$PBS_JOBNAME-$SHORT_JOBID.err
+SHORTER_JOBID=`echo $PBS_JOBID | sed  's/\([0-9]\+\).*/\1/g'`
+ORG_JOBNAME=`echo $PBS_JOBNAME |cut -d- -f1`
+
+JOB_FILE=$ORG_JOBNAME-$SHORTER_JOBID-$PBS_ARRAYID
+
+exec 1>$PBS_O_WORKDIR/$JOB_FILE.out  2>$PBS_O_WORKDIR/$JOB_FILE.err
 
 
 cd $PBS_O_WORKDIR
@@ -60,7 +65,7 @@ TAXON_FILE="`sed -n $PBS_ARRAYID\p $ROOTFOLDER/taxon_list`"
 
 
 # Create a file to mark the start of this BLAST
-echo "$PBS_ARRAYID|$TAXON_FILE|$(date)" > $PBS_JOBNAME-$SHORT_JOBID.str
+echo "$PBS_ARRAYID|$TAXON_FILE|$(date)|start" >> $PBS_O_WORKDIR/$ORG_JOBNAME-$SHORTER_JOBID.timing
 
 
 ############################################
@@ -76,7 +81,7 @@ echo "$PBS_ARRAYID|$TAXON_FILE|$(date)" > $PBS_JOBNAME-$SHORT_JOBID.str
 ###
 ### https://github.com/etabari/OrthoMCLP#finding-best-hits
 ###
-# porthomclPairsBestHit.py -t $ROOTFOLDER/taxon_list -i $ROOTFOLDER/5.input/ -b $ROOTFOLDER/5.besthit -q $ROOTFOLDER/5.bestquerytaxon  -l $PBS_JOBNAME-$SHORT_JOBID.log -x $PBS_ARRAYID
+# porthomclPairsBestHit.py -t $ROOTFOLDER/taxon_list -i $ROOTFOLDER/5.input/ -b $ROOTFOLDER/5.besthit -q $ROOTFOLDER/5.bestquerytaxon  -l $JOB_FILE.log -x $PBS_ARRAYID
 
 
 ############################################
@@ -93,7 +98,7 @@ echo "$PBS_ARRAYID|$TAXON_FILE|$(date)" > $PBS_JOBNAME-$SHORT_JOBID.str
 ###
 ### https://github.com/etabari/PorthoMCL#finding-orthologs
 ###
-# porthomclPairsOrthologs.py -t $ROOTFOLDER/taxon_list -b $ROOTFOLDER/5.besthit -o $ROOTFOLDER/5.orthologs -l $PBS_JOBNAME-$SHORT_JOBID.log -x $PBS_ARRAYID
+# porthomclPairsOrthologs.py -t $ROOTFOLDER/taxon_list -b $ROOTFOLDER/5.besthit -o $ROOTFOLDER/5.orthologs -l $JOB_FILE.log -x $PBS_ARRAYID
 
 
 ############################################
@@ -113,7 +118,7 @@ echo "$PBS_ARRAYID|$TAXON_FILE|$(date)" > $PBS_JOBNAME-$SHORT_JOBID.str
 
 #########
 ###
-### Step 5.2.2: sort unique files:
+### Step 5.2.2: sort and remove duplicates from the files (Not really necessary, just to reduce file sizes):
 ###
 # sort -u $ROOTFOLDER/5.ogenes/$TAXON_FILE.og.tsv > $ROOTFOLDER/5.ogenes/$TAXON_FILE.og.tsv
 #
@@ -125,5 +130,5 @@ echo "$PBS_ARRAYID|$TAXON_FILE|$(date)" > $PBS_JOBNAME-$SHORT_JOBID.str
 
 
 # Create a file to mark the end of this BLAST
-echo "$PBS_ARRAYID|$TAXON_FILE|$(date)" >  $PBS_O_WORKDIR/$PBS_JOBNAME-$SHORT_JOBID.fin
+echo "$PBS_ARRAYID|$TAXON_FILE|$(date)|end" >> $PBS_O_WORKDIR/$ORG_JOBNAME-$SHORTER_JOBID.timing
 

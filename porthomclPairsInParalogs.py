@@ -96,7 +96,7 @@ if __name__ == '__main__':
 
 	OrthologUniqueId = []
 	if options.inOrthologGeneFolder: 
-		OrthologUniqueId = readTaxonList(os.path.join(options.inOrthologGeneFolder, taxon1s + '.og.tsv' ))
+		OrthologUniqueId = set(readTaxonList(os.path.join(options.inOrthologGeneFolder, taxon1s + '.og.tsv' )))
 
 
 	log('{2} | InParalogs | {0} | {1} | {3} | {4} MB | {5}'.format(3 , 'reading TempParalog file (pt file)', options.index, taxon1s , memory_usage_resource(), datetime.now() ))
