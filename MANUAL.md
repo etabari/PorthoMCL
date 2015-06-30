@@ -53,6 +53,21 @@ orthomclAdjustFastaAll.sh <input_folder>
 
 In the sample run, the results of this step is copied to samlple/1.compliantFasta
 
+
+
+#### 1.1 Taxon List file
+
+Although we could have listed the compliantFasta folder like the original orthomcl, but we find it very inefficient. 
+Also, having a list of taxons will help to easily exclude a taxon from the whole process.
+
+This is achived by listing the folder and removing the extension, sending it to a file.
+
+```shell
+cd sample
+ls -1 1.compliantFasta/ | sed -e 's/\..*$//'  > taxon_list
+```
+This file is going to be used in the most of the steps to follow.
+
 ## Step 2: Filter the input 
 
 This is EXACTLY like the 6th step of OrhtoMCL. 
@@ -87,6 +102,8 @@ At this stage, instead of running one huge blast that will never ends,
 we will split the input files to smaller size and blast them against the same huge database. 
 This way, you will have many blast runs that can be ran in parallel on a computing cluster. 
 We have supplied a torque script for PBS based clusters. To do that we need to split the input file first.
+
+
 
 
 #### 3.1 Create BLAST database
@@ -197,18 +214,6 @@ The files creared in this step from the sample run is in sample/5.splitSimSeq.
 
 _It's better to run this as a job on the cluster rather than running it interactively._
 -->
-
-#### 5.0 Taxon List file
-
-Although we could have listed the compliantFasta folder like the original orthomcl, but we find it very inefficient. 
-Also, having a list of taxons will help to easily exclude a taxon from the whole process.
-
-This is achived by listing the folder and removing the extension, sending it to a file.
-
-```shell
-cd sample
-ls -1 1.compliantFasta/ | sed -e 's/\..*$//'  > taxon_list
-```
 
 
 #### 5.1 Finding Best Hits
