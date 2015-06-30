@@ -285,7 +285,7 @@ porthomclPairsOrthologs.py -t sample/taxon_list -b sample/5.besthit -o sample/6.
 You can run this code in parallel with different values for -x. An example of such execution is included in the `porthomclRunPBS.sh` script.
 
 
-#### Step 7: Finding Paralogs
+## Step 7: Finding Paralogs
 
 This step normalizes the scores calculated in step 5. PorthoMCL uses the average paralog score of the genes that have orthologous relationships to 
 normalized the score. 
