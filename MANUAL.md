@@ -143,7 +143,7 @@ job array index.
 
 For example, job 4 will run a multithreaded blastp command with query NC_003080.fasta and outputs NC_003080.tab
 
-The script is `porthomclRunPBS.sh`
+The script is [porthomclRunPBS.sh](porthomclRunPBS.sh)
 
 You have to customize the `#PBS` variables so that it matches the requirements of your cluster. 
 
