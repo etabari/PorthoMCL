@@ -74,7 +74,7 @@ echo "$PBS_ARRAYID|$TAXON_FILE|$(date)|start" >> $PBS_O_WORKDIR/$ORG_JOBNAME-$SH
 ### https://github.com/etabari/OrthoMCLP#step-4-parse-blast-results
 ### note that -num_threads 8 is passed, adjust it accordingly to your nodes.
 ###
-#  blastp -query $ROOTFOLDER/3.blastquery/goodProteins.fasta.$PBS_ARRAYID  -db $ROOTFOLDER/3.blastdb/goodProteins.fasta  -seg yes  -dbsize 100000000  -evalue 1e-5  -outfmt 6 -num_threads 8 -out $ROOTFOLDER/3.blastres/blastres.$PBS_ARRAYID.tab
+#  blastp -query $ROOTFOLDER/3.blastquery/$TAXON_FILE.fasta  -db $ROOTFOLDER/3.blastdb/goodProteins.fasta  -seg yes  -dbsize 100000000  -evalue 1e-5  -outfmt 6 -num_threads 8 -out $ROOTFOLDER/3.blastres/blastres.$PBS_ARRAYID.tab
 
 ############################################
 ### STEP 5: Finding Best Hits

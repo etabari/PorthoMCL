@@ -108,7 +108,7 @@ The input arguments to `porthomclSplitFasta.py` are:
 porthomclSplitFasta.py -i samlple/2.filteredFasta/goodProteins.fasta  -o sample/3.blastquery 
 ```
 
-The output files of the makeblastdb is copied to samlple/3.blastquery
+The output files of the makeblastdb is created in samlple/3.blastquery
 
 #### 3.3 Run blasts 
 
@@ -127,7 +127,7 @@ Sample run for one of the input files:
 ```
 cd sample
 mkdir 3.blastres 
-blastp -query 3.blastquery/goodProteins.fasta.1  -db 3.blastdb/goodProteins.fasta  -seg yes  -dbsize 100000000  -evalue 1e-5  -outfmt 6 -num_threads 8 -out 3.blastres/blastres.1.tab
+blastp -query 3.blastquery/NC_000913.fasta  -db 3.blastdb/goodProteins.fasta  -seg yes  -dbsize 100000000  -evalue 1e-5  -outfmt 6 -num_threads 8 -out 3.blastres/NC_000913.tab
  ```
 
 
@@ -137,13 +137,13 @@ If you have access to a PBS base computing cluster, we have included a torque sc
 It initiates an array of jobs (for the sample 1 to 4) that each job array will execute one BLASTP commands on the input indetified by 
 job array index. 
 
-For example, job 4 will run a multithreaded blastp command with query goodProteins.fasta.4 and outputs blastres.4.tab
+For example, job 4 will run a multithreaded blastp command with query NC_003080.fasta and outputs NC_003080.tab
 
 The script is `porthomclRunPBS.sh`
 
 You have to customize the `#PBS` variables so that it matches the requirements of your cluster. 
 
-
+<!--
 #### 3.4 Put all blastp results together
 
 You have parallelized the blast so far, you need to put the results back together
@@ -154,7 +154,7 @@ cat 3.blastres/* > 3.blastresmerge/blastres.tab
 ```
 
 _It's better to run this as a job on the cluster rather than running it interactively._
-
+-->
 
 ## Step 4: Parse BLAST results
 This is a little different from the 8th step of OrhtoMCL. 
