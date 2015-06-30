@@ -118,15 +118,9 @@ echo "$PBS_ARRAYID|$TAXON_FILE|$(date)|start" >> $PBS_O_WORKDIR/$ORG_JOBNAME-$SH
 
 #########
 ###
-### Step 5.2.2: sort and remove duplicates from the files (Not really necessary, just to reduce file sizes):
+### Step 5.2.2: Run the paralog
 ###
-# sort -u $ROOTFOLDER/5.ogenes/$TAXON_FILE.og.tsv > $ROOTFOLDER/5.ogenes/$TAXON_FILE.og.tsv
-#
-#########
-###
-### Step 5.2.3: Run the paralog
-###
-
+#porthomclPairsInParalogs.py -t $ROOTFOLDER/taxon_list -q $ROOTFOLDER/5.paralogTemp -o $ROOTFOLDER/5.ogenes -p $ROOTFOLDER/5.paralogs -l $JOB_FILE.log -x $PBS_ARRAYID
 
 
 # Create a file to mark the end of this BLAST
