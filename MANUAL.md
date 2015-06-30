@@ -164,7 +164,7 @@ This will serve as an input to the next step.
 
 ```
 cd sample
-porthomclBlastParser 3.blastresmerge/NC_000913.tab 1.compliantFasta >> 5.splitSimSeq/NC_000913.ss.tsv
+porthomclBlastParser 3.blastresmerge/NC_000913.tab 1.compliantFasta >> 4.splitSimSeq/NC_000913.ss.tsv
 ```
 
 _It's better to run this as a job on the cluster rather than running it interactively._
@@ -177,6 +177,8 @@ This is an embarrassingly parallel problem and can be easily splitted into multi
 
 So the first step is to split the similarSequences.txt file into multiple files:
 
+
+<!--
 #### 5.0.1 Split input file
 
 `awk` provides a lot of capabilities for such use, we remove the taxon columns from the input file.  
@@ -190,9 +192,9 @@ awk -F'[|\t]' '{print $1"|"$2"\t"$3"|"$4"\t"$7"\t"$8"\t"$9"\t"$10 >> ("5.splitSi
 The files creared in this step from the sample run is in sample/5.splitSimSeq.
 
 _It's better to run this as a job on the cluster rather than running it interactively._
+-->
 
-
-#### 5.0.2 Taxon List file
+#### 5.0 Taxon List file
 
 Although we could have listed the compliantFasta folder like the original orthomcl, but we find it very inefficient. 
 Also, having a list of taxons will help to easily exclude a taxon from the whole process.
@@ -240,7 +242,7 @@ This is the example to run for the FIRST sample file (-x 1). To perform this for
 mkdir sample/5.paralogTemp
 mkdir sample/5.besthit
 
-porthomclPairsBestHit.py -t sample/taxon_list -s sample/5.splitSimSeq -b sample/5.besthit -p sample/5.paralogTemp -x 1
+porthomclPairsBestHit.py -t sample/taxon_list -s sample/4.splitSimSeq -b sample/5.besthit -p sample/5.paralogTemp -x 1
 
 ```
 
