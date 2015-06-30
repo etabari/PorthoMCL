@@ -168,7 +168,7 @@ This will serve as an input to the next step.
 
 ```
 cd sample
-porthomclBlastParser 3.blastresmerge/NC_000913.tab 1.compliantFasta >> 4.splitSimSeq/NC_000913.ss.tsv
+porthomclBlastParser 3.blastres/NC_000913.tab 1.compliantFasta >> 4.splitSimSeq/NC_000913.ss.tsv
 ```
 
 _It's better to run this as a job on the cluster rather than running it interactively._
