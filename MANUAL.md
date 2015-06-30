@@ -244,7 +244,7 @@ This is the example to run for the FIRST sample file (-x 1). To perform this for
 mkdir sample/5.paralogTemp
 mkdir sample/5.besthit
 
-porthomclPairsBestHit.py -t sample/taxon_list -s sample/4.splitSimSeq -b sample/5.besthit -p sample/5.paralogTemp -x 1
+porthomclPairsBestHit.py -t sample/taxon_list -s sample/4.splitSimSeq -b sample/5.besthit -q sample/5.paralogTemp -x 1
 
 ```
 
@@ -277,9 +277,9 @@ The input parameters are:
 This is the example to run for the FIRST sample file (-x 1). To perform this for all the sample files, you must to run the same command for -x 1 to -x 12. 
 
 ```shell
-mkdir sample/5.orthologs
+mkdir sample/6.orthologs
 
-porthomclPairsOrthologs.py -t sample/taxon_list -b sample/5.besthit -o sample/5.orthologs -x 1
+porthomclPairsOrthologs.py -t sample/taxon_list -b sample/5.besthit -o sample/6.orthologs -x 1
 
 ```
 You can run this code in parallel with different values for -x. An example of such execution is included in the `porthomclRunPBS.sh` script.
@@ -287,7 +287,7 @@ You can run this code in parallel with different values for -x. An example of su
 
 #### Step 7: Finding Paralogs
 
-This step normalizes the scores calculated in step 5. OrthoMCL uses the average paralog score of the genes that have orthologous relationships to 
+This step normalizes the scores calculated in step 5. PorthoMCL uses the average paralog score of the genes that have orthologous relationships to 
 normalized the score. 
 Therefore a list of all the genes that have an orthology is essential. 
 
@@ -297,19 +297,19 @@ This can be achieved using a set of bash commands as follows.
 
 ```shell
 cd sample
-mkdir 5.ogenes
+mkdir 7.ogenes
 
 # genes in the second column
-awk -F'[|\t]' '{print $4 >> ("5.ogenes/"$3".og.tsv")}' 5.orthologs/*.ort.tsv
+awk -F'[|\t]' '{print $4 >> ("7.ogenes/"$3".og.tsv")}' 6.orthologs/*.ort.tsv
 
 # genes in the first column
-awk -F'[|\t]' '{print $2 >> ("5.ogenes/"$1".og.tsv")}' 5.orthologs/*.ort.tsv
+awk -F'[|\t]' '{print $2 >> ("7.ogenes/"$1".og.tsv")}' 6.orthologs/*.ort.tsv
 
 ```
 <!---
 # keep unique ones
 # not needed anymore. InParalogs uses sets. 
-find 5.ogenes/ -maxdepth 1 -type f -exec sort -u -o {} {} \;
+find 7.ogenes/ -maxdepth 1 -type f -exec sort -u -o {} {} \;
 -->
 
 Parallelized version of preceding commands have been included in the `porthomclRunPBS.sh` for convenience.
@@ -340,7 +340,7 @@ This is the example to run for the FIRST sample file (-x 1). To perform this for
 ```shell
 mkdir sample/5.paralogs
 
-porthomclPairsInParalogs.py -t sample/taxon_list -q sample/5.paralogTemp -o sample/5.ogenes -p sample/5.paralogs -x 1
+porthomclPairsInParalogs.py -t sample/taxon_list -q sample/5.paralogTemp -o sample/7.ogenes -p sample/7.paralogs -x 1
 
 ```
 You can run this code in parallel with different values for -x. An example of such execution is included in the `porthomclRunPBS.sh` script.
