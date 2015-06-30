@@ -105,7 +105,7 @@ The input arguments to `porthomclSplitFasta.py` are:
 
 
 ```shell
-porthomclSplitFasta.py -i samlple/2.filteredFasta/goodProteins.fasta  -s 10000
+porthomclSplitFasta.py -i samlple/2.filteredFasta/goodProteins.fasta  -o sample/3.blastquery 
 ```
 
 The output files of the makeblastdb is copied to samlple/3.blastquery
@@ -113,7 +113,7 @@ The output files of the makeblastdb is copied to samlple/3.blastquery
 #### 3.3 Run blasts 
 
 In this step the required blast arguments are as follows:
-- query 3.blastquery/goodProteins.fasta  (BLAST Query)
+- query 3.blastquery/XXXXXX.fasta  (BLAST Query)
 - db 3.blastdb/goodProteins.fasta  (BLAST Database)
 - seg yes  (Filter query sequence with [SEG](http://www.ncbi.nlm.nih.gov/pubmed/8743706) to remove low complexity regions)
 - dbsize 100000000  (*constant* database size for adding other genomes and keeping e-values comparable)
