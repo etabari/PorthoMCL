@@ -69,9 +69,13 @@ The input arguments to `orthomclFilterFasta` are:
 
 ```shell
 orthomclFilterFasta samlple/1.compliantFasta 10 20 
+
+mkdir samlple/2.filteredFasta
+mv goodProteins.fasta samlple/2.filteredFasta/
+mv poorProteins.fasta samlple/2.filteredFasta/
 ```
 
-In the sample run, the results of this step is copied to samlple/2.filteredFasta
+In the sample run, the results of this step (`goodProteins.fasta` and `poorProteins.fasta`) is copied to samlple/2.filteredFasta
 
 
 
