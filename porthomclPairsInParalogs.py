@@ -8,7 +8,7 @@ from optparse import OptionParser
 
 
 options = None
-DEBUG = True
+DEBUG = False
 
 
 options = None
