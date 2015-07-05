@@ -338,7 +338,7 @@ The input parameters are:
 This is the example to run for the FIRST sample file (-x 1). To perform this for all the sample files, you must to run the same command for -x 1 to -x 12. 
 
 ```shell
-mkdir sample/5.paralogs
+mkdir sample/7.paralogs
 
 porthomclPairsInParalogs.py -t sample/taxon_list -q sample/5.paralogTemp -o sample/7.ogenes -p sample/7.paralogs -x 1
 
