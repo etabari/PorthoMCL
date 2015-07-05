@@ -14,14 +14,6 @@ DEBUG = False
 options = None
 
 
-def readParalogTemp(taxon, file_name):
-
-
-	return paralog_temp
-
-
-
-
 def readTaxonList(filename):
 
 	taxon_list = []
@@ -45,11 +37,13 @@ def memory_usage_resource():
 
 def log(s):
 	global options
-	print >> sys.stderr, s
 	if options.logfile:
 		l = open(options.logfile, 'a')
 		l.write(s+'\n')
 		l.close()
+	else:
+		print >> sys.stderr, s
+
 
 
 
