@@ -61,7 +61,7 @@ exec 1>$PBS_O_WORKDIR/$JOB_FILE.out  2>$PBS_O_WORKDIR/$JOB_FILE.err
 ### This is the folder where you keep your data 
 ### This is going to be big.
 ### SKIP the / at the end of it
-### example: ROOTFOLDER=/scratch/user/porthomcl/data
+### example: ROOTFOLDER=/users/<USERNAME>/porthomcl/data
 ##
 ROOTFOLDER=sample
 
@@ -88,7 +88,7 @@ echo "$PBS_ARRAYID|$TAXON_FILE|$(date)|start" >> $PBS_O_WORKDIR/$ORG_JOBNAME-$SH
 ############################################
 ### STEP 3: run the blast
 ###
-### https://github.com/etabari/OrthoMCLP#step-4-parse-blast-results
+### 
 ### note that -num_threads 8 is passed, adjust it accordingly to your nodes.
 ###
 #
@@ -99,7 +99,7 @@ echo "$PBS_ARRAYID|$TAXON_FILE|$(date)|start" >> $PBS_O_WORKDIR/$ORG_JOBNAME-$SH
 ############################################
 ### STEP 4: Parse the blast
 ###
-### https://github.com/etabari/OrthoMCLP#step-4-parse-blast-results
+### 
 ###
 #
 #  mkdir $ROOTFOLDER/4.splitSimSeq
@@ -111,7 +111,7 @@ echo "$PBS_ARRAYID|$TAXON_FILE|$(date)|start" >> $PBS_O_WORKDIR/$ORG_JOBNAME-$SH
 ############################################
 ### STEP 5: Finding Best Hits
 ###
-### https://github.com/etabari/OrthoMCLP#finding-best-hits
+### 
 ###
 #
 #  mkdir $ROOTFOLDER/5.paralogTemp
@@ -120,43 +120,64 @@ echo "$PBS_ARRAYID|$TAXON_FILE|$(date)|start" >> $PBS_O_WORKDIR/$ORG_JOBNAME-$SH
 #  porthomclPairsBestHit.py -t $ROOTFOLDER/taxon_list -i $ROOTFOLDER/5.input/ -b $ROOTFOLDER/5.besthit -q $ROOTFOLDER/5.bestquerytaxon  -l $JOB_FILE.log -x $PBS_ARRAYID
 
 
-############################################
-### STEP 5.0.1: Split the input file
-###
-### https://github.com/etabari/PorthoMCL#finding-orthologs
-###
-# awk -F'[|\t]' '{print $1"|"$2"\t"$3"|"$4"\t"$7"\t"$8"\t"$9"\t"$10 >> ("'"$ROOTFOLDER"'/5.splitSimSeq/"$1".ss.tsv")}' $ROOTFOLDER/4.parsedblast/similarSequences.txt
-
-
 
 ############################################
-### STEP 5.1: Finding Orthologs
+### STEP 6: Finding Orthologs
 ###
-### https://github.com/etabari/PorthoMCL#finding-orthologs
+### 
 ###
-# porthomclPairsOrthologs.py -t $ROOTFOLDER/taxon_list -b $ROOTFOLDER/5.besthit -o $ROOTFOLDER/5.orthologs -l $JOB_FILE.log -x $PBS_ARRAYID
-
-
-############################################
-### STEP 5.2: Finding Paralogs
-###
-### https://github.com/etabari/PorthoMCL#finding-paralogs
-###
-#########
-###
-### Step 5.2.1: Find the genes:
-###
-# awk -F'[|\t]' '{print $4 >> ("'"$ROOTFOLDER"'/5.ogenes/"$3".og.tsv")}' $ROOTFOLDER/5.orthologs/$TAXON_FILE.ort.tsv 
 #
-# awk -F'[|\t]' '{print $2 >> ("'"$ROOTFOLDER"'/5.ogenes/"$1".og.tsv")}' $ROOTFOLDER/5.orthologs/$TAXON_FILE.ort.tsv 
+#  mkdir $ROOTFOLDER/6.orthologs
 #
+#  porthomclPairsOrthologs.py -t $ROOTFOLDER/taxon_list -b $ROOTFOLDER/5.besthit -o $ROOTFOLDER/6.orthologs -l $JOB_FILE.log -x $PBS_ARRAYID
+
+
+
+############################################
+### STEP 7: Finding Paralogs
+###
+### 
+###
 
 
 #########
 ###
-### Step 5.2.2: Run the paralog
+### Step 7.1: Find the ogenes:
 ###
-#porthomclPairsInParalogs.py -t $ROOTFOLDER/taxon_list -q $ROOTFOLDER/5.paralogTemp -o $ROOTFOLDER/5.ogenes -p $ROOTFOLDER/5.paralogs -l $JOB_FILE.log -x $PBS_ARRAYID
+#
+#  mkdir $ROOTFOLDER/7.ogenes
+#
+#  awk -F'[|\t]' '{print $4 >> ("'"$ROOTFOLDER"'/7.ogenes/"$3".og.tsv")}' $ROOTFOLDER/6.orthologs/$TAXON_FILE.ort.tsv 
+#  awk -F'[|\t]' '{print $2 >> ("'"$ROOTFOLDER"'/7.ogenes/"$1".og.tsv")}' $ROOTFOLDER/6.orthologs/$TAXON_FILE.ort.tsv 
+
+
+#########
+###
+### Step 7.2: Run the paralog
+###
+#
+#  mkdir $ROOTFOLDER/7.paralogs
+#
+#  porthomclPairsInParalogs.py -t $ROOTFOLDER/taxon_list -q $ROOTFOLDER/5.paralogTemp -o $ROOTFOLDER/7.ogenes -p $ROOTFOLDER/7.paralogs -l $JOB_FILE.log -x $PBS_ARRAYID
+
+
+
+############################################
+### STEP 8: Run MCL
+###
+### note that -t 8 is passed, adjust it accordingly to your nodes.
+###
+#
+#  cat $ROOTFOLDER/6.orthologs/*.tsv >> $ROOTFOLDER/8.all.ort.tsv
+#
+#  mcl $ROOTFOLDER/8.all.ort.tsv  --abc -I 1.5 -t 8 -o $ROOTFOLDER/8.all.ort.group
+#
+#
+#
+#  cat $ROOTFOLDER/7.paralogs/*.tsv >> $ROOTFOLDER/8.all.par.tsv
+#
+#  mcl $ROOTFOLDER/8.all.par.tsv  --abc -I 1.5 -t 8 -o $ROOTFOLDER/8.all.par.group
+#
 
 
 ### ----------------------------------------
