@@ -28,6 +28,11 @@ This implementation *removes* the need for a database server.
 The sample folder contains execution of all these steps. Each folder created at each step is numbered by the step number. 
 The starting data is located in sample/0.input_faa
 
+<!--  =============================================================================================================== -->
+<!--  = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = -->
+<!--  =============================================================================================================== -->
+<!--  = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = -->
+<!--  =============================================================================================================== -->
 ## Step 1: Prepare the input sequences.
 
 This is EXACTLY like the 5th step of OrhtoMCL. In this step fasta file will be generated to have sequence and protein identifiers.
@@ -68,6 +73,11 @@ ls -1 1.compliantFasta/ | sed -e 's/\..*$//'  > taxon_list
 ```
 This file is going to be used in the most of the steps to follow.
 
+<!--  =============================================================================================================== -->
+<!--  = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = -->
+<!--  =============================================================================================================== -->
+<!--  = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = -->
+<!--  =============================================================================================================== -->
 ## Step 2: Filter the input 
 
 This is EXACTLY like the 6th step of OrhtoMCL. 
@@ -93,7 +103,11 @@ mv poorProteins.fasta samlple/2.filteredFasta/
 In the sample run, the results of this step (`goodProteins.fasta` and `poorProteins.fasta`) is copied to samlple/2.filteredFasta
 
 
-
+<!--  =============================================================================================================== -->
+<!--  = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = -->
+<!--  =============================================================================================================== -->
+<!--  = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = -->
+<!--  =============================================================================================================== -->
 ## Step 3: All-v-all BLAST
 
 We have developed and tested this with NCBI BLAST 2.2.29+. 
@@ -208,7 +222,11 @@ The files creared in this step from the sample run is in sample/5.splitSimSeq.
 _It's better to run this as a job on the cluster rather than running it interactively._
 -->
 
-
+<!--  =============================================================================================================== -->
+<!--  = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = -->
+<!--  =============================================================================================================== -->
+<!--  = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = -->
+<!--  =============================================================================================================== -->
 ## Step 5: Finding Best Hits
 
 This step must be done for all the split input files before you could move forward to calculate Orthologs, inParalogs and coOrthologs.
@@ -250,7 +268,11 @@ porthomclPairsBestHit.py -t sample/taxon_list -s sample/4.splitSimSeq -b sample/
 
 You can run this code in parallel with different values for -x. An example of such execution is included in the `porthomclRunPBS.sh` script.
 
-
+<!--  =============================================================================================================== -->
+<!--  = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = -->
+<!--  =============================================================================================================== -->
+<!--  = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = -->
+<!--  =============================================================================================================== -->
 ## Step 6: Finding Orthologs
 
 The output of this step is all the ortholog genes. 
@@ -284,7 +306,11 @@ porthomclPairsOrthologs.py -t sample/taxon_list -b sample/5.besthit -o sample/6.
 ```
 You can run this code in parallel with different values for -x. An example of such execution is included in the `porthomclRunPBS.sh` script.
 
-
+<!--  =============================================================================================================== -->
+<!--  = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = -->
+<!--  =============================================================================================================== -->
+<!--  = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = -->
+<!--  =============================================================================================================== -->
 ## Step 7: Finding Paralogs
 
 This step normalizes the scores calculated in step 5. PorthoMCL uses the average paralog score of the genes that have orthologous relationships to 
@@ -344,6 +370,30 @@ porthomclPairsInParalogs.py -t sample/taxon_list -q sample/5.paralogTemp -o samp
 
 ```
 You can run this code in parallel with different values for -x. An example of such execution is included in the `porthomclRunPBS.sh` script.
+
+<!--  =============================================================================================================== -->
+<!--  = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = -->
+<!--  =============================================================================================================== -->
+<!--  = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = -->
+<!--  =============================================================================================================== -->
+## Step 8: Running MCL
+
+This is EXACTLY like the last step of OrhtoMCL. 
+You just need to run MCL on outputs of the steps 6 and 7:
+
+Just notice that **-t** will set the number of processors you have to use for MCL. 
+
+```shell
+
+cat sample/6.orthologs/*.tsv >> sample/8.all.ort.tsv
+
+mcl sample/8.all.ort.tsv  --abc -I 1.5 -t 4 -o sample/8.all.ort.group
+
+cat sample/7.paralogs/*.tsv >> sample/8.all.par.tsv
+
+mcl sample/8.all.par.tsv  --abc -I 1.5 -t 4 -o sample/8.all.par.group
+
+```
 
 
 
