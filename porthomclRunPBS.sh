@@ -116,7 +116,7 @@ echo "$PBS_ARRAYID|$TAXON_FILE|$(date)|start" >> $PBS_O_WORKDIR/$ORG_JOBNAME-$SH
 ###
 ### https://github.com/etabari/PorthoMCL#finding-orthologs
 ###
-# awk -F'[|\t]' '{print $1"|"$2"\t"$3"|"$4"\t"$7"\t"$8"\t"$9"\t"$10 >> ("$ROOTFOLDER/5.splitSimSeq/"$1".ss.tsv")}' $ROOTFOLDER/4.parsedblast/similarSequences.txt
+# awk -F'[|\t]' '{print $1"|"$2"\t"$3"|"$4"\t"$7"\t"$8"\t"$9"\t"$10 >> ("'"$ROOTFOLDER"'/5.splitSimSeq/"$1".ss.tsv")}' $ROOTFOLDER/4.parsedblast/similarSequences.txt
 
 
 
@@ -137,9 +137,9 @@ echo "$PBS_ARRAYID|$TAXON_FILE|$(date)|start" >> $PBS_O_WORKDIR/$ORG_JOBNAME-$SH
 ###
 ### Step 5.2.1: Find the genes:
 ###
-# awk -F'[|\t]' '{print $4 >> ("$ROOTFOLDER/5.ogenes/"$3".og.tsv")}' $ROOTFOLDER/5.orthologs/$TAXON_FILE.ort.tsv 
+# awk -F'[|\t]' '{print $4 >> ("'"$ROOTFOLDER"'/5.ogenes/"$3".og.tsv")}' $ROOTFOLDER/5.orthologs/$TAXON_FILE.ort.tsv 
 #
-# awk -F'[|\t]' '{print $2 >> ("$ROOTFOLDER/5.ogenes/"$1".og.tsv")}' $ROOTFOLDER/5.orthologs/$TAXON_FILE.ort.tsv 
+# awk -F'[|\t]' '{print $2 >> ("'"$ROOTFOLDER"'/5.ogenes/"$1".og.tsv")}' $ROOTFOLDER/5.orthologs/$TAXON_FILE.ort.tsv 
 #
 
 

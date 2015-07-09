@@ -8,18 +8,10 @@ from optparse import OptionParser
 
 
 options = None
-DEBUG = True
+DEBUG = False
 
 
 options = None
-
-
-def readParalogTemp(taxon, file_name):
-
-
-	return paralog_temp
-
-
 
 
 def readTaxonList(filename):
@@ -45,11 +37,13 @@ def memory_usage_resource():
 
 def log(s):
 	global options
-	print >> sys.stderr, s
 	if options.logfile:
 		l = open(options.logfile, 'a')
 		l.write(s+'\n')
 		l.close()
+	else:
+		print >> sys.stderr, s
+
 
 
 
@@ -95,7 +89,7 @@ if __name__ == '__main__':
 	log('{2} | InParalogs | {0} | {1} | {3} | {4} MB | {5}'.format(2 , 'reading Ortholog Gene file (og file)', options.index, taxon1s , memory_usage_resource(), datetime.now() ))
 
 	OrthologUniqueId = []
-	if options.inOrthologGeneFolder: 
+	if options.inOrthologGeneFolder and os.path.exists( os.path.join(options.inOrthologGeneFolder, taxon1s + '.og.tsv' ) ):
 		OrthologUniqueId = set(readTaxonList(os.path.join(options.inOrthologGeneFolder, taxon1s + '.og.tsv' )))
 
 
