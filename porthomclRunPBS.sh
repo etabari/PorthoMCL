@@ -91,6 +91,8 @@ echo "$PBS_ARRAYID|$TAXON_FILE|$(date)|start" >> $PBS_O_WORKDIR/$ORG_JOBNAME-$SH
 ### https://github.com/etabari/OrthoMCLP#step-4-parse-blast-results
 ### note that -num_threads 8 is passed, adjust it accordingly to your nodes.
 ###
+#
+#  mkdir $ROOTFOLDER/3.blastres
 #  blastp -query $ROOTFOLDER/3.blastquery/$TAXON_FILE.fasta  -db $ROOTFOLDER/3.blastdb/goodProteins.fasta  -seg yes  -dbsize 100000000  -evalue 1e-5  -outfmt 6 -num_threads 8 -out $ROOTFOLDER/3.blastres/$TAXON_FILE.tab
 
 
@@ -99,6 +101,9 @@ echo "$PBS_ARRAYID|$TAXON_FILE|$(date)|start" >> $PBS_O_WORKDIR/$ORG_JOBNAME-$SH
 ###
 ### https://github.com/etabari/OrthoMCLP#step-4-parse-blast-results
 ###
+#
+#  mkdir $ROOTFOLDER/4.splitSimSeq
+#
 #  porthomclBlastParser $ROOTFOLDER/3.blastresmerge/$TAXON_FILE.tab $ROOTFOLDER/1.compliantFasta >> $ROOTFOLDER/5.splitSimSeq/$TAXON_FILE.ss.tsv
 
 
@@ -108,7 +113,11 @@ echo "$PBS_ARRAYID|$TAXON_FILE|$(date)|start" >> $PBS_O_WORKDIR/$ORG_JOBNAME-$SH
 ###
 ### https://github.com/etabari/OrthoMCLP#finding-best-hits
 ###
-# porthomclPairsBestHit.py -t $ROOTFOLDER/taxon_list -i $ROOTFOLDER/5.input/ -b $ROOTFOLDER/5.besthit -q $ROOTFOLDER/5.bestquerytaxon  -l $JOB_FILE.log -x $PBS_ARRAYID
+#
+#  mkdir $ROOTFOLDER/5.paralogTemp
+#  mkdir $ROOTFOLDER/5.besthit
+#
+#  porthomclPairsBestHit.py -t $ROOTFOLDER/taxon_list -i $ROOTFOLDER/5.input/ -b $ROOTFOLDER/5.besthit -q $ROOTFOLDER/5.bestquerytaxon  -l $JOB_FILE.log -x $PBS_ARRAYID
 
 
 ############################################

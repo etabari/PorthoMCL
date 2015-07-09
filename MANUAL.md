@@ -52,12 +52,11 @@ If you have downloaded faa files from NCBI (for example: ftp://ftp.ncbi.nlm.nih.
 We have supplied a bash script to run `orthomclAdjustFasta` on all faa files and produce the proper fasta files.
 
 ```shell
-cd compliantFasta
+cd sample/1.compliantFasta
 orthomclAdjustFastaAll.sh <input_folder>
 ```
 
 In the sample run, the results of this step is copied to samlple/1.compliantFasta
-
 
 
 #### 1.1 Taxon List file
@@ -124,6 +123,11 @@ We have supplied a torque script for PBS based clusters. To do that we need to s
 
 ```
 makeblastdb -in samlple/2.filteredFasta/goodProteins.fasta  -dbtype prot
+
+mkdir samlple/3.blastdb
+
+mv sample/goodProteins.* samlple/3.blastdb/
+
 ```
 
 The output files of the makeblastdb is copied to samlple/3.blastdb
@@ -140,6 +144,8 @@ The input arguments to `porthomclSplitFasta.py` are:
 
 
 ```shell
+mkdir sample/3.blastquery 
+
 porthomclSplitFasta.py -i samlple/2.filteredFasta/goodProteins.fasta  -o sample/3.blastquery 
 ```
 
@@ -191,6 +197,11 @@ cat 3.blastres/* > 3.blastresmerge/blastres.tab
 _It's better to run this as a job on the cluster rather than running it interactively._
 -->
 
+<!--  =============================================================================================================== -->
+<!--  = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = -->
+<!--  =============================================================================================================== -->
+<!--  = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = -->
+<!--  =============================================================================================================== -->
 ## Step 4: Parse BLAST results
 This is a little different from the 8th step of OrhtoMCL. 
 This step parses NCBI BLAST tabular output format into the format that can be loaded into the orthomcl database. 
@@ -198,6 +209,8 @@ This step parses NCBI BLAST tabular output format into the format that can be lo
 This will serve as an input to the next step. 
 
 ```
+mkdir sample/4.splitSimSeq
+
 cd sample
 porthomclBlastParser 3.blastres/NC_000913.tab 1.compliantFasta >> 4.splitSimSeq/NC_000913.ss.tsv
 ```
