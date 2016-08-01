@@ -232,7 +232,7 @@ porthomclBlastParser 3.blastres/NC_000913.tab 1.compliantFasta >> 4.splitSimSeq/
 
 to run `porthomclBlastParser` for all the blast results you could use a shell script such as:
 
-```
+```bash
 mkdir sample/4.splitSimSeq
 
 cd sample
