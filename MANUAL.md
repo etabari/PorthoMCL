@@ -44,14 +44,14 @@ The input arguments to orthomclAdjustFasta are:
 - Input Fasta file 
 - A number identifying the field containing protein identification on the fasta header
 
-```
+```bash
 orthomclAdjustFasta NC_000913 sample/0.input_faa/NC_000913.faa 4
 ```
 
 If you have downloaded faa files from NCBI (for example: ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/bacteria/)
 We have supplied a bash script to run `orthomclAdjustFasta` on all faa files and produce the proper fasta files.
 
-```shell
+```bash
 cd sample/1.compliantFasta
 orthomclAdjustFastaAll.sh <input_folder>
 ```
@@ -66,7 +66,7 @@ Also, having a list of taxons will help to easily exclude a taxon from the whole
 
 This is achived by listing the folder and removing the extension, sending it to a file.
 
-```shell
+```bash
 cd sample
 ls -1 1.compliantFasta/ | sed -e 's/\..*$//'  > taxon_list
 ```
@@ -91,7 +91,7 @@ The input arguments to `orthomclFilterFasta` are:
 - good_proteins_file:      _optional_  By default goodProteins.fasta in the current dir.
 - poor_proteins_file:      _optional_  By default poorProteins.fasta in the current dir.
 
-```shell
+```bash
 orthomclFilterFasta sample/1.compliantFasta 10 20 
 
 mkdir sample/2.filteredFasta
@@ -121,7 +121,7 @@ We have supplied a torque script for PBS based clusters. To do that we need to s
 
 #### 3.1 Create BLAST database
 
-```
+```bash
 makeblastdb -in sample/2.filteredFasta/goodProteins.fasta  -dbtype prot
 
 mkdir sample/3.blastdb
@@ -143,7 +143,7 @@ The input arguments to `porthomclSplitFasta.py` are:
 - size: number of sequences to keep in each split file
 
 
-```shell
+```bash
 mkdir sample/3.blastquery 
 
 porthomclSplitFasta.py -i sample/2.filteredFasta/goodProteins.fasta  -o sample/3.blastquery 
@@ -165,7 +165,7 @@ In this step the required blast arguments are as follows:
 
 
 Sample run for one of the input files:
- ```
+ ```bash
 cd sample
 mkdir 3.blastres 
 blastp -query 3.blastquery/NC_000913.fasta  -db 3.blastdb/goodProteins.fasta  -seg yes  -dbsize 100000000  -evalue 1e-5  -outfmt 6 -num_threads 8 -out 3.blastres/NC_000913.tab
@@ -175,7 +175,7 @@ blastp -query 3.blastquery/NC_000913.fasta  -db 3.blastdb/goodProteins.fasta  -s
 Or if you're running PorthoMCL on a single machine you could use a shell script such as:
 (be aware of -num_threads argument of blastp)
 
- ```
+ ```bash
 cd sample
 mkdir 3.blastres 
 for query in 3.blastquery/*
@@ -203,7 +203,7 @@ You have to customize the `#PBS` variables so that it matches the requirements o
 
 You have parallelized the blast so far, you need to put the results back together
 
-```shell
+```bash
 cd sample
 cat 3.blastres/* > 3.blastresmerge/blastres.tab
 ```
@@ -223,7 +223,7 @@ This step parses NCBI BLAST tabular output format into the format that can be lo
 This will serve as an input to the next step. 
 
 As an example for one blast result 
-```
+```bash
 mkdir sample/4.splitSimSeq
 
 cd sample
@@ -302,7 +302,7 @@ The input parameters are:
 This is the example to run for the FIRST sample file (-x 1). To perform this for all the sample files, you must to run the same command for **-x 1** to **-x 12**. 
 
 
-```shell
+```bash
 mkdir sample/5.paralogTemp
 mkdir sample/5.besthit
 
@@ -342,7 +342,7 @@ The input parameters are:
 
 This is the example to run for the FIRST sample file (-x 1). To perform this for all the sample files, you must to run the same command for -x 1 to -x 12. 
 
-```shell
+```bash
 mkdir sample/6.orthologs
 
 porthomclPairsOrthologs.py -t sample/taxon_list -b sample/5.besthit -o sample/6.orthologs -x 1
@@ -365,7 +365,7 @@ To find the paralogs, we need to extract every gene that has an orthologous rela
 This can be achieved using a set of bash commands as follows. 
 
 
-```shell
+```bash
 cd sample
 mkdir 7.ogenes
 
@@ -407,7 +407,7 @@ The input parameters are:
 
 This is the example to run for the FIRST sample file (-x 1). To perform this for all the sample files, you must to run the same command for -x 1 to -x 12. 
 
-```shell
+```bash
 mkdir sample/7.paralogs
 
 porthomclPairsInParalogs.py -t sample/taxon_list -q sample/5.paralogTemp -o sample/7.ogenes -p sample/7.paralogs -x 1
@@ -427,7 +427,7 @@ You just need to run MCL on outputs of the steps 6 and 7:
 
 Just notice that **-t** will set the number of processors you have to use for MCL. 
 
-```shell
+```bash
 
 cat sample/6.orthologs/*.tsv >> sample/8.all.ort.tsv
 
