@@ -236,7 +236,7 @@ to run `porthomclBlastParser` for all the blast results you could use a shell sc
 mkdir sample/4.splitSimSeq
 
 cd sample
-for blres in $sample/*
+for blres in sample/3.blastres/*
 do
     strand=$(basename "$blres")
     strand="${strand%.*}" # remove .fasta
