@@ -48,7 +48,7 @@ The input arguments to orthomclAdjustFasta are:
 orthomclAdjustFasta NC_000913 sample/0.input_faa/NC_000913.faa 4
 ```
 
-If you have downloaded faa files from NCBI (for example: ftp://ftp.ncbi.nlm.nih.gov/genomes/Bacteria/all.faa.tar.gz)
+If you have downloaded faa files from NCBI (for example: ftp://ftp.ncbi.nlm.nih.gov/genomes/genbank/bacteria/)
 We have supplied a bash script to run `orthomclAdjustFasta` on all faa files and produce the proper fasta files.
 
 ```shell
