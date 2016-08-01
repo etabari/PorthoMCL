@@ -165,12 +165,26 @@ In this step the required blast arguments are as follows:
 
 
 Sample run for one of the input files:
-```
+ ```
 cd sample
 mkdir 3.blastres 
 blastp -query 3.blastquery/NC_000913.fasta  -db 3.blastdb/goodProteins.fasta  -seg yes  -dbsize 100000000  -evalue 1e-5  -outfmt 6 -num_threads 8 -out 3.blastres/NC_000913.tab
  ```
 
+
+Or if you're running PorthoMCL on a single machine you could use a shell script such as:
+(be aware of -num_threads argument of blastp)
+
+ ```
+cd $sample
+mkdir 3.blastres 
+for query in 3.blastquery/*
+do
+    strand=$(basename "$query")
+    strand="${strand%.*}" # remove .fasta
+    blastp -query 3.blastquery/$strand.fasta  -db 3.blastdb/goodProteins.fasta  -seg yes  -dbsize 100000000  -evalue 1e-5  -outfmt 6 -num_threads 8 -out 3.blastres/$strand.tab
+done
+ ```
 
 #### 3.3.1 PBS Cluster BLAST
 
