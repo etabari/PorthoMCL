@@ -126,7 +126,7 @@ makeblastdb -in sample/2.filteredFasta/goodProteins.fasta  -dbtype prot
 
 mkdir sample/3.blastdb
 
-mv sample/goodProteins.* sample/3.blastdb/
+mv sample/2.filteredFasta/goodProteins.fasta.* sample/3.blastdb/
 
 ```
 
