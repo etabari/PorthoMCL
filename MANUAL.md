@@ -239,7 +239,7 @@ cd sample
 for blres in sample/3.blastres/*
 do
     strand=$(basename "$blres")
-    strand="${strand%.*}" # remove .fasta
+    strand="${strand%.*}" # remove .tab
     porthomclBlastParser 3.blastres/$strand.tab 1.compliantFasta >> 4.splitSimSeq/$strand.ss.tsv
 done
 ```
