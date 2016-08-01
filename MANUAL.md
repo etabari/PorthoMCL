@@ -222,12 +222,29 @@ This step parses NCBI BLAST tabular output format into the format that can be lo
 
 This will serve as an input to the next step. 
 
+As an example for one blast result 
 ```
 mkdir sample/4.splitSimSeq
 
 cd sample
 porthomclBlastParser 3.blastres/NC_000913.tab 1.compliantFasta >> 4.splitSimSeq/NC_000913.ss.tsv
 ```
+
+to run `porthomclBlastParser` for all the blast results you could use a shell script such as:
+
+```
+mkdir sample/4.splitSimSeq
+
+cd sample
+for blres in $sample/*
+do
+    strand=$(basename "$blres")
+    strand="${strand%.*}" # remove .fasta
+    porthomclBlastParser 3.blastres/$strand.tab 1.compliantFasta >> 4.splitSimSeq/$strand.ss.tsv
+done
+```
+
+
 
 _It's better to run this as a job on the cluster rather than running it interactively._
 
