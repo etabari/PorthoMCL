@@ -56,7 +56,7 @@ cd sample/1.compliantFasta
 orthomclAdjustFastaAll.sh <input_folder>
 ```
 
-In the sample run, the results of this step is copied to samlple/1.compliantFasta
+In the sample run, the results of this step is copied to sample/1.compliantFasta
 
 
 #### 1.1 Taxon List file
@@ -92,14 +92,14 @@ The input arguments to `orthomclFilterFasta` are:
 - poor_proteins_file:      _optional_  By default poorProteins.fasta in the current dir.
 
 ```shell
-orthomclFilterFasta samlple/1.compliantFasta 10 20 
+orthomclFilterFasta sample/1.compliantFasta 10 20 
 
-mkdir samlple/2.filteredFasta
-mv goodProteins.fasta samlple/2.filteredFasta/
-mv poorProteins.fasta samlple/2.filteredFasta/
+mkdir sample/2.filteredFasta
+mv goodProteins.fasta sample/2.filteredFasta/
+mv poorProteins.fasta sample/2.filteredFasta/
 ```
 
-In the sample run, the results of this step (`goodProteins.fasta` and `poorProteins.fasta`) is copied to samlple/2.filteredFasta
+In the sample run, the results of this step (`goodProteins.fasta` and `poorProteins.fasta`) is copied to sample/2.filteredFasta
 
 
 <!--  =============================================================================================================== -->
@@ -122,15 +122,15 @@ We have supplied a torque script for PBS based clusters. To do that we need to s
 #### 3.1 Create BLAST database
 
 ```
-makeblastdb -in samlple/2.filteredFasta/goodProteins.fasta  -dbtype prot
+makeblastdb -in sample/2.filteredFasta/goodProteins.fasta  -dbtype prot
 
-mkdir samlple/3.blastdb
+mkdir sample/3.blastdb
 
-mv sample/goodProteins.* samlple/3.blastdb/
+mv sample/goodProteins.* sample/3.blastdb/
 
 ```
 
-The output files of the makeblastdb is copied to samlple/3.blastdb
+The output files of the makeblastdb is copied to sample/3.blastdb
 
 #### 3.2 Split the input file 
 
@@ -146,10 +146,10 @@ The input arguments to `porthomclSplitFasta.py` are:
 ```shell
 mkdir sample/3.blastquery 
 
-porthomclSplitFasta.py -i samlple/2.filteredFasta/goodProteins.fasta  -o sample/3.blastquery 
+porthomclSplitFasta.py -i sample/2.filteredFasta/goodProteins.fasta  -o sample/3.blastquery 
 ```
 
-The output files of the makeblastdb is created in samlple/3.blastquery
+The output files of the makeblastdb is created in sample/3.blastquery
 
 #### 3.3 Run blasts 
 
