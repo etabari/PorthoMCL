@@ -176,7 +176,7 @@ Or if you're running PorthoMCL on a single machine you could use a shell script 
 (be aware of -num_threads argument of blastp)
 
  ```
-cd $sample
+cd sample
 mkdir 3.blastres 
 for query in 3.blastquery/*
 do
