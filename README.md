@@ -36,7 +36,7 @@ All you need to do is to put all your protein fasta files inside a specificly na
 If you have a `container/0.input_faa` set up with all your fasta files inside the `0.input_faa`, all you need to do is to run:
 
 ```bash
-orthomcl.sh container
+porthomcl.sh container
 ```
 ## Requirements and options
 
@@ -44,7 +44,7 @@ you have to install all the requirements listed above.
 
 The syntaxt to run PorthoMCL is as follows: 	
 ```bash
-orthomcl.sh [OPTIONS] container_folder
+porthomcl.sh [OPTIONS] container_folder
 ```
 Options can be: 
 
@@ -59,8 +59,8 @@ Options can be:
 
 Example:
 
-Run porthoMCL for the provided sample, from the repository folder
+Run PorthoMCL for the provided sample, from the repository folder
 
 ```bash
-./orthomcl.sh -t 8 -l . sample
+./porthomcl.sh -t 8 -l . sample
 ```
