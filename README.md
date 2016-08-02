@@ -38,4 +38,29 @@ If you have a `container/0.input_faa` set up with all your fasta files inside th
 ```bash
 orthomcl.sh container
 ```
+## Requirements and options
 
+you have to install all the requirements listed above.
+
+The syntaxt to run PorthoMCL is as follows: 	
+```bash
+orthomcl.sh [OPTIONS] container_folder
+```
+Options can be: 
+
+
+|  Options|                			|    Description                                                              
+|--------|--------------------------|-----------------------------------------------------------------------------
+|   -h   | --help 	 			    | Prints this help.              
+|   -t   | --num_threads	  		| An integer number identifying the number of processes/threads to be used (default=4)
+|   -s   | --startat				| Step to start at. in cace you stopped after a specific step, you can restart by runing from a step (values: 1-8. default=1)         
+|   -l 	| --lib  					| The location of PorthoMCL files (you can alternatively add that location to your $PATH)
+|    | --wait	| wait for a key press after each step
+
+Example:
+
+Run porthoMCL for the provided sample, from the repository folder
+
+```bash
+./orthomcl.sh -t 8 -l . sample
+```
