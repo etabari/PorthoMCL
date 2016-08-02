@@ -31,7 +31,7 @@ An application of PorthoMCL on 2,758 bacterial genome is available at [here](htt
 
 It's possible to run porthomcl without reading the manual or tweeking the parameters. To this end we have provided `porthomcl.sh`.
 
-All you need to do is to put all you protein fasta files inside a specificly named folder `0.input_faa` which is inside a container folder, just like the sample folder provided in this repository.
+All you need to do is to put all your protein fasta files inside a specificly named folder `0.input_faa` which is inside a container folder, just like the sample folder provided in this repository.
 
 If you have a `container/0.input_faa` set up with all your fasta files inside the `0.input_faa`, all you need to do is to run:
 
