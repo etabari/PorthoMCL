@@ -96,7 +96,11 @@ then
 	SHOWHELP="YES"
 fi
 
-
+if (! hash mcl 2>/dev/null)
+then
+	echo "ERROR: mcl was not found in \$PATH"
+	SHOWHELP="YES"
+fi
 
 if [ "$NUM_THREADS" -lt 1 ] 
 then 
@@ -125,7 +129,7 @@ fi
 # ### STEP 1: Prepare the input sequences.
 
 if [ $START -le 1 ]; then
-	if [ ! -z "$LIBPATH" ]; then
+	if [ ! -z "$WAITFORKEY" ]; then
 		read -p "Press any key to continue... " -n1 -s
 		echo
 	fi
@@ -153,9 +157,11 @@ if [ $START -le 1 ]; then
 	# ### STEP 1.1: Taxon List file
 
 
-	read -p "Press any key to continue... " -n1 -s
-	echo
-
+	if [ ! -z "$WAITFORKEY" ]; then
+		read -p "Press any key to continue... " -n1 -s
+		echo
+	fi
+	
 	echo "$1|1.1|Create taxon list file|Start|$(date)"
 	echo "$1|1.1|Create taxon list file|Start|$(date)" >> $LOGFILE
 
@@ -168,7 +174,7 @@ fi
 # #####################################
 # ### STEP 2: Filter the input
 if [ $START -le 2 ]; then
-	if [ ! -z "$LIBPATH" ]; then
+	if [ ! -z "$WAITFORKEY" ]; then
 		read -p "Press any key to continue... " -n1 -s
 		echo
 	fi
@@ -187,7 +193,7 @@ fi
 # #####################################
 # ### STEP 3.1:  Create BLAST database
 if [ $START -le 3 ]; then
-	if [ ! -z "$LIBPATH" ]; then
+	if [ ! -z "$WAITFORKEY" ]; then
 		read -p "Press any key to continue... " -n1 -s
 		echo
 	fi
@@ -205,24 +211,27 @@ if [ $START -le 3 ]; then
 	echo "$1|3.1|makeblastdb|End|$(date)" >> $LOGFILE
 
 
-	# # #####################################
-	# # ### 3.2 Split the input file
-	# read -p "Press any key to continue... " -n1 -s
-	# echo
+	# #####################################
+	# ### 3.2 Split the input file
+	if [ ! -z "$WAITFORKEY" ]; then
+		read -p "Press any key to continue... " -n1 -s
+		echo
+	fi
+	
 
-	# echo "$1|3.2|porthomclSplitFasta|Start|$(date)"
-	# echo "$1|3.2|porthomclSplitFasta|Start|$(date)" >> $LOGFILE
+	echo "$1|3.2|porthomclSplitFasta|Start|$(date)"
+	echo "$1|3.2|porthomclSplitFasta|Start|$(date)" >> $LOGFILE
 
-	# mkdir $container/3.blastquery 
+	mkdir $container/3.blastquery 
 
-	# `"$LIBPATH"porthomclSplitFasta.py -i $container/2.filteredFasta/goodProteins.fasta  -o $container/3.blastquery`
+	`"$LIBPATH"porthomclSplitFasta.py -i $container/2.filteredFasta/goodProteins.fasta  -o $container/3.blastquery`
 
-	# echo "$1|3.2|porthomclSplitFasta|End|$(date)" 
-	# echo "$1|3.2|porthomclSplitFasta|End|$(date)" >> $LOGFILE
+	echo "$1|3.2|porthomclSplitFasta|End|$(date)" 
+	echo "$1|3.2|porthomclSplitFasta|End|$(date)" >> $LOGFILE
 
 	# #####################################
 	### 3.3 Run blasts
-	if [ ! -z "$LIBPATH" ]; then
+	if [ ! -z "$WAITFORKEY" ]; then
 		read -p "Press any key to continue... " -n1 -s
 		echo
 	fi
@@ -233,12 +242,12 @@ if [ $START -le 3 ]; then
 
 	cd $container
 	mkdir 3.blastres 
-	for query in 1.compliantFasta/*
+	for query in 3.blastquery/*
 	do
 		echo "   $query"
 	    strand=$(basename "$query")
 	    strand="${strand%.*}" # remove .fasta
-	    blastp -query 1.compliantFasta/$strand.fasta  -db 3.blastdb/goodProteins.fasta  -seg yes  -dbsize 100000000  -evalue 1e-5  -outfmt 6 -num_threads $NUM_THREADS -out 3.blastres/$strand.tab
+	    blastp -query 3.blastquery/$strand.fasta  -db 3.blastdb/goodProteins.fasta  -seg yes  -dbsize 100000000  -evalue 1e-5  -outfmt 6 -num_threads $NUM_THREADS -out 3.blastres/$strand.tab
 	done
 
 	echo "$1|3.3|Blasts|End|$(date)" 
@@ -247,7 +256,7 @@ fi
 # #####################################
 # ### 4 Parse blasts
 if [ $START -le 4 ]; then
-	if [ ! -z "$LIBPATH" ]; then
+	if [ ! -z "$WAITFORKEY" ]; then
 		read -p "Press any key to continue... " -n1 -s
 		echo
 	fi
@@ -271,7 +280,7 @@ fi
 # #####################################
 # ### 5 Finding Best Hits
 if [ $START -le 5 ]; then
-	if [ ! -z "$LIBPATH" ]; then
+	if [ ! -z "$WAITFORKEY" ]; then
 		read -p "Press any key to continue... " -n1 -s
 		echo
 	fi
@@ -310,7 +319,7 @@ fi
 # ### Step 6: Finding Orthologs
 if [ $START -le 6 ]; then
 
-	if [ ! -z "$LIBPATH" ]; then
+	if [ ! -z "$WAITFORKEY" ]; then
 		read -p "Press any key to continue... " -n1 -s
 		echo
 	fi
@@ -348,11 +357,10 @@ fi
 # #####################################
 # ### Step 7:  Finding Paralogs
 if [ $START -le 7 ]; then
-	if [ ! -z "$LIBPATH" ]; then
+	if [ ! -z "$WAITFORKEY" ]; then
 		read -p "Press any key to continue... " -n1 -s
 		echo
 	fi
-	
 
 
 	echo "$1|7.1|Finding Paralogs (awk)|Start|$(date)" 
@@ -407,8 +415,10 @@ if [ $START -le 7 ]; then
 	echo "$1|7.1|Finding Paralogs (awk)|End|$(date)" 
 	echo "$1|7.1|Finding Paralogs (awk)|End|$(date)" >> $LOGFILE
 	###########
-	read -p "Press any key to continue... " -n1 -s
-	echo
+	if [ ! -z "$WAITFORKEY" ]; then
+		read -p "Press any key to continue... " -n1 -s
+		echo
+	fi
 
 
 	echo "$1|7.2|Finding Paralogs (porthomclPairsOrthologs)|Start|$(date)" 
@@ -443,7 +453,7 @@ fi
 # ### Step 8:  Running MCL
 if [ $START -le 8 ]; then
 
-	if [ ! -z "$LIBPATH" ]; then
+	if [ ! -z "$WAITFORKEY" ]; then
 		read -p "Press any key to continue... " -n1 -s
 		echo
 	fi
