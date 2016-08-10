@@ -52,7 +52,8 @@ Options can be:
 |--------|--------------------------|-----------------------------------------------------------------------------
 |   -h   | --help 	 			    | Prints this help.              
 |   -t   | --num_threads	  		| An integer number identifying the number of processes/threads to be used (default=4)
-|   -s   | --startat				| Step to start at. in cace you stopped after a specific step, you can restart by runing from a step (values: 1-8. default=1)         
+|   -s   | --startat				| Step to start at, in cace you stopped after a specific step, you can restart by runing from a step (values: 1-8. default=1)         
+|   -e   | --endafter				| Step to finish after, in cace you want to stop after a specific step, such as running the blasts. (values: 1-8. default=8)    
 |   -l 	| --lib  					| The location of PorthoMCL files (you can alternatively add that location to your $PATH)
 |    | --wait	| wait for a key press after each step
 
