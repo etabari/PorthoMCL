@@ -13,13 +13,12 @@ We have reimplemented steps 9 and 10. (main processing steps)
 
 There are very few requirements for PorthoMCL. Here are the list of the things needed to run PorthoMCL
 
-- Perl 5.x
-- Python 2.x
-- [BioPython](http://biopython.org/wiki/Download)
+- Perl 5.x 
+- Python 2.x 
 - [NCBI Blast](http://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE=BlastDocs&DOC_TYPE=Download)
 - [MCL](http://www.micans.org/mcl/sec_description1.html)
 
-Perl and Python come preinstalled on most Linux and Unix (OS X). You need to install them on Windows. 
+Perl and Python come preinstalled on most Linux and Unix (OS X). You need to install them on Windows. The default installation is enough and you don't need to install any modules or packages. 
 
 This implementation *removes* the need for a database server.
 
