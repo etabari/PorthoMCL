@@ -45,7 +45,7 @@ do
 	    START="$2"
 	    shift # past argument
 	    ;;
-	    -e|--endat)
+	    -e|--endafter)
 	    END="$2"
 	    shift # past argument
 	    ;;
@@ -121,10 +121,10 @@ then
 	echo "     -l, --lib          path to PorthoMCL, not required if it's installed in the \$PATH"
 	echo "     -t, --num_threads  number of threads/processes to run (default=4)"
 	echo "     -s, --startat      an integer indicating the first Step to run (default=1)"
-	echo "     -e, --endat 	     an integer indicating the last Step to run (default=8)"
+	echo "     -e, --endafter     an integer indicating the last Step to run (default=8)"
 	echo "     --wait             wait for keypress at every step"
 	echo 
-	echo "   The container folder must contain a folder named 0.input_faa"
+	echo "   The CONTAINER_FOLDER must contain a folder named 0.input_faa"
     echo "   please put your fasta (amino acid fasta) files in container/0.input_faa"
     echo "   be aware that we will process any file in that folder. "
 	exit
