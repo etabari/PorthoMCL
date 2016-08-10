@@ -20,7 +20,7 @@ There are very few requirements for PorthoMCL. Here are the list of the things n
 
 Perl and Python come preinstalled on most Linux and Unix (OS X). You need to install them on Windows. 
 
-This implementation *removes* the need for a database server.
+This implementation *removes* the need for a database server. Therefore, you don't need to install DBI or DBD::mysql modules for your perl. 
 
 # Steps 
 
