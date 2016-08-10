@@ -26,6 +26,7 @@
 
 NUM_THREADS=4
 START=1
+END=8
 
 while [[ $# -gt 1 ]]
 do
@@ -42,6 +43,10 @@ do
 	    ;;
 	    -s|--startat)
 	    START="$2"
+	    shift # past argument
+	    ;;
+	    -e|--endat)
+	    END="$2"
 	    shift # past argument
 	    ;;
 	    -l|--lib)
@@ -116,6 +121,7 @@ then
 	echo "     -l, --lib          path to PorthoMCL, not required if it's installed in the \$PATH"
 	echo "     -t, --num_threads  number of threads/processes to run (default=4)"
 	echo "     -s, --startat      an integer indicating the first Step to run (default=1)"
+	echo "     -e, --endat 	     an integer indicating the last Step to run (default=8)"
 	echo "     --wait             wait for keypress at every step"
 	echo 
 	echo "   The container folder must contain a folder named 0.input_faa"
@@ -171,6 +177,10 @@ if [ $START -le 1 ]; then
 	echo "$1|1.1|Create taxon list file|End|$(date)"
 	echo "$1|1.1|Create taxon list file|End|$(date)" >> $LOGFILE
 fi
+
+if [ $END -le 1 ]; then
+	exit
+fi
 # #####################################
 # ### STEP 2: Filter the input
 if [ $START -le 2 ]; then
@@ -189,6 +199,9 @@ if [ $START -le 2 ]; then
 
 	echo "$1|2|orthomclFilterFasta|End|$(date)" 
 	echo "$1|2|orthomclFilterFasta|End|$(date)" >> $LOGFILE
+fi
+if [ $END -le 2 ]; then
+	exit
 fi
 # #####################################
 # ### STEP 3.1:  Create BLAST database
@@ -253,6 +266,9 @@ if [ $START -le 3 ]; then
 	echo "$1|3.3|Blasts|End|$(date)" 
 	echo "$1|3.3|Blasts|End|$(date)" >> $LOGFILE
 fi
+if [ $END -le 3 ]; then
+	exit
+fi
 # #####################################
 # ### 4 Parse blasts
 if [ $START -le 4 ]; then
@@ -276,6 +292,9 @@ if [ $START -le 4 ]; then
 
 	echo "$1|4|Parse Blast Results|End|$(date)" 
 	echo "$1|4|Parse Blast Results|End|$(date)" >> $LOGFILE
+fi
+if [ $END -le 4 ]; then
+	exit
 fi
 # #####################################
 # ### 5 Finding Best Hits
@@ -315,6 +334,9 @@ if [ $START -le 5 ]; then
 	echo "$1|5|porthomclPairsBestHit|End|$(date)" 
 	echo "$1|5|porthomclPairsBestHit|End|$(date)" >> $LOGFILE
 fi
+if [ $END -le 5 ]; then
+	exit
+fi
 # #####################################
 # ### Step 6: Finding Orthologs
 if [ $START -le 6 ]; then
@@ -353,7 +375,9 @@ if [ $START -le 6 ]; then
 	echo "$1|6|Finding orthologs (porthomclPairsOrthologs)|End|$(date)" 
 	echo "$1|6|Finding orthologs (porthomclPairsOrthologs)|End|$(date)" >> $LOGFILE
 fi
-
+if [ $END -le 6 ]; then
+	exit
+fi
 # #####################################
 # ### Step 7:  Finding Paralogs
 if [ $START -le 7 ]; then
@@ -448,7 +472,9 @@ if [ $START -le 7 ]; then
 	echo "$1|7.2|Finding Paralogs (porthomclPairsOrthologs)|Start|$(date)" >> $LOGFILE
 
 fi
-
+if [ $END -le 7 ]; then
+	exit
+fi
 # #####################################
 # ### Step 8:  Running MCL
 if [ $START -le 8 ]; then
