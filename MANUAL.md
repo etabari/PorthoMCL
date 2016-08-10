@@ -15,7 +15,6 @@ There are very few requirements for PorthoMCL. Here are the list of the things n
 
 - Perl 5.x
 - Python 2.x
-- [BioPython](http://biopython.org/wiki/Download)
 - [NCBI Blast](http://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE=BlastDocs&DOC_TYPE=Download)
 - [MCL](http://www.micans.org/mcl/sec_description1.html)
 
