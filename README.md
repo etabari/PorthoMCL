@@ -7,3 +7,5 @@ We have reimplemented the sections of OrthoMCL that rely on databases. This way,
 
 Check [Wiki](https://github.com/etabari/PorthoMCL/wiki/)
 
+
+Please cite PorthoMCL paper if you use it in your research.
