@@ -3,6 +3,7 @@
 from ftplib import FTP
 from optparse import OptionParser
 import os, re
+import hashlib
 
 options = None
 
@@ -19,6 +20,8 @@ if __name__ == '__main__':
 	parser.add_option("-g", "--genome", dest='genome', help='a regular expression for the name of the genome (default=.*)', default='.*')
 	parser.add_option("-a", "--all", dest='getall', help='download all files for assembly (default=FALSE, only FAA)', action="store_true", default=False)
 	parser.add_option("-n", "--noprotein", dest='noprotein', help='download even no protein data available (default=FALSE)', action="store_true", default=False)
+	parser.add_option("-f", "--flatten", dest='flatten', help="Download all in the same folder (don't make forlder for each assembly", action="store_true", default=False)
+	parser.add_option("-m", "--md5", dest='checkmd5', help="check MD5 hash for downloaded files", action="store_true", default=False)
 
 	
 	(options, args) = parser.parse_args()
@@ -29,7 +32,7 @@ if __name__ == '__main__':
 	localfolder = args[0]
 
 
-	print('Connecting to FTP server: ', options.host)
+	print 'Connecting to FTP server: ', options.host
 	ftp = FTP(options.host)
 	print('login annonynously...')
 	ftp.login()
@@ -51,6 +54,12 @@ if __name__ == '__main__':
 
 	errors = dict()
 	index = 0
+
+	if options.flatten:
+		try:
+			os.makedirs(localfolder)
+		except:
+			print 'WARNING: output folder already exists'
 
 
 	for genome in genomes:
@@ -79,13 +88,23 @@ if __name__ == '__main__':
 				if not options.noprotein and not assembly+'_protein.faa.gz' in files:
 					continue
 
-				os.makedirs(os.path.join(localfolder, genome+'_'+assembly))
+				if not options.flatten:
+					try:
+						os.makedirs(os.path.join(localfolder, genome+'_'+assembly))
+					except:
+						print '\t\tWARNING: folder already exists'
 
 				for anyfile in files:
 
-					if options.getall or anyfile.endswith('report.txt') or  anyfile.endswith('md5checksums.txt') or anyfile.endswith('faa.gz'):
+					if options.getall or anyfile.endswith('report.txt') or  anyfile == 'md5checksums.txt' or anyfile.endswith('faa.gz'):
 						try:
-							local_filename = os.path.join(localfolder, genome+'_'+assembly,anyfile)
+							if options.flatten:
+								if not assembly in anyfile:
+									local_filename = os.path.join(localfolder, genome+'_'+assembly+'_'+anyfile)
+								else:
+									local_filename = os.path.join(localfolder, genome+'_'+anyfile)
+							else:
+								local_filename = os.path.join(localfolder, genome+'_'+assembly,anyfile)
 							local_file = open(local_filename, 'wb')
 							ftp.retrbinary('RETR ' + anyfile, local_file.write)
 							local_file.close()
