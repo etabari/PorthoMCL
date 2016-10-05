@@ -49,10 +49,10 @@ do
 	    END="$2"
 	    shift # past argument
 	    ;;
-	    -l|--lib)
-	    LIBPATH=`cd "$2"; pwd`
-	    shift # past argument
-	    ;;
+	    # -l|--lib)
+	    # LIBPATH=`cd "$2"; pwd`
+	    # shift # past argument
+	    # ;;
 	    --wait)
 	    WAITFORKEY=YES
 	    ;;
@@ -78,20 +78,27 @@ then
 	SHOWHELP="YES"
 fi
 
-if [ -z "$LIBPATH" ] 
+# from: http://stackoverflow.com/questions/59895/can-a-bash-script-tell-which-directory-it-is-stored-in
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+  TARGET="$(readlink "$SOURCE")"
+  if [[ $TARGET == /* ]]; then
+    echo "SOURCE '$SOURCE' is an absolute symlink to '$TARGET'"
+    SOURCE="$TARGET"
+  else
+    DIR="$( dirname "$SOURCE" )"
+    echo "SOURCE '$SOURCE' is a relative symlink to '$TARGET' (relative to '$DIR')"
+    SOURCE="$DIR/$TARGET" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+  fi
+done
+RDIR="$( dirname "$SOURCE" )"
+LIBPATH="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+
+
+if [ ! -f $LIBPATH/orthomclAdjustFasta ]
 then
-	if (! hash orthomclAdjustFasta 2>/dev/null)
-	then
-		echo "ERROR: provided PorthoMCL does not exists or PorthoMCL was not found in \$PATH"
-		SHOWHELP="YES"
-	fi
-else 
-	LIBPATH="$LIBPATH"/
-	if [ ! -f $LIBPATH/orthomclAdjustFasta ]
-	then
-		echo "ERROR: PorthoMCL was not found in $LIBPATH"
-		SHOWHELP="YES"
-	fi
+	echo "ERROR: PorthoMCL was not found in $LIBPATH"
+	SHOWHELP="YES"
 fi
 
 
