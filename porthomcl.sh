@@ -92,7 +92,7 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
   fi
 done
 RDIR="$( dirname "$SOURCE" )"
-LIBPATH="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+LIBPATH="$( cd -P "$( dirname "$SOURCE" )" && pwd )"/
 
 
 if [ ! -f $LIBPATH/orthomclAdjustFasta ]
@@ -125,7 +125,7 @@ then
 	echo "   porthomcl.sh [OPTIONS] CONTAINER_FOLDER"
 	echo 
 	echo "   options"
-	echo "     -l, --lib          path to PorthoMCL, not required if it's installed in the \$PATH"
+	# echo "     -l, --lib          path to PorthoMCL, not required if it's installed in the \$PATH"
 	echo "     -t, --num_threads  number of threads/processes to run (default=4)"
 	echo "     -s, --startat      an integer indicating the first Step to run (default=1)"
 	echo "     -e, --endafter     an integer indicating the last Step to run (default=8)"
