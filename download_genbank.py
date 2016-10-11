@@ -2,7 +2,7 @@
 
 from ftplib import FTP
 from optparse import OptionParser
-import os, re
+import os, sys, re
 import hashlib
 
 options = None
@@ -34,12 +34,18 @@ def download_anyfile(ftp, genome, assembly, anyfile, localfolder, options, md5da
 			if anyfile in md5data:
 				md5hash = hashfile(open(local_filename, 'rb'), hashlib.md5())
 				HashCheckResult = md5hash == md5data[anyfile]
-		print '\t\t', anyfile, HashCheckResult
+				if not HashCheckResult:
+					sys.err.write('MD5FAIL\t'+local_filename)
+		print '\t\t', anyfile, 
+		if HashCheckResult is not None:
+			print '('+str(HashCheckResult)+')'
+		else:
+			print
+
 	except Exception as detail:
-		if not errors.has_key(genome):
-			errors[genome] = []
-		errors[genome] += [anyfile]
 		print '\t\t', anyfile,'\t','[FAILED]\n\t\t', detail
+		sys.err.write('DOWNLOADFAIL\t'+local_filename)
+		sys.err.write(detail)
 	return local_filename
 
 
@@ -85,9 +91,6 @@ if __name__ == '__main__':
 	print 'Total genomes in match criteria: ', total
 
 
-	errors = dict()
-	index = 0
-
 	if options.flatten:
 		try:
 			os.makedirs(localfolder)
@@ -95,10 +98,9 @@ if __name__ == '__main__':
 			print 'WARNING: output folder already exists'
 
 
+	index = 0
 	for genome in genomes:
 		try:
-			if index>10:
-				break
 			ftp.cwd(options.directory+genome+'/latest_assembly_versions')
 			index += 1
 			print index,'/',total, ': ', genome ,
@@ -141,11 +143,10 @@ if __name__ == '__main__':
 					if anyfile != 'md5checksums.txt' and (options.getall or anyfile.endswith('report.txt') or anyfile.endswith('faa.gz')):
 						download_anyfile(ftp, genome, assembly, anyfile, localfolder, options, md5data)
 
-				exit(0)
-
 		except Exception as detail:
-			index -= 1
 			print '>>', detail
+			sys.err.write('GENOMEFAIL\t'+genome)
+			sys.err.write(detail)
 
 
 	ftp.close()
