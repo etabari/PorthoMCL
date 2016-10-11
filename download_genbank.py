@@ -97,6 +97,7 @@ if __name__ == '__main__':
 		except:
 			print 'WARNING: output folder already exists'
 
+	sys.stderr.write('#Possible fails are: FAIL_GENOME (having no latest assembly), FAIL_ASSEMBLY (no files), FAIL_FILE (download fail), FAIL_MD5 (md5 fails)\n')
 
 	index = 0
 	for genome in genomes:
