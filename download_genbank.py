@@ -8,6 +8,39 @@ import hashlib
 options = None
 
 
+def hashfile(afile, hasher, blocksize=65536):
+    buf = afile.read(blocksize)
+    while len(buf) > 0:
+        hasher.update(buf)
+        buf = afile.read(blocksize)
+    return hasher.hexdigest()
+
+def download_anyfile(ftp, genome, assembly, anyfile, localfolder, options, md5data=None):
+	try:
+		if options.flatten:
+			if not assembly in anyfile:
+				local_filename = os.path.join(localfolder, genome+'_'+assembly+'_'+anyfile)
+			else:
+				local_filename = os.path.join(localfolder, genome+'_'+anyfile)
+		else:
+			local_filename = os.path.join(localfolder, genome+'_'+assembly,anyfile)
+
+		local_file = open(local_filename, 'wb')
+		ftp.retrbinary('RETR ' + anyfile, local_file.write)
+		local_file.close()
+
+		HashCheckResult = None
+		if options.checkmd5 and md5data is not None:
+			if anyfile in md5data:
+				md5hash = hashfile(open(local_filename, 'rb'), hashlib.md5())
+				HashCheckResult = md5hash == md5data[anyfile]
+		print '\t\t', anyfile, HashCheckResult
+	except Exception as detail:
+		if not errors.has_key(genome):
+			errors[genome] = []
+		errors[genome] += [anyfile]
+		print '\t\t', anyfile,'\t','[FAILED]\n\t\t', detail
+	return local_filename
 
 
 if __name__ == '__main__':
@@ -94,30 +127,25 @@ if __name__ == '__main__':
 					except:
 						print '\t\tWARNING: folder already exists'
 
-				for anyfile in files:
+				md5data = None
+				if 'md5checksums.txt' in files:
+					local_filename = download_anyfile(ftp, genome, assembly, 'md5checksums.txt',localfolder, options)
+					if options.checkmd5:
+						md5data = {}
+						with open(local_filename) as md5file:
+							for md5line in md5file:
+								md5value = md5line.split('  ')
+								md5data[md5value[1][2:-1]] = md5value[0]
 
-					if options.getall or anyfile.endswith('report.txt') or  anyfile == 'md5checksums.txt' or anyfile.endswith('faa.gz'):
-						try:
-							if options.flatten:
-								if not assembly in anyfile:
-									local_filename = os.path.join(localfolder, genome+'_'+assembly+'_'+anyfile)
-								else:
-									local_filename = os.path.join(localfolder, genome+'_'+anyfile)
-							else:
-								local_filename = os.path.join(localfolder, genome+'_'+assembly,anyfile)
-							local_file = open(local_filename, 'wb')
-							ftp.retrbinary('RETR ' + anyfile, local_file.write)
-							local_file.close()
-							print '\t\t', anyfile
-						except Exception as detail:
-							if not errors.has_key(genome):
-								errors[genome] = []
-							errors[genome] += [anyfile]
-							print '\t\t', anyfile,'\t','[FAILED]\n\t\t', detail
+				for anyfile in files:
+					if anyfile != 'md5checksums.txt' and (options.getall or anyfile.endswith('report.txt') or anyfile.endswith('faa.gz')):
+						download_anyfile(ftp, genome, assembly, anyfile, localfolder, options, md5data)
+
+				exit(0)
 
 		except Exception as detail:
 			index -= 1
-			print detail
+			print '>>', detail
 
 
 	ftp.close()
