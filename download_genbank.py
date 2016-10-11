@@ -45,7 +45,7 @@ def download_anyfile(ftp, genome, assembly, anyfile, localfolder, options, md5da
 	except Exception as detail:
 		print '\t\t', anyfile,'\t','[FAILED]\n\t\t', detail
 		sys.stderr.write('FILEFAIL\t'+local_filename)
-		sys.stderr.write(detail)
+		sys.stderr.write(str(detail))
 	return local_filename
 
 
@@ -147,12 +147,12 @@ if __name__ == '__main__':
 				except Exception as detail:
 					print '>>', detail
 					sys.stderr.write('ASSEMBLYFAIL\t'+genome+'\t'+assembly)
-					sys.stderr.write(detail)
+					sys.stderr.write(str(detail))
 
 		except Exception as detail:
 			print '>>', detail
 			sys.stderr.write('GENOMEFAIL\t'+genome)
-			sys.stderr.write(detail)
+			sys.stderr.write(str(detail))
 
 
 	ftp.close()
