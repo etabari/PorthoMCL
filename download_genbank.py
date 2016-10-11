@@ -44,7 +44,7 @@ def download_anyfile(ftp, genome, assembly, anyfile, localfolder, options, md5da
 
 	except Exception as detail:
 		print '\t\t', anyfile,'\t','[FAILED]\n\t\t', detail
-		sys.stderr.write('DOWNLOADFAIL\t'+local_filename)
+		sys.stderr.write('FILEFAIL\t'+local_filename)
 		sys.stderr.write(detail)
 	return local_filename
 
@@ -116,32 +116,38 @@ if __name__ == '__main__':
 			print ' contains ', len(assemblies), ' assemblies...'
 
 			for assembly in assemblies:
+				try:
 
-				ftp.cwd(options.directory+genome+'/latest_assembly_versions/'+assembly)
-				files = ftp.nlst()
+					ftp.cwd(options.directory+genome+'/latest_assembly_versions/'+assembly)
+					files = ftp.nlst()
 
-				if not options.noprotein and not assembly+'_protein.faa.gz' in files:
-					continue
+					if not options.noprotein and not assembly+'_protein.faa.gz' in files:
+						continue
 
-				if not options.flatten:
-					try:
-						os.makedirs(os.path.join(localfolder, genome+'_'+assembly))
-					except:
-						print '\t\tWARNING: folder already exists'
+					if not options.flatten:
+						try:
+							os.makedirs(os.path.join(localfolder, genome+'_'+assembly))
+						except:
+							print '\t\tWARNING: folder already exists'
 
-				md5data = None
-				if 'md5checksums.txt' in files:
-					local_filename = download_anyfile(ftp, genome, assembly, 'md5checksums.txt',localfolder, options)
-					if options.checkmd5:
-						md5data = {}
-						with open(local_filename) as md5file:
-							for md5line in md5file:
-								md5value = md5line.split('  ')
-								md5data[md5value[1][2:-1]] = md5value[0]
+					md5data = None
+					if 'md5checksums.txt' in files:
+						local_filename = download_anyfile(ftp, genome, assembly, 'md5checksums.txt',localfolder, options)
+						if options.checkmd5:
+							md5data = {}
+							with open(local_filename) as md5file:
+								for md5line in md5file:
+									md5value = md5line.split('  ')
+									md5data[md5value[1][2:-1]] = md5value[0]
 
-				for anyfile in files:
-					if anyfile != 'md5checksums.txt' and (options.getall or anyfile.endswith('report.txt') or anyfile.endswith('faa.gz')):
-						download_anyfile(ftp, genome, assembly, anyfile, localfolder, options, md5data)
+					for anyfile in files:
+						if anyfile != 'md5checksums.txt' and (options.getall or anyfile.endswith('report.txt') or anyfile.endswith('faa.gz')):
+							download_anyfile(ftp, genome, assembly, anyfile, localfolder, options, md5data)
+
+				except Exception as detail:
+					print '>>', detail
+					sys.stderr.write('ASSEMBLYFAIL\t'+genome+'\t'+assembly)
+					sys.stderr.write(detail)
 
 		except Exception as detail:
 			print '>>', detail
