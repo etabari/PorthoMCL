@@ -35,7 +35,7 @@ def download_anyfile(ftp, genome, assembly, anyfile, localfolder, options, md5da
 				md5hash = hashfile(open(local_filename, 'rb'), hashlib.md5())
 				HashCheckResult = md5hash == md5data[anyfile]
 				if not HashCheckResult:
-					sys.stderr.write('MD5FAIL\t'+local_filename+'\n')
+					sys.stderr.write('FAIL_MD5\t'+local_filename+'\n')
 		print '\t\t', anyfile, 
 		if HashCheckResult is not None:
 			print '('+str(HashCheckResult)+')'
@@ -44,7 +44,7 @@ def download_anyfile(ftp, genome, assembly, anyfile, localfolder, options, md5da
 
 	except Exception as detail:
 		print '\t\t', anyfile,'\t','[FAILED]\n\t\t', detail
-		sys.stderr.write('FILEFAIL\t'+local_filename+'\n')
+		sys.stderr.write('FAIL_FILE\t'+local_filename+'\n')
 		sys.stderr.write(str(detail)+'\n')
 	return local_filename
 
@@ -146,12 +146,12 @@ if __name__ == '__main__':
 
 				except Exception as detail:
 					print '>>', detail
-					sys.stderr.write('ASSEMBLYFAIL\t'+genome+'\t'+assembly+'\n')
+					sys.stderr.write('FAIL_ASSEMBLY\t'+genome+'\t'+assembly+'\n')
 					sys.stderr.write(str(detail)+'\n')
 
 		except Exception as detail:
 			print '>>', detail
-			sys.stderr.write('GENOMEFAIL\t'+genome+'\n')
+			sys.stderr.write('FAIL_GENOME\t'+genome+'\n')
 			sys.stderr.write(str(detail)+'\n')
 
 
