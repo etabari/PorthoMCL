@@ -27,6 +27,8 @@
 NUM_THREADS=4
 START=1
 END=8
+IDFIELD=1
+NAMEREGX="(.+)\..+"
 
 while [[ $# -gt 1 ]]
 do
@@ -37,7 +39,7 @@ do
 	    SHOWHELP=YES
 	    # shift # past argument
 	    ;;
-	    -t|--num_threads)
+	    -t|--threads)
 	    NUM_THREADS="$2"
 	    shift # past argument
 	    ;;
@@ -49,10 +51,14 @@ do
 	    END="$2"
 	    shift # past argument
 	    ;;
-	    # -l|--lib)
-	    # LIBPATH=`cd "$2"; pwd`
-	    # shift # past argument
-	    # ;;
+	    -f|--field)
+	    IDFIELD="$2"
+	    shift # past argument
+	    ;;
+ 		-n|--nameregx)
+	    NAMEREGX=$2
+	    shift # past argument
+	    ;;
 	    --wait)
 	    WAITFORKEY=YES
 	    ;;
@@ -63,7 +69,6 @@ do
 	esac
 	shift # past argument or value
 done
-
 
 container_org="$1"
 container=`cd "$1"; pwd`
@@ -126,7 +131,9 @@ then
 	echo 
 	echo "   options"
 	# echo "     -l, --lib          path to PorthoMCL, not required if it's installed in the \$PATH"
-	echo "     -t, --num_threads  number of threads/processes to run (default=4)"
+	echo "     -n, --nameregx  	  a regular expression to treat file names (default behaviour remove extention (.+)\..+)"
+	echo "     -f, --field  	  ID Field in input Fasta Files (default=1)"
+	echo "     -t, --threads      number of threads/processes to run (default=4)"
 	echo "     -s, --startat      an integer indicating the first Step to run (default=1)"
 	echo "     -e, --endafter     an integer indicating the last Step to run (default=8)"
 	echo "     --wait             wait for keypress at every step"
@@ -152,15 +159,16 @@ if [ $START -le 1 ]; then
 
 	mkdir $container/1.compliantFasta
 	cd $container/1.compliantFasta
-	for faa in $container/0.input_faa/*
+	for file in $container/0.input_faa/*
 	do
+		strand=$(basename "$file")
 		
-
-		strand=$(basename "$faa")
-		strand="${strand%.*}" # remove .faa
+		# strand="${strand%.*}" # remove .faa
+		strand=`echo $strand | sed -E "s/$NAMEREGX/\1/"`
+		
 		echo '    |processing|'$strand
 
-		`"$LIBPATH"orthomclAdjustFasta $strand $faa 4 || exit 1`
+		`"$LIBPATH"orthomclAdjustFasta $strand $file $IDFIELD || exit 1`
 	done
 	echo "$1|1|orthomclAdjustFasta|End|$(date)"
 	echo "$1|1|orthomclAdjustFasta|End|$(date)" >> $LOGFILE
@@ -179,7 +187,7 @@ if [ $START -le 1 ]; then
 	echo "$1|1.1|Create taxon list file|Start|$(date)" >> $LOGFILE
 
 	cd $container
-	ls -1 1.compliantFasta/ | sed -e 's/\..*$//'  > taxon_list
+	ls -1 0.input_faa/ | sed -E "s/$NAMEREGX/\1/"  > taxon_list
 
 	echo "$1|1.1|Create taxon list file|End|$(date)"
 	echo "$1|1.1|Create taxon list file|End|$(date)" >> $LOGFILE
