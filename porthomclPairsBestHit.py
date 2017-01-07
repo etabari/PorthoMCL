@@ -17,22 +17,35 @@ BestInterTaxonScore = {}
 BetterHit = {}
 
 
-class SimilarSequenceLine:
-	def __init__(self, line):
-		column = line.strip().split('\t')
+# class SimilarSequenceLine:
+# 	def __init__(self, line):
+# 		column = line.strip().split('\t')
 
-		self.query_id = column[0]
-		(self.query_taxon, self.query_seq) = column[0].split('|')
+# 		self.query_id = column[0]
+# 		(self.query_taxon, self.query_seq) = column[0].split('|')
 
-		self.subject_id = column[1]
-		(self.subject_taxon,self.subject_seq)  = column[1].split('|')
+# 		self.subject_id = column[1]
+# 		(self.subject_taxon,self.subject_seq)  = column[1].split('|')
 
-		self.evalue_mant = float(column[2])
-		self.evalue_exp = int(column[3])
+# 		self.evalue_mant = float(column[2])
+# 		self.evalue_exp = int(column[3])
 
-		#self.percent_ident = column[4]
-		self.percent_match = float(column[4])
+# 		#self.percent_ident = column[4]
+# 		self.percent_match = float(column[4])
 
+class SimilarSequenceLine(namedtuple('SimilarSequenceLine', 'query_id,query_taxon,query_seq,subject_id,subject_taxon,subj_seq,evalue_mant,evalue_exp,percemt_match')):
+	__slots__ = ()
+	@classmethod
+	def _fromLine(cls, line, new=tuple.__new__, len=len):
+		'Make a new SimilarSequenceLine object from a sequence or iterable'
+		column = line.strip().split('\\t')
+		(query_taxon, query_seq) = column[0].split('|')
+		(subject_taxon, subject_seq)  = column[1].split('|')
+		iterable = (column[0], query_taxon, query_seq, column[1], subject_taxon, subject_seq, float(column[2]), int(column[3]), float(column[4]))
+		result = new(cls, iterable)
+		if len(result) != 9:
+			raise TypeError('Expected 9 arguments, got %d' % len(result))
+		return result
 
 
 def readTaxonList(filename):
@@ -162,7 +175,7 @@ if __name__ == '__main__':
 	with open(os.path.join(options.inSimSeq, taxon1s+'.ss.tsv')) as input_file:
 		for line in input_file:
 
-			ss = SimilarSequenceLine(line)
+			ss = SimilarSequenceLine._fromLine(line)
 
 
 			if options.cacheInputFile:
@@ -240,7 +253,7 @@ if __name__ == '__main__':
 	if not options.cacheInputFile:
 		with open(os.path.join(options.inSimSeq, taxon1s+'.ss.tsv')) as input_file:
 			for line in input_file:
-				s = SimilarSequenceLine(line)
+				s = SimilarSequenceLine._fromLine(line)
 				writeStoOutputFiles(s, out_bh_file)
 
 
