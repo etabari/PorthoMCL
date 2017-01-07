@@ -1,6 +1,6 @@
 #!/usr/bin/python
-import time
 from datetime import datetime
+from collections import namedtuple
 import sys, os
 import gzip
 import random, math
@@ -33,12 +33,12 @@ BetterHit = {}
 # 		#self.percent_ident = column[4]
 # 		self.percent_match = float(column[4])
 
-class SimilarSequenceLine(namedtuple('SimilarSequenceLine', 'query_id,query_taxon,query_seq,subject_id,subject_taxon,subj_seq,evalue_mant,evalue_exp,percemt_match')):
+class SimilarSequenceLine(namedtuple('SimilarSequenceLine', 'query_id,query_taxon,query_seq,subject_id,subject_taxon,subject_seq,evalue_mant,evalue_exp,percent_match')):
 	__slots__ = ()
 	@classmethod
 	def _fromLine(cls, line, new=tuple.__new__, len=len):
 		'Make a new SimilarSequenceLine object from a sequence or iterable'
-		column = line.strip().split('\\t')
+		column = line.strip().split('\t')
 		(query_taxon, query_seq) = column[0].split('|')
 		(subject_taxon, subject_seq)  = column[1].split('|')
 		iterable = (column[0], query_taxon, query_seq, column[1], subject_taxon, subject_seq, float(column[2]), int(column[3]), float(column[4]))
@@ -170,6 +170,12 @@ if __name__ == '__main__':
 	log('{2} | Best Hit | {0} | {1} | {3} | {4} MB | {5}'.format(2 , 'Reading similar sequences (ss file)', options.index, taxon1s, memory_usage_resource(), datetime.now() ))
 
 
+	if options.outBestHitFolder and not os.path.exists(options.outBestHitFolder):
+		os.makedirs(options.outBestHitFolder)
+
+	if options.outInParalogTempFolder and not os.path.exists(options.outInParalogTempFolder):
+		os.makedirs(options.outInParalogTempFolder)
+
 	input_file_cache = []
 
 	with open(os.path.join(options.inSimSeq, taxon1s+'.ss.tsv')) as input_file:
@@ -211,6 +217,7 @@ if __name__ == '__main__':
 
 	if options.outInParalogTempFolder:
 
+
 		# log('{2} | Best Hit | {0} | {1} | * | {3} MB | {4}'.format(3 , 'Creating bestQueryTaxonScore (q-t file)', options.index, memory_usage_resource(), datetime.now() ))
 		# with open(os.path.join(options.outQueryTaxonScoreFolder, taxon1s+'.q-t.tsv'), 'w') as out_file:
 		# 	for (query_id,subject_taxon) in sorted(best_query_taxon_score):
@@ -248,6 +255,7 @@ if __name__ == '__main__':
 
 	if not options.outBestHitFolder:
 		options.outBestHitFolder = '.'
+
 	out_bh_file = open(os.path.join(options.outBestHitFolder, taxon1s+'.bh.tsv') ,'w')
 
 	if not options.cacheInputFile:
