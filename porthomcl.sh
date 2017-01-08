@@ -331,7 +331,7 @@ if [ $START -le 5 ]; then
 
 	loop_start=1
 	loop_end=$((loop_start + NUM_THREADS - 1))
-	loop_end=$(($loop_end>$taxon_count?$taxon_count:$loop_end))
+	loop_end=$((loop_end>taxon_count?taxon_count:loop_end))
 
 	while [ $loop_start -lt $taxon_count ]
 	do
@@ -342,7 +342,7 @@ if [ $START -le 5 ]; then
 		wait
 		loop_start=$((loop_end + 1))
 		loop_end=$((loop_start + NUM_THREADS - 1))
-		loop_end=($(($loop_end>$taxon_count?$taxon_count:$loop_end)))
+		loop_end=($((loop_end>taxon_count?taxon_count:loop_end)))
 		
 	done
 
@@ -372,7 +372,7 @@ if [ $START -le 6 ]; then
 
 	loop_start=1
 	loop_end=$((loop_start + NUM_THREADS - 1))
-	loop_end=$(($loop_end>$taxon_count?$taxon_count:$loop_end))
+	loop_end=$((loop_end>taxon_count?taxon_count:loop_end))
 
 	while [ $loop_start -lt $taxon_count ]
 	do
@@ -383,7 +383,7 @@ if [ $START -le 6 ]; then
 		wait
 		loop_start=$((loop_end + 1))
 		loop_end=$((loop_start + NUM_THREADS - 1))
-		loop_end=($(($loop_end>$taxon_count?$taxon_count:$loop_end)))
+		loop_end=$((loop_end>taxon_count?taxon_count:loop_end))
 		
 	done
 
@@ -414,7 +414,7 @@ if [ $START -le 7 ]; then
 # 
 	loop_start=1
 	loop_end=$((loop_start + NUM_THREADS - 1))
-	loop_end=$(($loop_end>$taxon_count?$taxon_count:$loop_end))
+	loop_end=$((loop_end>taxon_count?taxon_count:loop_end))
 
 	while [ $loop_start -lt $taxon_count ]
 	do
@@ -426,7 +426,7 @@ if [ $START -le 7 ]; then
 		wait
 		loop_start=$((loop_end + 1))
 		loop_end=$((loop_start + NUM_THREADS - 1))
-		loop_end=($(($loop_end>$taxon_count?$taxon_count:$loop_end)))
+		loop_end=$((loop_end>taxon_count?taxon_count:loop_end))
 		
 	done
 
@@ -436,7 +436,7 @@ if [ $START -le 7 ]; then
 
 	loop_start=1
 	loop_end=$((loop_start + NUM_THREADS - 1))
-	loop_end=$(($loop_end>$taxon_count?$taxon_count:$loop_end))
+	loop_end=$((loop_end>taxon_count?taxon_count:loop_end))
 
 	while [ $loop_start -lt $taxon_count ]
 	do
@@ -447,7 +447,7 @@ if [ $START -le 7 ]; then
 		wait
 		loop_start=$((loop_end + 1))
 		loop_end=$((loop_start + NUM_THREADS - 1))
-		loop_end=($(($loop_end>$taxon_count?$taxon_count:$loop_end)))
+		loop_end=$((loop_end>taxon_count?taxon_count:loop_end))
 		
 	done
 
@@ -467,7 +467,7 @@ if [ $START -le 7 ]; then
 
 	loop_start=1
 	loop_end=$((loop_start + NUM_THREADS - 1))
-	loop_end=$(($loop_end>$taxon_count?$taxon_count:$loop_end))
+	loop_end=$((loop_end>taxon_count?taxon_count:loop_end))
 
 	while [ $loop_start -lt $taxon_count ]
 	do
@@ -478,7 +478,7 @@ if [ $START -le 7 ]; then
 		wait
 		loop_start=$((loop_end + 1))
 		loop_end=$((loop_start + NUM_THREADS - 1))
-		loop_end=($(($loop_end>$taxon_count?$taxon_count:$loop_end)))
+		loop_end=$((loop_end>taxon_count?taxon_count:loop_end))
 		
 	done
 
