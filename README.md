@@ -12,4 +12,4 @@ Please cite PorthoMCL paper if you use it in your research :
 
 <b>PorthoMCL: Parallel orthology prediction using MCL for the realm of massive genome availability</b><br>
 <i>Ehsan Tabari and Zhengchang Su</i><br>
-Big Data Analytics20172:4 DOI: [10.1186/s41044-016-0019-8](http://bdataanalytics.biomedcentral.com/articles/10.1186/s41044-016-0019-8)
+Big Data Analytics 2017 2:4 DOI: [10.1186/s41044-016-0019-8](http://bdataanalytics.biomedcentral.com/articles/10.1186/s41044-016-0019-8)
