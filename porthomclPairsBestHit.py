@@ -40,7 +40,7 @@ class SimilarSequenceLine(namedtuple('SimilarSequenceLine', 'query_id,query_taxo
 		'Make a new SimilarSequenceLine object from a sequence or iterable'
 		column = line.strip().split('\t')
 		(query_taxon, query_seq) = column[0].split('|')
-		(subject_taxon, subject_seq)  = column[1].split('|')
+		(subject_taxon, subject_seq) = column[1].split('|')
 		iterable = (column[0], query_taxon, query_seq, column[1], subject_taxon, subject_seq, float(column[2]), int(column[3]), float(column[4]))
 		result = new(cls, iterable)
 		if len(result) != 9:
@@ -66,7 +66,7 @@ def memory_usage_resource():
 		# ... it seems that in OSX the output is different units ...
 		rusage_denom = rusage_denom * rusage_denom
 	mem = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / rusage_denom
-	return round(mem,0)
+	return round(mem, 0)
 
 
 def log(s):
@@ -83,26 +83,25 @@ def writeStoOutputFiles(s, out_bh_file):
 	try:
 		(cutoff_exp, cutoff_mant) = best_query_taxon_score[(s.query_id, s.subject_taxon)]
 
-		if ( 
+		if (
 			s.query_taxon != s.subject_taxon and
-			s.evalue_exp < options.evalueExponentCutoff and 
-			s.percent_match > options.percentMatchCutoff and 
+			s.evalue_exp < options.evalueExponentCutoff and
+			s.percent_match > options.percentMatchCutoff and
 			(s.evalue_mant < 0.01 or s.evalue_exp==cutoff_exp and s.evalue_mant==cutoff_mant)
 		   ):
 			out_bh_file.write('{0}\t{1}\t{2}\t{3}\n'.format(s.query_seq, s.subject_id, s.evalue_exp, s.evalue_mant))
 
 	except KeyError:
 		pass
-		
+
 	if options.outInParalogTempFolder:
 		try:
 			(cutoff_exp, cutoff_mant) = BestInterTaxonScore[s.query_id]
 
-			if (
-				s.query_taxon == s.subject_taxon and 
-				s.query_id != s.subject_id and 
-				s.evalue_exp <= options.evalueExponentCutoff and 
-				s.percent_match >= options.percentMatchCutoff and 
+			if (s.query_taxon == s.subject_taxon and
+				s.query_id != s.subject_id and
+				s.evalue_exp <= options.evalueExponentCutoff and
+				s.percent_match >= options.percentMatchCutoff and
 				(s.evalue_mant < 0.01 or s.evalue_exp<cutoff_exp or (s.evalue_exp == cutoff_exp and s.evalue_mant<=cutoff_mant))
 			   ):
 
@@ -114,9 +113,9 @@ def writeStoOutputFiles(s, out_bh_file):
 		except KeyError:
 			# Include the ones with
 			if (
-				s.query_taxon == s.subject_taxon and 
+				s.query_taxon == s.subject_taxon and
 				(options.keepOrthoMCLBug or s.query_id != s.subject_id) and  #### THIS IS an OrthoMCL bug
-				s.evalue_exp <= options.evalueExponentCutoff and 
+				s.evalue_exp <= options.evalueExponentCutoff and
 				s.percent_match >= options.percentMatchCutoff
 			   ):
 				# try:
@@ -130,7 +129,7 @@ if __name__ == '__main__':
 	parser = OptionParser(usage)
 
 	parser.add_option("-t", "--taxonlist", dest="taxonlistfile", help="A single column file containing the list of taxon to work with")
-	parser.add_option("-x", "--index", dest="index", help="An integer number identifying which taxon to work on [1-size_of_taxon_list]" , type='int')
+	parser.add_option("-x", "--index", dest="index", help="An integer number identifying which taxon to work on [1-size_of_taxon_list]", type='int')
 
 	parser.add_option('-s', '--inSimSeq', dest='inSimSeq', help='Input folder that contains split similar sequences files (ss files)')
 
@@ -138,14 +137,14 @@ if __name__ == '__main__':
 	parser.add_option('-q', '--outInParalogTempFolder', dest='outInParalogTempFolder', help='folder to generate best InParalogTemp evalue scores (pt files) (required only for Paralogs)')
 	parser.add_option("-l", "--logfile", dest="logfile", help="log file (optional, if not supplied STDERR will be used)")
 
-	
+
 	parser.add_option('', '--evalueExponentCutoff', dest='evalueExponentCutoff', help='evalue Exponent Cutoff (a nebative value, default=-5)', default=-5, type='int')
 	parser.add_option('', '--percentMatchCutoff', dest='percentMatchCutoff', help='percent Match Cutoff (integer value, default=50)', default=50, type='int')
 	parser.add_option('', '--cacheInputFile', dest='cacheInputFile', help='Cache input file or read it again. (Only use if I/O is very slow)', default=False, action="store_true")
 	parser.add_option('', '--keepOrthoMCLBug', dest='keepOrthoMCLBug', help='Keep the OrthoMCL bug in creating Temporary Paralogs files (pt files) where self hits are included', default=False, action="store_true")
-	
+
 	#
-	
+
 	(options, args) = parser.parse_args()
 
 
@@ -153,21 +152,21 @@ if __name__ == '__main__':
 		parser.error("incorrect arguments.\n\t\tUse -h to get more information or refer to the MANUAL.md")
 
 
-	log('{2} | Best Hit | {0} | {1} | {3} | {4} MB | {5}'.format(1 , 'reading taxon list', options.index, '', memory_usage_resource(), datetime.now() ))
+	log('{2} | Best Hit | {0} | {1} | {3} | {4} MB | {5}'.format(1, 'reading taxon list', options.index, '', memory_usage_resource(), datetime.now()))
 	taxon_list = readTaxonList(options.taxonlistfile)
 
 	if options.index <= 0 or options.index > len(taxon_list):
-		log('{2} | Best Hit | {0} | {1} | {3} | {4} MB | {5}'.format('ERROR' , 'Error in index', options.index,'', memory_usage_resource(), datetime.now() ))
+		log('{2} | Best Hit | {0} | {1} | {3} | {4} MB | {5}'.format('ERROR', 'Error in index', options.index, '', memory_usage_resource(), datetime.now()))
 		exit()
 
 	taxon1s = taxon_list[options.index - 1]
 
 
 	if options.cacheInputFile:
-		log('{2} | Best Hit | {0} | {1} | {3} | {4} MB | {5}'.format('OPTION' , 'Caching Input files', options.index, taxon1s, memory_usage_resource(), datetime.now() ))
+		log('{2} | Best Hit | {0} | {1} | {3} | {4} MB | {5}'.format('OPTION', 'Caching Input files', options.index, taxon1s, memory_usage_resource(), datetime.now()))
 
 
-	log('{2} | Best Hit | {0} | {1} | {3} | {4} MB | {5}'.format(2 , 'Reading similar sequences (ss file)', options.index, taxon1s, memory_usage_resource(), datetime.now() ))
+	log('{2} | Best Hit | {0} | {1} | {3} | {4} MB | {5}'.format(2, 'Reading similar sequences (ss file)', options.index, taxon1s, memory_usage_resource(), datetime.now()))
 
 
 	if options.outBestHitFolder and not os.path.exists(options.outBestHitFolder):
