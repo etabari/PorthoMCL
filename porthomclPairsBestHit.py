@@ -85,7 +85,7 @@ def writeStoOutputFiles(s, out_bh_file):
 
 		if (
 			s.query_taxon != s.subject_taxon and
-			s.evalue_exp < options.evalueExponentCutoff and
+			(s.evalue_exp == 0 or s.evalue_exp < options.evalueExponentCutoff) and
 			s.percent_match > options.percentMatchCutoff and
 			(s.evalue_mant < 0.01 or s.evalue_exp==cutoff_exp and s.evalue_mant==cutoff_mant)
 		   ):
@@ -100,7 +100,7 @@ def writeStoOutputFiles(s, out_bh_file):
 
 			if (s.query_taxon == s.subject_taxon and
 				s.query_id != s.subject_id and
-				s.evalue_exp <= options.evalueExponentCutoff and
+                (s.evalue_exp== 0 or s.evalue_exp <= options.evalueExponentCutoff) and
 				s.percent_match >= options.percentMatchCutoff and
 				(s.evalue_mant < 0.01 or s.evalue_exp<cutoff_exp or (s.evalue_exp == cutoff_exp and s.evalue_mant<=cutoff_mant))
 			   ):
@@ -115,7 +115,7 @@ def writeStoOutputFiles(s, out_bh_file):
 			if (
 				s.query_taxon == s.subject_taxon and
 				(options.keepOrthoMCLBug or s.query_id != s.subject_id) and  #### THIS IS an OrthoMCL bug
-				s.evalue_exp <= options.evalueExponentCutoff and
+				(s.evalue_exp == 0 or s.evalue_exp <= options.evalueExponentCutoff) and
 				s.percent_match >= options.percentMatchCutoff
 			   ):
 				# try:
@@ -209,7 +209,10 @@ if __name__ == '__main__':
 				min_mants += [evalue_mant]
 
 			if evalue_mant == 0 and evalue_exp == 0:
-				min_mants += [evalue_mant]
+				#min_mants += [evalue_mant]
+				min_exp = 0
+				min_mants = [0]
+				break
 
 		best_query_taxon_score[(query_id,subject_taxon)] = (min_exp, min(min_mants))
 
@@ -234,7 +237,9 @@ if __name__ == '__main__':
 			try:
 				(min_exp, mants) = BestInterTaxonScore[query_id]
 				
-				if ev_exp < min_exp:
+				if min_exp == 0 and mants[0] == 0:
+					pass
+				elif ev_exp < min_exp:
 					BestInterTaxonScore[query_id] = (ev_exp, [ev_mant])
 				elif ev_exp == min_exp:
 					BestInterTaxonScore[query_id] = (ev_exp, mants+[ev_mant])
