@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 from ftplib import FTP
 from optparse import OptionParser
